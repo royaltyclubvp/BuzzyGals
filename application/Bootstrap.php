@@ -52,6 +52,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 				'model' => array(
                     'path' => 'models/',
                     'namespace'=> 'Model_'
+                ),
+                'fileadapter' => array(
+                    'path' => 'adapters/file',
+                    'namespace' => 'File_Adapter_'
                 )
             )
         ));
