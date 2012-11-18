@@ -212,11 +212,12 @@ ProfileVM = new (function() {
 		});
 	}
 	
-	self.addComment = function(comment) {
+	self.addComment = function(storyid, comment) {
 		success = "";
 		$.ajax({
 			url : "/profile/addstorycomment",
 			data : {
+				story : storyid,
 				comment : comment
 			},
 			type : "POST",
