@@ -1,0 +1,17 @@
+INSTALL.txt
+LICENSE.txt
+README.txt
+demos/
+extras/documentation
+docs/
+tests/
+cache/
+*.class
+*.pyc
+*.pyo
+*.DS_Store
+*.zfproject.xml
+*.project
+*.class
+*.pyc
+*.pyo

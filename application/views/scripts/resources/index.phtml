@@ -1,0 +1,50 @@
+<?php
+$this->additionalBodyClasses = 'townhall resources';
+$this->additionalScripts = '<script src="/assets/js/resources.js="></script>';
+?>
+
+<div id="resource_search">
+    <form action="/resources/search" method="get">
+        <input type="text" name="search" placeholder="Search Resources"/>
+    </form>
+</div>
+<div id="newest_resources" class="article_listing">
+    <header><h2>Newest Resources</h2></header>
+    <div data-bind="foreach: newestResources">
+        <article class="resource">
+            <div class="resource_header">
+                <div class="resource_title left" data-bind="text: name"></div>
+                <div class="resource_options right"><span data-bind="visible: bookmarked() == 0, click: $parent.bookmark">Bookmark Resource</span><span data-bind="visible: bookmarked() == 1, click: $parent.removeBookmark">Remove Bookmark</span></div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="resource_content">
+                <div class="resource_contact left" data-bind="html: contact"></div>
+                <div class="resource_address right" data-bind="html: address"></div>
+                <div class="clearfix"></div>
+            </div>
+        </article>
+    </div>
+</div>
+<div id="local_resources" class="article_listing">
+    <header><h2>Local Resources</h2></header>
+    <div data-bind="foreach: localResources">
+        <article class="resource">
+            <div class="resource_header">
+                <div class="resource_title left" data-bind="text: name"></div>
+                <div class="resource_options right"><span data-bind="visible: bookmarked() == 0, click: $parent.bookmark">Bookmark Resource</span><span data-bind="visible: bookmarked() == 1, click: $parent.removeBookmark">Remove Bookmark</span></div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="resource_content">
+                <div class="resource_contact left" data-bind="html: contact"></div>
+                <div class="resource_address right" data-bind="html: address"></div>
+                <div class="clearfix"></div>
+            </div>
+        </article>
+    </div>
+    <footer class="listing_footer" data-bind="click: $root.loadMoreLocalResources, visible: localResourceTotal() > localResources().length">See More...</footer>
+</div>
+<? $this->variablesJS = '<script type="text/javascript">
+    var newestResources="'.Zend_Json::encode($this->newestResources).'";
+    var localResources="'.Zend_Json::encode($this->localResources).'";
+</script>';
+echo $this->variablesJS; ?>

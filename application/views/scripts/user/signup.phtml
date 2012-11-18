@@ -1,0 +1,37 @@
+<? $this->pageTitle = "Registration" ?>
+<div id="content">
+    <div id="left-column" class="left">
+        <div id="logo">
+            <img src="/assets/img/logo-home.png" alt="ElleFab Logo" />
+        </div>
+    </div>
+    <div id="right-column" class="right">
+        <div id="signup">
+            <form action="register" method="post" id="signup_form">
+                <h2 class="lightred">Account Credentials</h2>
+                <input type="text" name="username" id="field_username" placeholder="E-Mail Address"/>
+                <input type="password" name="password" id="field_password" placeholder="Enter Password. Minimum 7 characters"/>
+                <input type="password" name="password_confirm" id="field_password_confirm" placeholder="Confirm Password"/>
+                <h2 class="lightred">Profile</h2>
+                <input type="text" name="fName" id="field_fName" placeholder="First Name" />
+                <input type="text" name="lName" id="field_lName" placeholder="Last Name" />
+                <input type="text" name="displayName" id="field_displayName" placeholder="Display Name. Minimum 5 characters"/>
+                <input type="radio" name="gender" value="male" /><label>Male</label>
+                <input type="radio" name="gender" value="female" /><label>Female</label>
+                <br/><br/>
+                <label>Date of Birth</label>
+                <input type="text" name="dob_month" placeholder="MM" id="field_dob_month" class="square"/>
+                <input type="text" name="dob_day" placeholder="DD" id="field_dob_day" class="square"/>
+                <input type="text" name="dob_year" placeholder="YYYY" id="field_dob_year" class="square"/>
+                <br/>
+                <label>Location</label>
+                <input type="text" name="country" class="square" id="field_country" value="" placeholder="Country"/>
+                <input type="text" name="stateprov" class="square" id="field_stateprov" value="" placeholder="State/Province"/>
+                <input type="text" name="city" class="square" id="field_city" value="" placeholder="City"/>
+      
+                <input type="submit" name="submit" value="Complete Registration"/>
+            </form>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>

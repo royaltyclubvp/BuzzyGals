@@ -1,0 +1,52 @@
+<?php
+$this->additionalBodyClasses = 'townhall';
+$article = $this->article;
+?>
+
+<div id="sidebar">
+    <div id="icon">
+        <img src="/assets/img/townhall-large.png" alt="<? echo $this->menuTitle ?> Townhall"/>
+    </div>
+    <div id="townhall_search">
+        <form action="/townhalls/search" method="get">
+            <input type="text" name="search" placeholder="Search Articles / Resources"/>
+        </form>
+    </div>
+</div>
+<div id="articles">
+    <article class="single_page_article" id="article_id_<? echo $article['id'] ?>">
+        <div id="title_image">
+            <img src="<? echo Zend_Registry::get('articleImagesUrl').'/'.$article['title_image'] ?>" alt="<? echo $article['title'] ?>" width="460" height="215"/>
+        </div>
+        <header>
+            <h1 class="left"><? echo $article['title'] ?></h1>
+            <aside class="right" id="date"><? echo date('F d, Y', strtotime($article['date'])) ?></aside>
+            <div class="clearfix"></div>
+            <h2 class="left author"><? echo $article['Author']['name'] ?></h2>
+            <div class="right button">Bookmark Article</div>
+            <div class="clearfix"></div>
+        </header>
+        <div id="article_content">
+            <p><? echo $article['content'] ?></p>
+        </div>
+        <div id="comments">
+            <div class="count" data-count="<? echo count($article['Comments']) ?>">Show <? echo count($article['Comments']); echo (count($article['Comments']) == 0) ? " Comment" : " Comments" ?></div>
+            <div class="inner-comment-container" style="display: none;">
+            <? foreach($article['Comments'] as $comment): ?>
+                <div class="comment">
+                    <div class="left username"><? echo $comment['UserProfile']['displayName'] ?></div>
+                    <time class="right date" datetime="<? echo date('c', strtotime($comment['date'])) ?>"><? echo date('F d, Y', strtotime($comment['date'])) ?></time>
+                    <div class="clearfix"></div>
+                    <img src="<? echo Zend_Registry::get('profileImagesUrl').'/'.$comment['UserProfile']['photo'] ?>" alt="<? echo $comment['UserProfile']['displayName'] ?> Profile Image" width="35" height="30"/>
+                    <div class="comment_content">
+                        <p><? echo $comment['content'] ?></p>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            <? endforeach; ?>
+            </div>
+            <textarea id="add_comment"></textarea>
+            
+        </div>
+    </article>
+</div>

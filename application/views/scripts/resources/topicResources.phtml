@@ -1,0 +1,38 @@
+<?php
+$this->additionalBodyClasses = 'resources townhall';
+$this->additionalScripts = '<script src="/assets/js/topicResources.js"></script>';
+?>
+
+<div id="sidebar">
+    <div id="icon">
+        <img src="/assets/img/townhall-large.png" alt="<? echo $this->title ?> Resources"/>
+    </div>
+    <h1><? echo $this->title ?> Townhall</h1>
+    <p>Resources: <span data-bind="text: resourceCount"></span></p>
+    <!-- Search Form -->
+    <div id="townhall_search">
+        <form action="/townhalls/search" method="get">
+            <input type="text" name="search" placeholder="Search Articles / Resources"/>
+        </form>
+    </div>
+</div> 
+<div class="resources" data-bind="foreach: resources">
+    <article class="resource">
+        <div class="resource_header">
+            <div class="resource_title left" data-bind="text: name"></div>
+            <div class="resource_options right"><span data-bind="visible: bookmarked() == 0, click: $parent.bookmark">Bookmark Resource</span><span data-bind="visible: bookmarked() == 1, click: $parent.removeBookmark">Remove Bookmark</span></div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="resource_content">
+            <div class="resource_contact left" data-bind="html: contact"></div>
+            <div class="resource_address right" data-bind="html: address"></div>
+            <div class="clearfix"></div>
+        </div>
+    </article>
+</div>
+<div class="clearfix"></div>
+<? $this->variablesJS = '<script type="text/javascript">
+    var resources="'.Zend_Json::encode($this->resources).'";
+    var resourceCount="'.$this->resourceCount.'";
+  </script>';
+echo $this->variablesJS; ?>

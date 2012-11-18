@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model package="main" baseClass="xPDOObject" platform="mysql" defaultEngine="InnoDB" version="1.1">
+	<object class="Articlecomment" table="articlecomment" extends="xPDOSimpleObject">
+		<field key="date" dbtype="timestamp" phptype="timestamp" null="false" default="CURRENT_TIMESTAMP" />
+		<field key="user" dbtype="int" precision="11" phptype="integer" null="false" index="index" />
+		<field key="article" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="content" dbtype="text" phptype="string" null="false" />
+
+		<index alias="user" name="user" primary="false" unique="false" type="BTREE" >
+			<column key="user" length="" collation="A" null="false" />
+			<column key="article" length="" collation="A" null="false" />
+		</index>
+		<index alias="articleid" name="articleid" primary="false" unique="false" type="BTREE" >
+			<column key="article" length="" collation="A" null="false" />
+		</index>
+		<aggregate alias="Article" class="Featuredarticles" local="article" foreign="id" cardinality="one" owner="foreign"/>
+		<aggregate alias="User" class="User" local="user" foreign="id" cardinality="one" owner="foreign"/>
+	</object>
+	<object class="FeaturedAuthor" table="featured_author" extends="xPDOSimpleObject">
+		<field key="name" dbtype="varchar" precision="100" phptype="string" null="false" />
+		<field key="created" dbtype="timestamp" phptype="timestamp" null="false" default="CURRENT_TIMESTAMP" />
+		<field key="modified" dbtype="timestamp" phptype="timestamp" null="true" />
+		
+		<composite alias="Articles" class="Featuredarticles" local="id" foreign="author" cardinality="many" owner="local" />
+	</object>
+	<object class="Featuredarticles" table="featuredarticles" extends="xPDOSimpleObject">
+		<field key="author" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="avatar_path" dbtype="varchar" precision="100" phptype="string" null="false" />
+		<field key="image_path" dbtype="varchar" precision="100" phptype="string" null="false" />
+		<field key="topic" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="title" dbtype="varchar" precision="500" phptype="string" null="false" />
+		<field key="date" dbtype="date" phptype="date" null="false" />
+		<field key="available" dbtype="tinyint" precision="4" phptype="integer" null="false" />
+		<field key="content" dbtype="longtext" phptype="string" null="false" />
+		<field key="description" dbtype="mediumtext" phptype="string" null="false" />
+		<field key="url" dbtype="varchar" precision="100" phptype="string" null="false" />
+		<field key="created" dbtype="timestamp" phptype="timestamp" null="false" default="CURRENT_TIMESTAMP" />
+		<field key="modified" dbtype="timestamp" phptype="timestamp" null="true" />
+
+		<index alias="topic" name="topic" primary="false" unique="false" type="BTREE" >
+			<column key="topic" length="" collation="A" null="false" />
+		</index>
+		<index alias="author" name="author" primary="false" unique="false" type="BTREE" >
+			<column key="author" length="" collation="A" null="false" />
+		</index>
+	
+		<aggregate alias="Topic" class="Topic" local="topic" foreign="id" cardinality="one" owner="foreign"/>
+		<composite alias="FollowedBy" class="Followedarticle" local="id" foreign="article" cardinality="many" owner="local"/>
+		<aggregate alias="Author" class="FeaturedAuthor" local="author" foreign="id" cardinality="one" owner="foreign"/>
+	</object>
+	<object class="Followedarticle" table="followedarticle" extends="xPDOObject">
+		<field key="user" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="article" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="date" dbtype="date" phptype="date" null="false" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="user" length="" collation="A" null="false" />
+			<column key="article" length="" collation="A" null="false" />
+		</index>
+		<index alias="article" name="article" primary="false" unique="false" type="BTREE" >
+			<column key="article" length="" collation="A" null="false" />
+		</index>
+		
+		<aggregate alias="Article" class="Featuredarticles" local="article" foreign="id" cardinality="one" owner="foreign"/>
+		<aggregate alias="User" class="User" local="user" foreign="id" cardinality="one" owner="foreign" />
+	</object>
+	<object class="Followedtopic" table="followedtopic" extends="xPDOObject">
+		<field key="user" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="topic" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="user" length="" collation="A" null="false" />
+			<column key="topic" length="" collation="A" null="false" />
+		</index>
+		
+		<aggregate alias="Topic" class="Topic" local="topic" foreign="id" cardinality="one" owner="foreign"/>
+		<aggregate alias="User" class="User" local="user" foreign="id" cardinality="one" owner="foreign" />
+	</object>
+	<object class="Friendrequest" table="friendrequest" extends="xPDOSimpleObject">
+		<field key="requestor" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="requestee" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" />
+		<field key="date" dbtype="date" phptype="date" null="false" />
+		<field key="new" dbtype="tinyint" precision="4" phptype="integer" null="false" />
+
+		<index alias="requestor" name="requestor" primary="false" unique="false" type="BTREE" >
+			<column key="requestor" length="" collation="A" null="false" />
+			<column key="requestee" length="" collation="A" null="false" />
+		</index>
+		
+		<aggregate alias="Requestor" class="User" local="requestor" foreign="id" cardinality="one" owner="foreign" />
+		<aggregate alias="Requestee" class="User" local="requestee" foreign="id" cardinality="one" owner="foreign" />
+	</object>
+	<object class="Friendship" table="friendship" extends="xPDOObject">
+		<field key="user" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="friend" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="status" dbtype="enum" precision="'a','b'" phptype="string" null="false" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="user" length="" collation="A" null="false" />
+			<column key="friend" length="" collation="A" null="false" />
+		</index>
+		
+		<aggregate alias="User" class="User" local="user" foreign="id" cardinality="one" owner="foreign"/>
+		<aggregate alias="Friend" class="User" local="friend" foreign="id" cardinality="one" owner="foreign"/>
+	</object>
+	<object class="Messages" table="messages" extends="xPDOSimpleObject">
+		<field key="sender" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="date" dbtype="datetime" phptype="datetime" null="false" />
+		<field key="type" dbtype="enum" precision="'n','f','r'" phptype="string" null="false" />
+		<field key="content" dbtype="mediumtext" phptype="string" null="false" />
+		<field key="reference" dbtype="int" precision="11" phptype="integer" null="true" index="index" />
+		<field key="subject" dbtype="varchar" precision="100" phptype="string" null="true" />
+
+		<index alias="sender" name="sender" primary="false" unique="false" type="BTREE" >
+			<column key="sender" length="" collation="A" null="false" />
+		</index>
+		<index alias="reference" name="reference" primary="false" unique="false" type="BTREE" >
+			<column key="reference" length="" collation="A" null="true" />
+		</index>
+		
+		<aggregate alias="Sender" class="User" local="sender" foreign="id" cardinality="one" owner="foreign" />
+		<aggregate alias="ParentMessage" class="Messages" local="reference" foreign="id" cardinality="one" owner="foreign" />
+		
+	</object>
+	<object class="Profile" table="profile" extends="xPDOSimpleObject">
+		<field key="fName" dbtype="varchar" precision="30" phptype="string" null="false" />
+		<field key="lName" dbtype="varchar" precision="60" phptype="string" null="false" />
+		<field key="displayName" dbtype="int" precision="11" phptype="integer" null="false" />
+		<field key="gender" dbtype="enum" precision="'m','f'" phptype="string" null="false" />
+		<field key="interests" dbtype="text" phptype="string" null="false" />
+		<field key="dob" dbtype="date" phptype="date" null="false" />
+		<field key="email" dbtype="text" phptype="string" null="false" />
+		<field key="about" dbtype="text" phptype="string" null="false" />
+		<field key="user" dbtype="int" precision="10" phptype="integer" attributes="unsigned" null="false" />
+		
+		<aggregate alias="User" class="User" local="user" foreign="id" cardinality="one" owner="foreign" />
+	</object>
+	<object class="Recipient" table="recipient" extends="xPDOObject">
+		<field key="message" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="user" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="read" dbtype="tinyint" precision="4" phptype="integer" null="false" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="message" length="" collation="A" null="false" />
+			<column key="user" length="" collation="A" null="false" />
+		</index>
+		
+		<aggregate alias="Message" class="Messages" local="message" foreign="id" cardinality="one" owner="foreign" />
+		<aggregate alias="User" class="User" local="user" foreign="id" cardinality="one" owner="foreign" />
+		
+	</object>
+	<object class="Resource" table="resource" extends="xPDOSimpleObject">
+		<field key="name" dbtype="varchar" precision="255" phptype="string" null="false" />
+		<field key="content" dbtype="mediumtext" phptype="string" null="false" />
+		<field key="type" dbtype="int" precision="11" phptype="integer" null="false" />
+		<field key="location_specific" dbtype="tinyint" precision="4" phptype="integer" null="false" />
+		<field key="location" dbtype="tinyint" precision="4" phptype="integer" null="true" />
+		
+		<composite alias="ResourceTopic" class="Resourcetopic" local="id" foreign="resource" cardinality="one" owner="local" />
+	</object>
+	<object class="Resourcetopic" table="resourcetopic" extends="xPDOObject">
+		<field key="topic" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="resource" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="topic" length="" collation="A" null="false" />
+			<column key="resource" length="" collation="A" null="false" />
+		</index>
+		
+		<aggregate alias="Resource" class="Resource" local="resource" foreign="id" cardinality="one" owner="foreign" />
+		<aggregate alias="Topic" class="Topic" local="topic" foreign="id" cardinality="one" owner="foreign" />
+	</object>
+	<object class="Session" table="session" extends="xPDOObject">
+		<field key="sessionid" dbtype="varchar" precision="200" phptype="string" null="false" index="pk" />
+		<field key="data" dbtype="text" phptype="string" null="false" />
+		<field key="expires" dbtype="int" precision="11" phptype="integer" null="false" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="sessionid" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="Topic" table="topic" extends="xPDOSimpleObject">
+		<field key="name" dbtype="varchar" precision="50" phptype="string" null="false" />
+		<field key="description" dbtype="varchar" precision="5000" phptype="string" null="false" />
+		<field key="active" dbtype="tinyint" precision="4" phptype="integer" null="false" index="index" />
+
+		<index alias="active" name="active" primary="false" unique="false" type="BTREE" >
+			<column key="active" length="" collation="A" null="false" />
+		</index>
+		
+		<composite alias="ResourceTopic" class="ResourceTopic" local="id" foreign="topic" cardinality="many" owner="local" />
+	</object>
+	<object class="User" table="user" extends="xPDOSimpleObject">
+		<field key="username" dbtype="varchar" precision="30" phptype="string" null="false" index="unique" />
+		<field key="password" dbtype="varchar" precision="100" phptype="string" null="true" />
+		<field key="salt" dbtype="varchar" precision="30" phptype="string" null="false" />
+		<field key="created" dbtype="date" phptype="date" null="false" />
+		<field key="modified" dbtype="date" phptype="date" null="false" />
+		<field key="status" dbtype="tinyint" precision="4" phptype="integer" null="false" default="0" />
+		<field key="lastLogin" dbtype="timestamp" phptype="timestamp" null="true" />
+		<field key="accessFailures" dbtype="int" precision="11" phptype="integer" null="false" />
+		<field key="usergroup" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="index" />
+
+		<index alias="username" name="username" primary="false" unique="true" type="BTREE" >
+			<column key="username" length="" collation="A" null="false" />
+		</index>
+		<index alias="userType" name="userType" primary="false" unique="false" type="BTREE" >
+			<column key="usergroup" length="" collation="A" null="false" />
+		</index>
+		
+		<composite alias="ArticleComments" class="Articlecomment" local="id" foreign="user" cardinality="many" owner="local" />
+		<composite alias="FollowedArticles" class="Followedarticles" local="id" foreign="user" cardinality="many" owner="local" />
+		<composite alias="FollowedTopics" class="Followedtopic" local="id" foreign="user" cardinality="many" owner="local"/>
+		<composite alias="IncomingFriendRequests" class="Friendrequest" local="id" foreign="requestee" cardinality="many" owner="local"/>
+		<composite alias="OutgoingFriendRequests" class="Friendrequest" local="id" foreign="requestor" cardinality="many" owner="local"/>
+		<composite alias="Friends" class="Friendship" local="id" foreign="user" cardinality="many" owner="local"/>
+		<composite alias="SentMessages" class="Messages" local="id" foreign="sender" cardinality="many" owner="local"/>
+		<composite alias="Profile" class="Profile" local="id" foreign="user" cardinality="one" owner="local"/>
+		<composite alias="ReceivedMessages" class="Recipient" local="id" foreign="user" cardinality="many" owner="local"/>
+		<composite alias="Group" class="Usergroup" local="group" foreign="id" cardinality="one" owner="foreign"/>
+		<composite alias="Stories" class="Userstory" local="id" foreign="user" cardinality="many" owner="local" />
+		<composite alias="StoryComments" class="Userstorycomment" local="id" foreign="user" cardinality="many" owner="local" />
+	</object>
+	<object class="Usergroup" table="usergroup" extends="xPDOSimpleObject">
+		<field key="name" dbtype="varchar" precision="50" phptype="string" null="false" />
+		<aggregate alias="User" class="User" local="id" foreign="usergroup" cardinality="one" owner="foreign"/>
+	</object>
+	<object class="Userstory" table="userstory" extends="xPDOSimpleObject">
+		<field key="date" dbtype="datetime" phptype="datetime" null="false" />
+		<field key="content" dbtype="mediumtext" phptype="string" null="false" />
+		<field key="user" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="index" />
+
+		<index alias="user" name="user" primary="false" unique="false" type="BTREE" >
+			<column key="user" length="" collation="A" null="false" />
+		</index>
+		
+		<aggregate alias="User" class="User" local="user" foreign="id" cardinality="one" owner="foreign" />
+	</object>
+	<object class="Userstorycomment" table="userstorycomment" extends="xPDOSimpleObject">
+		<field key="date" dbtype="datetime" phptype="datetime" null="false" />
+		<field key="content" dbtype="text" phptype="string" null="false" />
+		<field key="story" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="user" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+
+		<index alias="story" name="story" primary="false" unique="false" type="BTREE" >
+			<column key="story" length="" collation="A" null="false" />
+		</index>
+		<index alias="user" name="user" primary="false" unique="false" type="BTREE" >
+			<column key="user" length="" collation="A" null="false" />
+		</index>
+		
+		<aggregate alias="User" class="User" local="user" foreign="id" cardinality="one" owner="foreign" />
+		<aggregate alias="Story" class="Userstory" local="story" foreign="id" cardinality="one" owner="foreign" />
+	</object>
+</model>

@@ -1,0 +1,224 @@
++<?php
+$this -> menuTitle = 'My Profile';
+$this -> additionalBodyClasses = 'my_profile';
+$this -> additionalScripts = '<script src="/assets/js/profile.js"></script>';
+$this->profileImagesUrl = Zend_Registry::get('profileImagesUrl');
+$this->userGalleryImagesUrl = Zend_Registry::get('userGalleryImagesUrl');
+$this -> profileLocation = '';
+if ($this -> profile['Location']['city'] != '')
+    $this -> profileLocation .= $this -> profile['Location']['city'] . ', ';
+if ($this -> profile['Location']['stateprov'] != '')
+    $this -> profileLocation .= $this -> profile['Location']['stateprov'] . ', ';
+if ($this -> profile['Location']['country'] != '')
+    $this -> profileLocation .= $this -> profile['Location']['country'];
+?>
+<div id="photo">
+    <div id="profile_photo">
+        <img src="<? echo $this->profileImagesUrl.$this->profile['photo'] ?>" alt="Profile Image - <? echo $this->profile['displayName'] ?>" />
+    </div>
+    <div id="display_name">
+        <h2><? echo $this->profile['displayName'] ?></h2>
+    </div>
+    <div id="location">
+        <p><? echo $this->profileLocation ?></p>
+    </div>
+</div>
+<div id="profile_content">
+    <div id="profile_menu">
+        <ul data-bind="foreach: pages">
+            <li data-bind="text: $data, css: { selected: $data.replace(/\s/g, '') == $root.currentPage() }, click: $root.goToPage"></li>
+        </ul>
+        <div class="clearfix"></div>
+    </div>
+    <div id="profile_page">
+        <div data-bind="template: { name: 'about-template', if: currentPage() == 'AboutMe' }"></div>
+        <div data-bind="template: { name: 'townhalls-template', if: currentPage() == 'MyTownhalls' }"></div>
+        <div data-bind="template: { name: 'friends-template', if: currentPage() == 'Friends' }"></div>
+        <div data-bind="template: { name: 'stories-template', if: currentPage() == 'MyStories', afterRender: storiesDOMProcess }"></div>
+        <div data-bind="template: { name: 'resources-template', if: currentPage() == 'MyResources' }"></div>
+        
+        <!-- Templates -->
+        
+        <!-- ABOUT -->
+        <script type="text/html" id="about-template">
+            <div class="profile_section_title" id="aboutme">
+                <div class="left section_title">About Me</div>
+                <div class="right section_button" data-bind="click: $root.showAboutEdit">Edit</div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="profile_section_content" data-bind="with: profile">
+                <div class="editbox" data-bind="visible: $root.aboutEdit">
+                    <textarea class="profile_edit expanding" data-bind="value: about" placeholder="Tell Us About Yourself"></textarea>
+                    <input name="save_about" type="button" class="submit_button"  value="Save" data-bind="click: $root.saveAbout"/>
+                </div>
+                <p data-bind="text: about, visible: $root.aboutEdit() == false"></p>
+            </div>
+            <div class="profile_section_title" id="interests">
+                <div class="left section_title">My Interests</div>
+                <div class="right section_button" data-bind="click: $root.showInterestsEdit">Edit</div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="profile_section_content" data-bind="with: profile">
+                <div class="editbox" data-bind="visible: $root.interestsEdit">
+                    <textarea class="profile_edit expanding" data-bind="value: interests" placeholder="Tell Us About Your Interests"></textarea>
+                    <input name="save_interests" type="button" class="submit_button"  value="Save" data-bind="click: $root.saveInterests"/>
+                </div>
+                <p data-bind="text: interests, visible: $root.interestsEdit() == false"></p>
+            </div>
+        </script>
+        
+        <!-- TOWNHALLS -->
+        <script type="text/html" id="townhalls-template">
+            <div class="profile_section_title" id="mytownhalls">
+                <div class="left section_title">My Townhalls</div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="profile_section_content">
+                <div id="townhall_list" data-bind="foreach: townhalls">
+                    <div class="single_townhall">
+                        <a data-bind="attr: { 'href': url }">
+                            <img src="/assets/img/townhall-large.png" width="90" height="93"/>
+                        </a>
+                        <h2 data-bind="text: title"></h2>
+                    </div>
+                </div>
+            </div>
+            <div class="profile_section_title" id="bookmarkedarticles">
+                <div class="left section_title">Bookmarked Articles</div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="profile_section_content">
+                <div id="bookmark_list" data-bind="foreach: bookmarkedArticles">
+                    <article>
+                        <div class="left bookmark_title" ><a data-bind="attr: { 'href': url }, text: title"></a></div>
+                        <div class="right section_button remove_bookmark_button" data-bind="click: $root.removeBookmark">Remove Bookmark</div>
+                        <div class="clearfix"></div>
+                         <div class="left bookmark_topic" data-bind="text: topic"></div>
+                         <div class="right section_button share_button">Share</div>
+                        <div class="clearfix"></div>
+                    </article>
+                </div>
+            </div>
+        </script>
+        
+        <!-- FRIENDS -->
+        <script type="text/html" id="friends-template">
+            <div class="profile_section_title" id="myfriends">
+                <div class="left section_title">My Friends</div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="profile_section_content" data-bind="foreach: friends">
+                <div class="friend left">
+                    <a data-bind="attr: { 'href': url }">
+                        <img data-bind="attr: { 'src': photo }" alt="Friend Image" class="left" width="62" height="62"/>
+                    </a>
+                    <div class="info right">
+                        <div class="username" data-bind="text: displayName"></div>
+                        <div class="location" data-bind="text: location"></div>
+                        <div class="message">
+                            <img src="/assets/img/msg-icon-red.png" alt="Send Message"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+       
+        <!-- STORIES -->
+       	<script type="text/html" id="stories-template">
+           <div class="profile_section_title" id="mystories">
+                <div class="left section_title">My Stories</div>
+                <div class="clearfix"></div>
+           </div>
+           <div class="profile_section_content" data-bind="foreach: stories">
+               <article class="story">
+                    <aside class="details">
+                        <time class="date" data-bind="attr: { 'datetime': date }"></time>
+                    </aside>              
+                    <!-- Photo Gallery -->
+                    <section class="photogallery" data-bind="if: galleryAvailable">
+                        <!-- Preview Photos -->
+                        <div class="preview" data-bind="foreach: previewPhotos">
+                            <a class="thumb" data-bind="attr: { 'rel': $parent.id , 'href': $data }">
+                                <img data-bind="attr: { 'src': $data }" alt="" width="140" height="140" />
+                            </a>
+                        </div>
+                        <!-- Main Gallery -->
+                        <div class="main_gallery" data-bind="foreach: mainPhotos, visible: galleryVisible">
+                            <a class="thumb" data-bind="attr: { 'rel': $parent.id , 'href': $data }">
+                                <img data-bind="attr: { 'src': $data }" alt="" width="140" height="140" />
+                            </a>
+                        </div>
+                        <span class="more_photos" data-bind="visible: galleryVisible()=0, click: $parent.toggleGallery">Show Full Gallery</span>
+                        <span class="more_photos" data-bind="visible: galleryVisible()=1, click: $parent.toggleGallery">Hide Full Gallery</span>
+                    </section>
+                    <!-- Story -->
+                    <section class="story_body">
+                        <span class="preview" data-bind="html: contentPreview"></span>
+                        <span class="main_story_body" data-bind="html: contentFull, visible: fullStoryVisible"></span>
+                        <span class="option_more" data-bind="visible: fullStoryVisible()=0, click: $parent.toggleFullStory">Show All</span>
+                        <span class="option_more" data-bind="visible: fullStoryVisible()=1, click: $parent.toggleFullStory">Hide</span>
+                        <div class="clearfix"></div>
+                    </section>
+                    <!-- Comments-->
+                    <section class="comments" data-bind="visible: comments().length > 0">
+                        <div class="count" data-bind="click: $parent.showComments">Show <span data-bind="text: commentCount"></span> <span data-bind="text: commentText"></span></div>
+                        <div class="inner-comment-container" data-bind="visible: commentsVisible()=1, foreach: comments">
+                            <div class="comment">
+                                <div class="left username" data-bind="text: displayName"></div>
+                                <time class="right date" data-bind="attr: { 'datetime': date }"></time>
+                                <div class="clearfix"></div>
+                                <img data-bind="attr: { 'src': userPhoto }" alt="User Profile Image" width="35" height="30"/>
+                                <div class="comment_content">
+                                       <p data-bind="text: content"></p>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </section>
+                    <textarea class="add_comment" data-bind="click: $root.addComment"></textarea>
+                </article>
+           </div>
+        </script>
+       
+        <!-- RESOURCES -->
+        <script type="text/html" id="resources-template">
+            <div class="profile_section_title" id="myresources">
+                <div class="left section_title">My Resources</div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="profile_section_content" data-bind="foreach: resourceTypes">
+                <section class="resource_topic" data-bind="visible: resources().length > 0">
+                    <div class="resource_topic_header">
+                        <div class="resource_topic_name left" data-bind="text: name"></div>
+                        <div class="minimize right"><img src="/assets/img/minimize-red.png" alt="Minimise"/></div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="resources" data-bind="foreach: resources">
+                        <article class="resource">
+                            <div class="resource_header">
+                                <div class="resource_title left" data-bind="text: name"></div>
+                                <div class="resource_options right"><span data-bind="click: $root.viewResource">View</a> &lt;&gt; <span data-bind="click: $parent.deleteResource">Delete</span></div>
+                                <div class="clearfix"></div>    
+                            </div>
+                            <div class="resource_content">
+                                <div class="resource_contact left" data-bind="html: contact"></div>
+                                <div class="resource_address right" data-bind="html: address"></div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+            </div>
+        </script> 
+      
+    </div>
+</div>  
+<div class="clearfix"></div>
+<? $this->variablesJS = '<script type="text/javascript">
+    var profileImagesUrl="'.$this->profileImagesUrl.'";
+    var userGalleryImagesUrl="'.$this->userGalleryImagesUrl.'";
+    var townhallBaseUrl="/townhall/";
+    var friendProfileBaseUrl="/profile/";
+    var articleBaseUrl="/featured/";
+ </script>';
+echo $this->variablesJS; ?>

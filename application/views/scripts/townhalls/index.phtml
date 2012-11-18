@@ -1,0 +1,84 @@
+<?php
+$this->additionalBodyClasses = 'townhall';
+$this->additionalScripts = '<script src="/assets/js/townhalls.js"></script>';
+?>
+
+<div id="sidebar">
+    <div id="icon">
+        <img src="/assets/img/townhall-large.png" alt="<? echo $this->title ?> Townhall"/>
+    </div>
+    <h1><? echo $this->title ?> Townhall</h1>
+    <!-- Dynamic Article Count -->
+    <p>Articles: <span data-bind="text: articleTotal"></span></p>
+    <p>Resources: <? echo $this->resourceCount ?></p>
+    <!-- Search Form -->
+    <div id="townhall_search">
+        <form action="/townhalls/search" method="get">
+            <input type="text" name="search" placeholder="Search Articles / Resources"/>
+        </form>
+    </div>
+</div> 
+<div id="articles">
+    <div id="newest_articles" class="article_listing">
+        <header><h2>Newest Articles</h2></header>
+        <div data-bind="foreach: newestArticles">
+            <article>
+                <div class="articleimage">
+                    <a data-bind="attr: { 'href': url }">
+                        <img data-bind="attr: { 'src': avatarImage, 'alt': title }" width="100" height="100"/>
+                    </a>
+                </div>
+                <div class="content">
+                    <header>
+                        <h1 class="red">
+                            <a data-bind="attr: { 'href': url }, text: title"></a>
+                        </h1>
+                    </header>
+                    <aside class="details">
+                        <h2 class="author">By: <span data-bind="text: author"></span></h2>
+                    </aside>
+                    <section class="summary">
+                        <p data-bind="text: description"></p>
+                    </section>
+                </div>
+                <div class="clearfix"></div>
+            </article>
+        </div>
+        <footer class="listing_footer" data-bind="click: $root.loadMoreNewArticles, visible: articleTotal() > newestArticles().length">See More...</footer>       
+    </div>
+    <div id="popular_articles" class="article_listing">
+        <header><h2>Popular Articles</h2></header>
+        <div data-bind="foreach: popularArticles">
+            <article>
+                <div class="articleimage">
+                    <a data-bind="attr: { 'href': url }">
+                        <img data-bind="attr: { 'src': avatarImage, 'alt': title }" width="100" height="100"/>
+                    </a>
+                </div>
+                <div class="content">
+                    <header>
+                        <h1 class="red">
+                            <a data-bind="attr: { 'href': url }, text: title"></a>
+                        </h1>
+                    </header>
+                    <aside class="details">
+                        <h2 class="author">By: <span data-bind="text: author"></span></h2>
+                    </aside>
+                    <section class="summary">
+                        <p data-bind="text: description"></p>
+                    </section>
+                </div>
+                <div class="clearfix"></div>
+            </article>
+        </div>
+    </div>
+</div>
+<? $this->variablesJS = '<script type="text/javascript">
+    var articleImagesUrl="'.Zend_Registry::get("articleImagesUrl").'/";
+    var articleBaseUrl="/townhall/article/";
+    var newestArticles='.Zend_Json::encode($this->newest).';
+    var popularArticles='.Zend_Json::encode($this->popular).';
+    var topicid='.$this->topic.';
+  </script>';
+  echo $this->variablesJS; ?>
+

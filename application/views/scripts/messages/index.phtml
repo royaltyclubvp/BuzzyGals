@@ -1,0 +1,122 @@
+<?php
+$this->menuTitle = "Message Center";
+$this->additionalBodyClasses = "my_messages";
+$this->additionalScripts = '<script src="/assets/js/messages.js"></script>';
+
+?>
+<div id="menu" data-bind="foreach: folder">
+    <li data-bind="text: $data, css: {current: $data == $root.currentFolder() }, click: $root.goToFolder"></li>
+</div>
+<div id="message_content">
+    <div data-bind="template: { name: 'inbox-template', if: currentFolder() == 'Inbox'}"></div>
+    <div data-bind="template: { name: 'sent-template', if: currentFolder() == 'Sent'}"></div>
+    <div data-bind="template: { name: 'new-template', if: currentFolder() == 'New'}"></div>
+    <div data-bind="template: { name: 'receivedMessage-template', if: currentFolder() == 'ReceivedMessage'}"></div>
+    <div data-bind="template: { name: 'sentMessage-template', if: currentFolder() == 'SentMessage'}"></div>
+    
+    <!-- Templates -->
+    
+    <!-- INBOX -->
+    <script type="text/html" id="inbox-template">
+        <header>
+            <span>Date</span>
+            <span>Subject</span>
+            <span>From</span>
+            <span></span>
+        </header>
+        <div class="messages" data-bind="foreach: inboxMessages">
+            <div class="message">
+                <span data-bind="text:date"></span>
+                <span data-bind="text: subject, click: $root.goToMessage"></span>
+                <span data-bind="text: sender.displayName"></span>
+                <span data-bind="css: {read: read() == 1}, click: $root.toggleRead"></span>
+            </div>
+        </div>
+    </script>
+    
+    <!-- RECEIVED MESSAGE DETAILED -->
+    <script type="text/html" id="receivedMessage-template">
+        <div class="received-message" data-bind="with: message">
+            <aside class="options">
+                <input type="button" id="button_reply" class="mail_option" value="Reply" data-bind="click: $root.replyToMessage"/>
+                <input type="button" id="button_forward" class="mail_option" value="Forward" data-bind="click: $root.forwardMessage"/>
+                <input type="button" id="button_delete" class="mail_option" value="Delete" data-bind="click: $root.deleteMessage"/>
+            </aside>
+            <div class="fields">
+                <span class="field"><span class="name">From:</span> <span data-bind="text: sender.Profile.displayName, attr: { 'href': '/profile/'+displayName.toLowerCase() }"></span></span>
+                <span class="field"><span class="name">Date:</span> <span data-bind="text: date"></span></span>
+                <span class="field"><span class="name">Subject:</span> <span data-bind="text: subject"></span></span>
+                <hr/>
+                <p data-bind="text: content"></p>
+            </div>
+        </div>
+    </script>
+    
+    <!-- SENT -->
+    <script type="text/html" id="sent-template">
+        <header>
+            <span>Date</span>
+            <span>Subject</span>
+            <span>To</span>
+        </header>
+        <div class="messages" data-bind="foreach: sentMessages">
+            <div class="message">
+                <span data-bind="text: date"></span>
+                <span data-bind="text: subject, click: $root.goToMessage"></span>
+                <span data-bind="text: recipients"></span>
+            </div>
+        </div>
+    </script>
+    
+    <!-- SENT MESSAGE DETAILED -->
+    <script type="text/html" id="sentMessage-template">
+        <div class="sent-message" data-bind="with: message">
+            <div class="fields">
+                <span class="field">
+                    <!-- Compensate for Multiple Recipients. One per line. -->
+                    <div class="left">
+                        <span class="name">To:</span>    
+                    </div>
+                    <div class="right" data-bind="foreach: recipients">
+                        <span data-bind="text: User.Profile.displayName"></span>
+                    </div>
+                    <div class="clearfix"></div>
+                </span>
+                <span class="field"><span class="name">Date:</span> <span data-bind="text: date"></span></span>
+                <span class="field"><span class="name">Subject:</span> <span data-bind="text: subject"></span></span>
+                <hr/>
+                <p data-bind="text: content"></p>
+            </div>
+        </div>
+    </script>
+    
+    <!-- NEW MESSAGE -->
+    <script type="text/html" id="new-template">
+        <div class="new-message" data-bind="with: newMessage">
+            <header>
+                <h2>New Message</h2>
+            </header>
+            <div class="fields">
+                <span class="fieldname">To:</span>
+                <input type="text" placeholder="Add Recipient" id="field_recipient" data-bind="autoComplete: $root.recipientList, value: $root.recipientSelect, optionsText: 'displayName', optionsValue: 'id', autoCompleteOptions: {autoFocus:false}"/>
+                <div class="recipients" data-bind="foreach: recipients, visible: recipients().length > 0">
+                    <div class="recipient">
+                        <span data-bind="text: displayName"></span>    
+                        <span data-bind="click: $root.removeMessageRecipient">x</span>
+                    </div>
+                </div>
+                <span class="fieldname">Subject:</span>
+                <input type="text" placeholder="Give this message a subject" id="field_subject" data-bind="value: subject"/>
+                <span class="fieldname">Message:</span>
+                <textarea data-bind="value: content" placeholder="Enter your message here" class="expanding"></textarea>
+            </div>
+            <input type="button" id="button_send" class="submit_button"  value="Send" data-bind="click: $root.sendMessage"/>
+        </div>
+    </script>
+    
+</div>
+<div class="clearfix"></div>
+<? $this->variablesJS = '<script type="text/javascript">
+    var sendMsgBaseUrl="/messages#New/to/";
+ </script>';
+echo $this->variablesJS; ?>
