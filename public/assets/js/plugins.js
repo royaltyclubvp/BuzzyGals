@@ -195,4 +195,19 @@ ko.bindingHandlers.autoComplete = {
     }
 };
 
+//EXPANDING TEXTAREA Binding
+ko.bindingHandlers.expandingTextarea = {
+	init: function(element) {
+		$(element).expandingTextarea();
+	}
+};
 
+//GALLERY MODAL Binding
+ko.bindingHandlers.galleryModal = {
+	init: function(element) {
+		$(element).fancybox({
+			openEffect: 'none',
+			closeEffect: 'none'
+		});
+	}
+};

@@ -46,7 +46,9 @@ function Comment(data) {
 function Story(data) {
 	var self = this;
 	self.id = data.id;
-	self.date = ISODateString(new Date(data.date));
+	var da = data.date.split(/[- :]/);
+	self.date = new Date(da[0], da[1]-1, da[2], da[3], da[4], da[5]);
+	self.date = self.date.toDateString();
 	self.contentPreview = data.content.substring(0, 50);
 	self.contentFull = data.content.substring(50);
 	self.fullStoryVisible = ko.observable(0);
@@ -59,7 +61,7 @@ function Story(data) {
 		else
 			var len = 3;
 		for (var i = 0; i < len; i++)
-			self.previewPhotos[i] = data.Media.photos[i];
+			self.previewPhotos[i] = userGalleryImagesUrl + data.Media.photos[i];
 	}
 	else {
 		self.galleryAvailable = false;
@@ -68,7 +70,7 @@ function Story(data) {
 	if (self.photocount > 3) {
 		var len = self.photocount;
 		for (var i = 3; i < len; i++) {
-			self.mainPhotos[i] = data.Media.photos[i]
+			self.mainPhotos[i] = userGalleryImagesUrl + data.Media.photos[i]
 		}
 	}
 	self.galleryVisible = ko.observable(0);
@@ -78,10 +80,10 @@ function Story(data) {
 	for(var i=0; i < self.commentCount; i++) {
 		self.comments.push(new Comment(data.Comments[i]));
 	}
-	self.addComment = function(comment) {
-		result = ProfileVM.addComment(comment);
-		if(result) //Modify to check type
-			self.comments.push(comment);
+	self.addComment = function(story) {
+		result = ProfileVM.addComment(story.newComment);
+		if(result.id) //Check for Existence of ID Value On Object
+			self.comments.push(new Comment(result));
 	}
 	self.removeComment = function(comment) {
 		result = ProfileVM.removeComment(comment);
@@ -89,6 +91,7 @@ function Story(data) {
 			self.comments.remove(comment);
 	}
 	self.commentsVisible = ko.observable(0);
+	self.newComment = ko.observable();
 	self.toggleGallery = function() {
 		(self.galleryVisible()) ? self.galleryVisible(0) : self.galleryVisible(1);
 	}
@@ -207,6 +210,23 @@ ProfileVM = new (function() {
 					self.interestsEdit(false);
 			}
 		});
+	}
+	
+	self.addComment = function(comment) {
+		success = "";
+		$.ajax({
+			url : "/profile/addstorycomment",
+			data : {
+				comment : comment
+			},
+			type : "POST",
+			dataType : "json",
+			success : function(result) {
+				if(result.root.id)
+					success = result.root;
+			}
+		});
+		return success;
 	}
 	
 	//Client-Side Routes

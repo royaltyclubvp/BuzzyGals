@@ -215,11 +215,17 @@ class ProfileController extends Base_RestrictedController {
     
     public function addstorycommentAction() {
         if($this->getRequest()->isPost() && $this->_ajaxRequest) {
-            $values = $this->getRequest()->getPost();
-            $storyService = new Service_Userstory();
-            if(is_array($comment = $storyService->addNewComment($this->_user->id, $values['story'], $values['comment']))) {
-                $this->_response->appendBody(Zend_Json::encode($comment));
-                return;
+            if($comment = $this->getRequest()->getParam('comment', FALSE) && $story = $this->getRequest()->getParam('story', FALSE)) {
+                $storyService = new Service_Userstory();
+                if(is_array($newComment = $storyService->addNewComment($this->_user->id, $story, $comment))) {
+                    $response['root'] = $newComment;
+                    $this->_response->appendBody(Zend_Json::encode($response));
+                    return;
+                }
+                else {
+                    $this->_response->appendBody('0');
+                    return;
+                }
             }
             else {
                 $this->_response->appendBody('0');

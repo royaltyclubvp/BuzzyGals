@@ -909,8 +909,7 @@ input :-moz-placeholder {
           padding: 8px 0 12px;
       }
       
-      #profile_content #profile_page .profile_section_content a:hover,
-      #profile_content #profile_page .profile_section_content span.more_photos {
+      #profile_content #profile_page .profile_section_content a:hover {
       		text-decoration: underline;
       }
       
@@ -1035,7 +1034,19 @@ input :-moz-placeholder {
      #profile_content .story .photogallery span.photo_total {
      		float: left;
      		color: #f61a01;
-     		font-size: 9px;
+     		font-size: 10px;
+     }
+     
+     #profile_content .story .photogallery span.more_photos {
+     		font-size: 10px;
+     		text-transform: lowercase;
+     		color: #000000;
+     		cursor: pointer;
+     		float: right;
+     }
+     
+     #profile_content .story .photogallery span.more_photos:hover {
+     		text-decoration: underline;
      }
      
      #profile_content .story .photogallery span.option_more {
@@ -1046,9 +1057,9 @@ input :-moz-placeholder {
      }
      
      #profile_content .story .story_body {
-     		margin: 12px 0 0;
-     		color: #000000;
-     		font-size: 12px;
+     		margin: 12px 0 10px;
+     		color: #272525;
+     		font-size: 12.5px;
      }
      
      #profile_content .story .story_body span.option_more {
@@ -1066,7 +1077,7 @@ input :-moz-placeholder {
      #profile_content hr.article_separator {
      		width: 135px;
      		display: block;
-     		margin: 0 auto;
+     		margin: 20px auto 15px;
      		border: 1px solid #F61A01;
      }
      

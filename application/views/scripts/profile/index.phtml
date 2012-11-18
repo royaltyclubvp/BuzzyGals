@@ -1,4 +1,4 @@
-+<?php
+<?php
 $this -> menuTitle = 'My Profile';
 $this -> additionalBodyClasses = 'my_profile';
 $this -> additionalScripts = '<script src="/assets/js/profile.js"></script>';
@@ -138,31 +138,37 @@ if ($this -> profile['Location']['country'] != '')
                     <section class="photogallery" data-bind="if: galleryAvailable">
                         <!-- Preview Photos -->
                         <div class="preview" data-bind="foreach: previewPhotos">
-                            <a class="thumb" data-bind="attr: { 'rel': $parent.id , 'href': $data }">
+                            <a class="thumb modal" data-bind="attr: { 'rel': $parent.id , 'href': $data }, galleryModal: true">
                                 <img data-bind="attr: { 'src': $data }" alt="" width="140" height="140" />
                             </a>
                         </div>
                         <!-- Main Gallery -->
                         <div class="main_gallery" data-bind="foreach: mainPhotos, visible: galleryVisible">
-                            <a class="thumb" data-bind="attr: { 'rel': $parent.id , 'href': $data }">
+                            <a class="thumb modal" data-bind="attr: { 'rel': $parent.id , 'href': $data }, galleryModal: true">
                                 <img data-bind="attr: { 'src': $data }" alt="" width="140" height="140" />
                             </a>
                         </div>
-                        <span class="more_photos" data-bind="visible: galleryVisible()=0, click: $parent.toggleGallery">Show Full Gallery</span>
-                        <span class="more_photos" data-bind="visible: galleryVisible()=1, click: $parent.toggleGallery">Hide Full Gallery</span>
+                        <span class="photo_total"><span data-bind="text: photocount"></span> Photos</span>
+                        <div data-bind="visible: photocount > 3">
+                            <span class="more_photos" data-bind="visible: galleryVisible()==0, click: $parent.toggleGallery">Show Full Gallery</span>
+                            <span class="more_photos" data-bind="visible: galleryVisible()==1, click: $parent.toggleGallery">Hide Full Gallery</span>
+                        </div>
+                        <span class="clearfix"></span>
                     </section>
                     <!-- Story -->
                     <section class="story_body">
                         <span class="preview" data-bind="html: contentPreview"></span>
                         <span class="main_story_body" data-bind="html: contentFull, visible: fullStoryVisible"></span>
-                        <span class="option_more" data-bind="visible: fullStoryVisible()=0, click: $parent.toggleFullStory">Show All</span>
-                        <span class="option_more" data-bind="visible: fullStoryVisible()=1, click: $parent.toggleFullStory">Hide</span>
+                        <div data-bind="visible: contentFull.length > 0">
+                            <span class="option_more" data-bind="visible: fullStoryVisible()==0, click: $parent.toggleFullStory">Show All</span>
+                            <span class="option_more" data-bind="visible: fullStoryVisible()==1, click: $parent.toggleFullStory">Hide</span>
+                        </div>
                         <div class="clearfix"></div>
                     </section>
                     <!-- Comments-->
                     <section class="comments" data-bind="visible: comments().length > 0">
-                        <div class="count" data-bind="click: $parent.showComments">Show <span data-bind="text: commentCount"></span> <span data-bind="text: commentText"></span></div>
-                        <div class="inner-comment-container" data-bind="visible: commentsVisible()=1, foreach: comments">
+                        <div class="count" data-bind="click: showComments">Show <span data-bind="text: commentCount"></span> <span data-bind="text: commentText"></span></div>
+                        <div class="inner-comment-container" data-bind="visible: commentsVisible()==1, foreach: comments">
                             <div class="comment">
                                 <div class="left username" data-bind="text: displayName"></div>
                                 <time class="right date" data-bind="attr: { 'datetime': date }"></time>
@@ -175,8 +181,9 @@ if ($this -> profile['Location']['country'] != '')
                             </div>
                         </div>
                     </section>
-                    <textarea class="add_comment" data-bind="click: $root.addComment"></textarea>
+                    <textarea class="add_comment expanding" data-bind="expandingTextarea: true, text: newComment"></textarea>
                 </article>
+                <hr class="article_separator"/>
            </div>
         </script>
        

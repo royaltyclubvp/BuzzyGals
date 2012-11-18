@@ -153,7 +153,7 @@ class TestController extends Base_FoundationController {
         $story = array(
             'content' => 'This is the test user story',
             'gallery' => array(
-                    '3837838.jpg','hd8113.jpg','2738y2.jpg'
+                    '134431946941.jpg','13479636641.jpg','134431952441.jpg'
                 )
         );
         
