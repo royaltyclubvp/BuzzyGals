@@ -287,12 +287,18 @@ input :-moz-placeholder {
 #single #main {
 	background: #FFFFFF;
 	width: 100%;
-	padding: 67px 0 40px;
+	padding: 32px 0 100px;
 }
 
 #single #main #content {
 	width: 889px;
 	margin: 0 auto;
+}
+
+#single #main #content #logo {
+    width: 459px;
+    margin: 0 auto;
+    padding: 15px 0 0;
 }
 
 #single #main #content #left-column {
@@ -303,6 +309,7 @@ input :-moz-placeholder {
 #single #main #content #right-column {
 	width: 430px;
 	text-align: left;
+	padding: 100px 0 0;
 }
 
 #single #main #content #video {
@@ -1164,6 +1171,11 @@ input :-moz-placeholder {
    	}
      
       /*Login Elements*/
+     #login_container {
+         margin: 10px auto;
+         width: 430px;
+     }
+     
      #login_option, #login {
      	padding: 0 0 0 60px;
      }
