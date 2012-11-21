@@ -81,7 +81,7 @@ function Story(data) {
 		self.comments.push(new Comment(data.Comments[i]));
 	}
 	self.addComment = function(story) {
-		result = ProfileVM.addComment(story.newComment);
+		result = ProfileVM.addComment(story.id, story.newComment);
 		if(result.id) //Check for Existence of ID Value On Object
 			self.comments.push(new Comment(result));
 	}

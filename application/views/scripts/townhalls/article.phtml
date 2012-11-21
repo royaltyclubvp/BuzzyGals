@@ -13,40 +13,45 @@ $article = $this->article;
         </form>
     </div>
 </div>
-<div id="articles">
-    <article class="single_page_article" id="article_id_<? echo $article['id'] ?>">
+<div id="articles" data-bind="with: article">
+    <article class="single_page_article" data-bind="attr: { 'id': domID }">
         <div id="title_image">
-            <img src="<? echo Zend_Registry::get('articleImagesUrl').'/'.$article['title_image'] ?>" alt="<? echo $article['title'] ?>" width="460" height="215"/>
+            <img data-bind="attr: { 'src': titleImageUrl, 'alt': title }" width="460" height="215"/>
         </div>
         <header>
-            <h1 class="left"><? echo $article['title'] ?></h1>
-            <aside class="right" id="date"><? echo date('F d, Y', strtotime($article['date'])) ?></aside>
+            <h1 class="left" data-bind="text: title"></h1>
+            <aside class="right" id="date" data-bind="text: date"></aside>
             <div class="clearfix"></div>
-            <h2 class="left author"><? echo $article['Author']['name'] ?></h2>
-            <div class="right button">Bookmark Article</div>
+            <h2 class="left author" data-bind="text: authorName"></h2>
+            <div class="right button">
+                <span data-bind="visible: bookmarked()==0">Bookmark Article</span>
+                <span data-bind="visible: bookmarked()==1">Remove Bookmark</span>    
+            </div>
             <div class="clearfix"></div>
         </header>
         <div id="article_content">
-            <p><? echo $article['content'] ?></p>
+            <p data-bind="html: content"></p>
         </div>
         <div id="comments">
-            <div class="count" data-count="<? echo count($article['Comments']) ?>">Show <? echo count($article['Comments']); echo (count($article['Comments']) == 0) ? " Comment" : " Comments" ?></div>
-            <div class="inner-comment-container" style="display: none;">
-            <? foreach($article['Comments'] as $comment): ?>
+            <div class="count">Show<span data-bind="visible: commentsVisible()==1">ing</span> <span data-bind="text: commentCount"></span> <span data-bind="text: commentText"></span></div>
+            <div class="inner-comment-container" data-bind="visible: commentsVisible()==1, foreach: comments">
                 <div class="comment">
-                    <div class="left username"><? echo $comment['UserProfile']['displayName'] ?></div>
-                    <time class="right date" datetime="<? echo date('c', strtotime($comment['date'])) ?>"><? echo date('F d, Y', strtotime($comment['date'])) ?></time>
+                    <div class="left username" data-bind="text: displayName"></div>
+                    <time class="right date" data-bind="attr: { 'datetime': date }"></time>
                     <div class="clearfix"></div>
-                    <img src="<? echo Zend_Registry::get('profileImagesUrl').'/'.$comment['UserProfile']['photo'] ?>" alt="<? echo $comment['UserProfile']['displayName'] ?> Profile Image" width="35" height="30"/>
-                    <div class="comment_content">
-                        <p><? echo $comment['content'] ?></p>
-                    </div>
+                    <img data-bind="attr: { 'src': userPhoto, 'alt': displayName }" width="35" height="30"/>
+                    <div class="comment_content"><p data-bind="text: content"></p></div>
                     <div class="clearfix"></div>
                 </div>
-            <? endforeach; ?>
             </div>
-            <textarea id="add_comment"></textarea>
-            
+            <textarea id="add_comment" data-bind="text: newComment"></textarea>            
         </div>
     </article>
 </div>
+<? $this->variablesJS = '<script type="text/javascript">
+    var articleImagesUrl="'.Zend_Registry::get("articleImagesUrl").'/";
+    var profileImagesUrl="'.Zend_Registry::get('profileImagesUrl').'";
+    var article="'.Zend_Json::encode($this->article).'";
+    var bookmarked="'.$this->bookmarked.'";
+</script>';
+echo $this->variablesJS; ?>
