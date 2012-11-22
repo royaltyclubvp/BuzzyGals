@@ -406,4 +406,10 @@ class TestController extends Base_FoundationController {
         $this->view->result = $this->messageService->messageCount(7);
         $this->render('message');
     }
+
+    public function bytesAction() {
+        $upload = new File_Adapter_Uploader("image", array('jpg', 'png'), 50000);
+        $this->view->result = $upload->_toBytes("128M");
+        $this->render('message');
+    }
 }

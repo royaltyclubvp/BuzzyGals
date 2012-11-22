@@ -12,9 +12,7 @@
  */
 abstract class File_Adapter_Base_Foundation {
     
-    const IMAGE_UPLOAD = "image";
-    
-    protected $_uploadType = "";
+    protected $_uploadType;
     
     public function __construct($uploadType) {
         $this->_uploadType = $uploadType;

@@ -24,7 +24,7 @@ class File_Adapter_Form_Upload  extends File_Adapter_Base_Foundation {
         return $_FILES['filename']['size'];
     }
     
-    public function save($path) {
+    public function save($path, $extension, $userid = 0) {
         $adapter = new Zend_File_Transfer_Adapter_Http();
         $adapter->setDestination($path);
         $files = $adapter->getFileInfo();
@@ -32,7 +32,13 @@ class File_Adapter_Form_Upload  extends File_Adapter_Base_Foundation {
             if(!$adapter->isUploaded($file)) {
                 return false;
             }
-            $extension = strtolower(end(explode(".", $info['name'])));
+            $filename = $this->generateFileName($extension, $userid);
+            $adapter->addFilter('Rename', array('target' => $path.$filename, 'overwrite' => TRUE));
+            if(!$adapter->receive($info['name']))
+                return false;
         }
+        $filename = $adapter->getFileName();
+        $filename = basename($filename);
+        return $filename;
     }
 }

@@ -208,9 +208,19 @@ class ProfileController extends Base_RestrictedController {
         }
         else return $this->_redirect('/profile');
     }
-    //To Complete
+    
+    public function uploadstoryphotosAction() {
+        if($this->getRequest()->isPost()) {
+            
+        }
+    }
+    
     public function addstoryAction() {
-        
+        if($this->getRequest()->isPost() & $this->_ajaxRequest) {
+            if($content = $this->getRequest()->getParam('storyContent', FALSE)) {
+                
+            }
+        }
     }
     
     public function addstorycommentAction() {
