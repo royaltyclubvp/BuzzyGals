@@ -211,8 +211,31 @@ class ProfileController extends Base_RestrictedController {
     
     public function uploadstoryphotosAction() {
         if($this->getRequest()->isPost()) {
-            
+            $uploader = new File_Adapter_Uploader('image', array('jpg', 'jpeg'), '5M');
+            if(($settings = $uploader->checkServerSettings()) === true) {
+                $result = $uploader->handleUpload(Zend_Registry::get('userGalleryImagesPath'), $this->_user->id);
+                if($this->_ajaxRequest) {
+                    $this->_response->appendBody(Zend_Json::encode($result));
+                    return;
+                }
+                else {
+                    $this->view->uploadresponse = $result;
+                    return $this->render('uploadstoryphotos');
+                }
+            }
+            else {
+                if($this->_ajaxRequest) {
+                    $this->_response->appendBody(Zend_Json::encode($settings));
+                    return;
+                }
+                else {
+                    $this->view->uploadresponse = $settings;
+                    return $this->render('uploadstoryphotos');
+                }
+            }
         }
+        else 
+            return $this->_redirect('/profile'); 
     }
     
     public function addstoryAction() {

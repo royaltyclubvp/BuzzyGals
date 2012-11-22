@@ -179,7 +179,8 @@ input :-moz-placeholder {
 	font-size: 12px;
 }
 
-#topmenutemplate input[name="save_about"], #topmenutemplate input[name="save_interests"] {
+#topmenutemplate input[name="save_about"], #topmenutemplate input[name="save_interests"],
+#topmenutemplate input[name="add_gallery"], #topmenutemplate input[name="add_story"] {
 	margin: 30px 0 0;
 }
 
@@ -1087,6 +1088,12 @@ input :-moz-placeholder {
      		margin: 20px auto 15px;
      		border: 1px solid #F61A01;
      }
+     
+    /**New Story**/
+   	#profile_content .new_story_content label {
+   			font-size: 14px;
+   			color: #F61A01;
+   	}
      
     /**My Resources**/
    	#profile_content #profile_page .profile_section_content .resource_topic {

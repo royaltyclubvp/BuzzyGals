@@ -85,6 +85,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $Config = $this->getOption('storage');
         Zend_Registry::set('basepath', $Config['basePath']);
         Zend_Registry::set('userImagesPath', $Config['basePath'].$Config['userImagesPath']);
+        Zend_Registry::set('userGalleryImagesPath', $Config['basePath'].$Config['userGalleryImagesPath']);
         Zend_Registry::set('profileImagesPath', Zend_Registry::get('userImagesPath').$Config['profileImagesDir']);
         Zend_Registry::set('userImagesUrl', $Config['userImagesUrl']);
         Zend_Registry::set('profileImagesUrl', $Config['profileImagesUrl']);

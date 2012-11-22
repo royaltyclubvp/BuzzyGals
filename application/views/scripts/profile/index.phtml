@@ -1,7 +1,16 @@
 <?php
 $this -> menuTitle = 'My Profile';
 $this -> additionalBodyClasses = 'my_profile';
-$this -> additionalScripts = '<script src="/assets/js/profile.js"></script>';
+$this -> additionalScripts = '
+    <script src="/assets/js/uploader/header.js"></script>
+    <script src="/assets/js/uploader/util.js"></script>
+    <script src="/assets/js/uploader/button.js"></script>
+    <script src="/assets/js/uploader/handler.base.js"></script>
+    <script src="/assets/js/uploader/handler.form.js"></script>
+    <script src="/assets/js/uploader/handler.xhr.js"></script>
+    <script src="/assets/js/uploader/uploader.basic.js"></script>
+    <script src="/assets/js/uploader/uploader.js"></script>
+    <script src="/assets/js/profile.js"></script>';
 $this->profileImagesUrl = Zend_Registry::get('profileImagesUrl');
 $this->userGalleryImagesUrl = Zend_Registry::get('userGalleryImagesUrl');
 $this -> profileLocation = '';
@@ -34,7 +43,7 @@ if ($this -> profile['Location']['country'] != '')
         <div data-bind="template: { name: 'about-template', if: currentPage() == 'AboutMe' }"></div>
         <div data-bind="template: { name: 'townhalls-template', if: currentPage() == 'MyTownhalls' }"></div>
         <div data-bind="template: { name: 'friends-template', if: currentPage() == 'Friends' }"></div>
-        <div data-bind="template: { name: 'stories-template', if: currentPage() == 'MyStories', afterRender: storiesDOMProcess }"></div>
+        <div data-bind="template: { name: 'stories-template', if: currentPage() == 'MyStories' }"></div>
         <div data-bind="template: { name: 'resources-template', if: currentPage() == 'MyResources' }"></div>
         
         <!-- Templates -->
@@ -186,7 +195,27 @@ if ($this -> profile['Location']['country'] != '')
                 <hr class="article_separator"/>
            </div>
         </script>
-       
+        
+        <!-- NEW STORY -->
+        <script type="text/html" id="new-story-template">
+           <div class="profile_section_title" id="new-story">
+                <div class="left section_title">New Story</div>
+                <div class="right section_button" data-bind="click: $root.cancelNewStory">Cancel</div>
+                <div class="clearfix"></div>
+           </div>
+           <div class="profile_section_content" data-bind="with: newStory">
+               <div class="new_story_content">
+                   <label>Story:</label>
+                   <textarea class="expanding" data-bind="expandingTextarea: true, text: content"></textarea>
+               </div>
+               <input name="add_gallery" type="button" class="submit_button"  value="Add Photos" data-bind="click: $root.showAddGalleryInterface"/>
+               <div class="add_photos">
+                   <div class="drop_zone"></div>
+                   <ul class="image_upload unstyled"></ul>
+               </div>
+               <input name="add_story" type="button" class="submit_button" value="Add Story" data-bind="click: $root.addStory"/>
+           </div>
+        </script>
         <!-- RESOURCES -->
         <script type="text/html" id="resources-template">
             <div class="profile_section_title" id="myresources">

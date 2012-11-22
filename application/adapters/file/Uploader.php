@@ -23,7 +23,7 @@ class File_Adapter_Uploader {
         if($sizeLimit === NULL)
             $sizeLimit = $this->_toBytes(Zend_Registry::get('uploadMaxSize'));
         $this->_allowedExtensions = array_map("strtolower", $extensions);
-        $this->_sizeLimit = $sizeLimit;
+        $this->_sizeLimit = $this->_toBytes($sizeLimit);
         if(strpos(strtolower($_SERVER['CONTENT_TYPE']), 'multipart/') === 0)
             $this->_uploader = new File_Adapter_Form_Upload($uploadType);
         else 
