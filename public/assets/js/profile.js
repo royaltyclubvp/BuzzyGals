@@ -135,12 +135,25 @@ ProfileVM = new (function() {
 	//Edit Toggles
 	self.aboutEdit = ko.observable(false);
 	self.interestsEdit = ko.observable(false);
+	self.galleryInterfaceVisible(0);
 
 	//Behaviours
 	self.goToPage = function(page) {
 		page = page.replace(/\s/g, ""); 
 		location.hash = page; 
 	};
+	
+	self.addNewStory = function() { self.currentPage('NewStory') }
+	
+	self.cancelNewStory = function() {
+		self.currentPage('MyStories');
+		self.newStory();
+	}
+	
+	self.showAllGalleryInterface - function() {
+		self.galleryInterfaceVisible(1);
+	}
+	
 	self.removeBookmark = function(bookmark) {
 		$.ajax({
 			url : "/profile/removearticlebookmark",

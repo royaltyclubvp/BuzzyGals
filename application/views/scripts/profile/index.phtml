@@ -45,6 +45,7 @@ if ($this -> profile['Location']['country'] != '')
         <div data-bind="template: { name: 'friends-template', if: currentPage() == 'Friends' }"></div>
         <div data-bind="template: { name: 'stories-template', if: currentPage() == 'MyStories' }"></div>
         <div data-bind="template: { name: 'resources-template', if: currentPage() == 'MyResources' }"></div>
+        <div data-bind="template: { name: 'new-story-template', if: currentPage() == 'NewStory' }"></div>
         
         <!-- Templates -->
         
@@ -136,6 +137,7 @@ if ($this -> profile['Location']['country'] != '')
        	<script type="text/html" id="stories-template">
            <div class="profile_section_title" id="mystories">
                 <div class="left section_title">My Stories</div>
+                <div class="right section_button" data-bind="click: $root.addNewStory">New Story</div>
                 <div class="clearfix"></div>
            </div>
            <div class="profile_section_content" data-bind="foreach: stories">
@@ -209,7 +211,7 @@ if ($this -> profile['Location']['country'] != '')
                    <textarea class="expanding" data-bind="expandingTextarea: true, text: content"></textarea>
                </div>
                <input name="add_gallery" type="button" class="submit_button"  value="Add Photos" data-bind="click: $root.showAddGalleryInterface"/>
-               <div class="add_photos">
+               <div class="add_photos" data-bind="visible: galleryInterfaceVisible()==1">
                    <div class="drop_zone"></div>
                    <ul class="image_upload unstyled"></ul>
                </div>

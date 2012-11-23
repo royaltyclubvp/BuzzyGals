@@ -1096,7 +1096,10 @@ input :-moz-placeholder {
    			display: block;
    	}
     
-    #profile_content  
+    #profile_content .new_story_content textarea {
+    	width: 420px;
+    }
+    
     /**My Resources**/
    	#profile_content #profile_page .profile_section_content .resource_topic {
    			margin: 0 0 20px;
