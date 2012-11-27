@@ -133,7 +133,7 @@ class UserController extends Base_FoundationController {
                     'credentialVar' => 'password'
                 );
                 $adapter = new Auth_Adapter_DoctrineTable($adapterConfig);
-                $adapter->setCredentials($values['username'], $values['password']);
+                $adapter->setCredentials(trim($values['username']), trim($values['password']));
                 $storage = new Auth_Adapter_AuthDoctrineDbStorage('auth');
                 $auth = Zend_Auth::getInstance();
                 $auth->setStorage($storage);
@@ -141,7 +141,7 @@ class UserController extends Base_FoundationController {
                 if($result->isValid()) {
                     if(isset($values['keepLoggedIn'])) {
                         $encryption = new Cryptography_EncryptionService('12675');
-                        $cookievalue = $values['username'].'||'.$values['password'];
+                        $cookievalue = trim($values['username']).'||'.trim($values['password']);
                         $cookievalue = $encryption->encrypt($cookievalue);
                         setcookie('authPersistence',$cookievalue, time() + 2592000, '/');
                     }

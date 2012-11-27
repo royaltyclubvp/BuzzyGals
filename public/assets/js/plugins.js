@@ -211,3 +211,59 @@ ko.bindingHandlers.galleryModal = {
 		});
 	}
 };
+
+//UPLOADER Binding
+ko.bindingHandlers.uploader = {
+	completeHandler : function(event, id, filename, response) {
+		file = $(this).fineUploader('getItemByFileId', id);
+		imageUrl = userGalleryImagesUrl + response.filename;
+		$(this).find(file).find('.image_uploaded').html('<img src="'+imageUrl+'" width="140" height="140"/>');
+		ProfileVM.addStoryPhoto(response.filename);
+	},
+	init: function(element) {
+		$(element).fineUploader({
+			debug: true,
+			request: {
+				endpoint : '/profile/uploadstoryphotos',
+				inputName : 'filename'
+			},
+			validation : {
+				sizeLimit : 5242880
+			},
+			text : {
+				uploadButton : 'Upload Photos'
+			},
+			template: '<div class="drop_zone"><span>{dragZoneText}</span></div>' + 
+				'<input name="upload_photos" type="button" class="submit_button upload_button" value="{uploadButtonText}"/>' +
+				'<div class="images_uploaded"></div>',
+				
+			fileTemplate: '<div class="image_upload">' + 
+				'<div class="loading"></div>' + 
+				'<div class="progress_bar"></div>' +
+				'<div class="image_uploaded"></div>' +
+				'<div class="image_failed"></div>' + 
+				'<div class="retry">{retryButtonText}</div>' +
+				'<div class="upload_size"></div>' +
+				'<div class="upload_cancel">{cancelButtonText}</div>' + 
+				'<div class="upload_status_text">{statusText}</span>' +
+				'</div>',
+				
+			classes: {
+				button: 'upload_button',
+				drop: 'drop_zone',
+				list: 'images_uploaded',
+				progressBar: 'progress_bar',
+				file: 'image_uploaded',
+				spinner: 'loading',
+				retry: 'retry',
+				success: 'upload_success',
+				fail: 'upload_fail',
+				retrying: 'retrying',
+				retryable: 'retryable',
+				size: 'upload_size',
+				cancel: 'upload_cancel',
+				statusText: 'upload_status_text'
+			}
+		}).on('complete', ko.bindingHandlers.uploader.completeHandler);
+	}
+};

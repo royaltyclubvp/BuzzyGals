@@ -10,6 +10,7 @@ $this -> additionalScripts = '
     <script src="/assets/js/uploader/handler.xhr.js"></script>
     <script src="/assets/js/uploader/uploader.basic.js"></script>
     <script src="/assets/js/uploader/uploader.js"></script>
+    <script src="/assets/js/uploader/jquery-plugin.js"></script>
     <script src="/assets/js/profile.js"></script>';
 $this->profileImagesUrl = Zend_Registry::get('profileImagesUrl');
 $this->userGalleryImagesUrl = Zend_Registry::get('userGalleryImagesUrl');
@@ -211,9 +212,8 @@ if ($this -> profile['Location']['country'] != '')
                    <textarea class="expanding" data-bind="expandingTextarea: true, text: content"></textarea>
                </div>
                <input name="add_gallery" type="button" class="submit_button"  value="Add Photos" data-bind="click: $root.showAddGalleryInterface"/>
-               <div class="add_photos" data-bind="visible: galleryInterfaceVisible()==1">
-                   <div class="drop_zone"></div>
-                   <ul class="image_upload unstyled"></ul>
+               <div class="add_photos" data-bind="visible: $root.galleryInterfaceVisible()==1">
+                   <div class="upload_container unstyled" data-bind="uploader: true"></div>
                </div>
                <input name="add_story" type="button" class="submit_button" value="Add Story" data-bind="click: $root.addStory"/>
            </div>

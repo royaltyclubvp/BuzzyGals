@@ -103,6 +103,12 @@ function Story(data) {
 	}
 }
 
+function newStory() {
+	var self = this;
+	self.content = ko.observable("");
+	self.photos = ko.observableArray([]);
+}
+
 function ResourceType(data) {
 	var self = this;
 	self.typeid = data.id;
@@ -130,12 +136,12 @@ ProfileVM = new (function() {
 	self.friends = ko.observableArray([]);
 	self.stories = ko.observableArray([]);
 	self.resourceTypes = ko.observableArray([]);
-	self.newStory = ko.observable();
+	self.newStory = ko.observable(new newStory());
 	
 	//Edit Toggles
 	self.aboutEdit = ko.observable(false);
 	self.interestsEdit = ko.observable(false);
-	self.galleryInterfaceVisible(0);
+	self.galleryInterfaceVisible = ko.observable(0);
 
 	//Behaviours
 	self.goToPage = function(page) {
@@ -145,12 +151,16 @@ ProfileVM = new (function() {
 	
 	self.addNewStory = function() { self.currentPage('NewStory') }
 	
-	self.cancelNewStory = function() {
-		self.currentPage('MyStories');
-		self.newStory();
+	self.addStoryPhoto = function(file) {
+		self.newStory().photos.push(file);
 	}
 	
-	self.showAllGalleryInterface - function() {
+	self.cancelNewStory = function() {
+		self.currentPage('MyStories');
+		self.newStory("");
+	}
+	
+	self.showAddGalleryInterface = function() {
 		self.galleryInterfaceVisible(1);
 	}
 	

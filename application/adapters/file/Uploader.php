@@ -55,7 +55,7 @@ class File_Adapter_Uploader {
         $uploadSize = $this->_toBytes(ini_get('upload_max_filesize'));
         if($postSize < $this->_sizeLimit || $uploadSize < $this->_sizeLimit) {
             $size = max(1, $this->_sizeLimit/1024/1024).'M';
-            return array('error' => 'increase post_max_size and upload_max_filesize to $size');
+            return array('error' => 'increase post_max_size and upload_max_filesize to '.$size);
         }
         else
             return true;
@@ -70,16 +70,16 @@ class File_Adapter_Uploader {
         catch (Exception $e) {
             return array('error' => "File Size Not Available");
         }
-        if($size)
+        if(!$size)
             return array('error' => "File is empty");
         else if($size > $this->_sizeLimit) {
             return array('error' => "File is too large");
         }
-        $fileinfo = pathinfo($this->_uploader->getSize());
+        $fileinfo = pathinfo($this->_uploader->getName());
         $extension = @$fileinfo['extension'];
         if($this->_allowedExtensions && !in_array(strtolower($extension), $this->_allowedExtensions)) {
             $these = implode(",", $this->_allowedExtensions);
-            return array('error' => "File has an invalid extension. It should be one of these: ".$these);
+            return array('error' => "File has an invalid extension : ".$extension.". It should be one of these: ".$these);
         }
         $extension = ($extension == "") ? $extension : '.'.$extension;
         if($filename = $this->_uploader->save($path, $extension, $userid))

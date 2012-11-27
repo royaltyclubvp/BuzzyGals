@@ -17,7 +17,8 @@ class File_Adapter_Xhr_Upload extends File_Adapter_Base_Foundation {
     }
     
     public function getName() {
-        return $this->getRequest()->getParam('filename');
+        $controller = Zend_Controller_Front::getInstance();
+        return $controller->getRequest()->getParam('filename', 'test');
     }
     
     public function getSize() {

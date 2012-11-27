@@ -17,6 +17,7 @@
 		
 		<link type="text/css" rel="stylesheet" media="screen" href="/assets/css/jquery/jquery-ui.css">
 		<link type="text/css" rel="stylesheet" media="screen" href="/assets/css/fancybox/jquery.fancybox.css">
+		<link type="text/css" rel="stylesheet" media="screen" href="/assets/css/uploader/fineuploader.css">
 		<? echo $this->headScript()->prependFile('/assets/js/libs/modernizr-2.5.3.min.js') ?>
 	</head>
 	<body id="topmenutemplate">
@@ -80,8 +81,8 @@
         <script src="/assets/js/jquery.mousewheel-3.0.6.pack.js"></script>
         <script src="/assets/js/jquery.fancybox.pack.js"></script>
         <script src="/assets/js/plugins.js"></script>
+        <? echo $this->additionalScripts ?>       
         <script src="/assets/js/topmenu.js"></script>
-        <? echo $this->additionalScripts ?>
         <script src="/assets/js/script.js"></script>
 	</body>
 </html>

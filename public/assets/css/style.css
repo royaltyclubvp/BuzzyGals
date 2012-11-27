@@ -1028,15 +1028,54 @@ input :-moz-placeholder {
      		color: #363434;
      }
      
-     #profile_content .story .photogallery .thumb {
+     #profile_content .story .photogallery .thumb,
+     .add_photos .upload_container .image_upload   	{
      		width: 140px;
      		height: 140px;
      		margin: 0 15px 10px 0;
      		display: inline-block;
      }
      
-     #profile_content .story .photogallery .thumb:nth-of-type(3n+3) {
+     #profile_content .story .photogallery .thumb:nth-of-type(3n+3),
+     .add_photos .upload_container .image_upload:nth-of-type(3n+3)	 {
      		margin: 0 0 5px;
+     }
+     
+     .add_photos .upload_container .image_upload {
+     		height: 160px;
+     }
+     
+     .add_photos .upload_container .image_upload .image_uploaded {
+     		width: 140px;
+     		height: 140px;
+     }
+     
+     .add_photos .upload_container .image_upload.upload_success .loading,
+     .add_photos .upload_container .image_upload.upload_success .progress_bar,
+     .add_photos .upload_container .image_upload.upload_success .image_failed,
+     .add_photos .upload_container .image_upload.upload_success .retry,
+     .add_photos .upload_container .image_upload.upload_success .upload_size,
+     .add_photos .upload_container .image_upload.upload_failed .loading, 
+     .add_photos .upload_container .image_upload.upload_failed .progress_bar,
+     .add_photos .upload_container .image_upload.upload_failed .upload_size {
+     		display: none;
+     }
+     
+     .add_photos .upload_container .image_upload.upload_failed .image_failed,
+     .add_photos .upload_container .image_upload.upload_failed .retry {
+     		display: block;
+     }
+     
+     .add_photos .upload_container .image_upload .loading {
+     		width: 140px;
+     		height: 140px;
+     		background: transparent url('/assets/img/uploader/upload-loading.gif') no-repeat center center;
+     } 
+     
+     .add_photos .upload_container .image_upload .image_failed {
+     		width: 140px;
+     		height: 140px;
+     		background: transparent url('/assets/img/uploader/upload-failed.jpg') no-repeat 0 0;
      }
      
      #profile_content .story .photogallery span.photo_total {
@@ -1098,6 +1137,13 @@ input :-moz-placeholder {
     
     #profile_content .new_story_content textarea {
     	width: 420px;
+    }
+    
+    #profile_content .add_photos .drop_zone {
+    	width: 420px;
+    	height: 250px;
+    	background: #F61A01;
+    	margin: 0 0 10px;
     }
     
     /**My Resources**/
