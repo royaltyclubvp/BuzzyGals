@@ -168,6 +168,10 @@ input :-moz-placeholder {
 	font-size: 12px;
 }
 
+#topmenutemplate article.story .submit_button {
+    margin: 15px 0 0;
+}
+
 #topmenutemplate .mail_option {
 	border-radius: 10px;
 	-moz-border-radius: 10px;
@@ -824,7 +828,7 @@ input :-moz-placeholder {
         padding: 5px;
         height: 20px;
         background: #FFFFFF;
-        font-size: 11px;
+        font-size: 12px;
    }
    
    /* Profile */
@@ -859,7 +863,7 @@ input :-moz-placeholder {
         /*Profile Menu*/
        #topmenutemplate #main #content #profile_content #profile_menu ul {
            padding: 12px 0 0;
-           width: 355px;
+           width: 361px;
            margin: 0 auto;
        }
        

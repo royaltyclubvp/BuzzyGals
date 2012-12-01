@@ -68,6 +68,17 @@ class TownhallsController extends Base_RestrictedController {
             $articleService = new Service_Article();
             if($article = $articleService->fetchOneByUri($uri)) {
                 $this->_helper->layout->setLayout('topmenu');
+                $bookmarked = false;
+                if(count($article['Followers'])) {
+                    foreach($article['Followers'] as $follower) {
+                        if($this->_user->id == $follower['id']) {
+                            $bookmarked = true;
+                            break;
+                        }
+                    }
+                }
+                $this->view->bookmarked = $bookmarked;
+                unset($article['Followers']);
                 $this->view->article = $article;
                 return $this->render();
             }

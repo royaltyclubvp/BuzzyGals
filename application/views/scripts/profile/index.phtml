@@ -44,7 +44,7 @@ if ($this -> profile['Location']['country'] != '')
         <div data-bind="template: { name: 'about-template', if: currentPage() == 'AboutMe' }"></div>
         <div data-bind="template: { name: 'townhalls-template', if: currentPage() == 'MyTownhalls' }"></div>
         <div data-bind="template: { name: 'friends-template', if: currentPage() == 'Friends' }"></div>
-        <div data-bind="template: { name: 'stories-template', if: currentPage() == 'MyStories' }"></div>
+        <div data-bind="template: { name: 'stories-template', if: currentPage() == 'MyStories'}"></div>
         <div data-bind="template: { name: 'resources-template', if: currentPage() == 'MyResources' }"></div>
         <div data-bind="template: { name: 'new-story-template', if: currentPage() == 'NewStory' }"></div>
         
@@ -155,22 +155,22 @@ if ($this -> profile['Location']['country'] != '')
                             </a>
                         </div>
                         <!-- Main Gallery -->
-                        <div class="main_gallery" data-bind="foreach: mainPhotos, visible: galleryVisible">
+                        <div class="main_gallery" data-bind="foreach: mainPhotos, visible: galleryVisible()==1">
                             <a class="thumb modal" data-bind="attr: { 'rel': $parent.id , 'href': $data }, galleryModal: true">
                                 <img data-bind="attr: { 'src': $data }" alt="" width="140" height="140" />
                             </a>
                         </div>
                         <span class="photo_total"><span data-bind="text: photocount"></span> Photos</span>
                         <div data-bind="visible: photocount > 3">
-                            <span class="more_photos" data-bind="visible: galleryVisible()==0, click: $parent.toggleGallery">Show Full Gallery</span>
-                            <span class="more_photos" data-bind="visible: galleryVisible()==1, click: $parent.toggleGallery">Hide Full Gallery</span>
+                            <span class="more_photos" data-bind="visible: galleryVisible()==0, click: toggleGallery">Show Full Gallery</span>
+                            <span class="more_photos" data-bind="visible: galleryVisible()==1, click: toggleGallery">Hide Full Gallery</span>
                         </div>
                         <span class="clearfix"></span>
                     </section>
                     <!-- Story -->
                     <section class="story_body">
                         <span class="preview" data-bind="html: contentPreview"></span>
-                        <span class="main_story_body" data-bind="html: contentFull, visible: fullStoryVisible"></span>
+                        <span class="main_story_body" data-bind="html: contentFull, visible: fullStoryVisible()==1"></span>
                         <div data-bind="visible: contentFull.length > 0">
                             <span class="option_more" data-bind="visible: fullStoryVisible()==0, click: $parent.toggleFullStory">Show All</span>
                             <span class="option_more" data-bind="visible: fullStoryVisible()==1, click: $parent.toggleFullStory">Hide</span>
@@ -179,7 +179,7 @@ if ($this -> profile['Location']['country'] != '')
                     </section>
                     <!-- Comments-->
                     <section class="comments" data-bind="visible: comments().length > 0">
-                        <div class="count" data-bind="click: showComments">Show <span data-bind="text: commentCount"></span> <span data-bind="text: commentText"></span></div>
+                        <div class="count" data-bind="click: showComments">Show <span data-bind="text: commentCount()"></span> <span data-bind="text: commentText"></span></div>
                         <div class="inner-comment-container" data-bind="visible: commentsVisible()==1, foreach: comments">
                             <div class="comment">
                                 <div class="left username" data-bind="text: displayName"></div>
@@ -193,7 +193,8 @@ if ($this -> profile['Location']['country'] != '')
                             </div>
                         </div>
                     </section>
-                    <textarea class="add_comment expanding" data-bind="expandingTextarea: true, text: newComment"></textarea>
+                    <textarea class="add_comment expanding" data-bind="expandingTextarea: true, hasfocus: showAddCommentButton, value: newComment"></textarea>
+                    <input name="addcomment" type="button" class="submit_button"  value="Post" data-bind="visible: showAddCommentButton()==true || newComment().length > 0, click: addComment"/>
                 </article>
                 <hr class="article_separator"/>
            </div>
@@ -209,7 +210,7 @@ if ($this -> profile['Location']['country'] != '')
            <div class="profile_section_content" data-bind="with: newStory">
                <div class="new_story_content">
                    <label>Story:</label>
-                   <textarea class="expanding" data-bind="expandingTextarea: true, text: content"></textarea>
+                   <textarea class="expanding" data-bind="expandingTextarea: true, value: content"></textarea>
                </div>
                <input name="add_gallery" type="button" class="submit_button"  value="Add Photos" data-bind="click: $root.showAddGalleryInterface"/>
                <div class="add_photos" data-bind="visible: $root.galleryInterfaceVisible()==1">

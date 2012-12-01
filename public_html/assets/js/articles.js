@@ -26,16 +26,16 @@ function Article(data, bookmarked)	{
 	self.commentCount = ko.observable(data.Comments.length);
 	self.commentText = (self.commentComment() == 1) ? 'Comment' : 'Comments';
 	self.comments = ko.observableArray([]);
-	for(var i=0; i < self.commentCount; i++) {
+	for(var i=0; i < self.commentCount(); i++) {
 		self.comments.push(new Comment(data.Comments[i]));
 	}
-	self.addComment = function(story) {
-		result = ArticleVM.addComment(story.newComment);
+	self.addComment = function() {
+		result = ArticleVM.addComment(self.id, self.newComment);
 		if(result.id) {
+			self.newComment("");
 			self.comments.push(new Comment(result));
 			self.commentCount(self.comments().length)
 		}
-		self.newComment("");	
 	}
 	self.removeComment = function(comment) {
 		result = ArticleVM.removeComment(comment);
@@ -43,7 +43,7 @@ function Article(data, bookmarked)	{
 			self.comments.remove(comment);
 	}
 	self.commentsVisible = ko.observable(0);
-	self.newComment = ko.observable();
+	self.newComment = ko.observable("");
 	self.showComments = function() {
 		self.commentsVisible(1);
 	}

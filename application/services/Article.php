@@ -284,6 +284,7 @@ class Service_Article extends Service_Base_Foundation {
                 ->innerJoin('fa.Author a')
                 ->leftJoin('fa.Comments c')
                 ->leftJoin('c.UserProfile p')
+                ->leftJoin('fa.Followers f')
                 ->where('fa.uri = ?', $uri);
         try {
             $results = $query->fetchArray();

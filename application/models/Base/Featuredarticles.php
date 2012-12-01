@@ -177,5 +177,10 @@ abstract class Model_Base_Featuredarticles extends Doctrine_Record
         $this->hasMany('Model_Followedarticle as Followedarticles', array(
              'local' => 'id',
              'foreign' => 'article'));
+        $this->hasMany('Model_User as Followers', array(
+            'local' => 'user',
+            'foreign' => 'article',
+            'refClass' => 'Model_Followedarticle'
+        ));
     }
 }

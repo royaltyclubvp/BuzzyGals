@@ -46,6 +46,15 @@ jQuery.fn.exists = function() {
 };
 
 // Knockout Custom Bindings
+//TIMEAGO Binding
+ko.bindingHandlers.timeAgo = {
+	init: function(element) {
+		$(element).timeago();
+	},
+	update: function(element) {
+		$(element).timeago();
+	}
+};
 
 //AUTOCOMPLETE Binding
 ko.bindingHandlers.autoComplete = {

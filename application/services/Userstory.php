@@ -72,6 +72,7 @@ class Service_Userstory extends Service_Base_Foundation {
         catch (Doctrine_Exception $e) {
             return $e->getMessage();
         }
+        $new['User']['Profile'];
         return $new->toArray();
     }
     

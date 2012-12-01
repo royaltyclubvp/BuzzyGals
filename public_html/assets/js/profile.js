@@ -37,7 +37,9 @@ function Friend(data) {
 
 function Comment(data) {
 	this.id = data.id;
-	this.date = ISODateString(new Date(data.date));
+	var da = data.date.split(/[- :]/);
+	this.date = new Date(da[0], da[1]-1, da[2], da[3], da[4], da[5]);
+	this.date = ISODateString(this.date);
 	this.userPhoto = profileImagesUrl + data.User.Profile.photo;
 	this.displayName = data.User.Profile.displayName;
 	this.content = data.content;
@@ -48,7 +50,7 @@ function Story(data) {
 	self.id = data.id;
 	var da = data.date.split(/[- :]/);
 	self.date = new Date(da[0], da[1]-1, da[2], da[3], da[4], da[5]);
-	self.date = self.date.toDateString();
+	self.date = ISODateString(self.date);
 	self.contentPreview = data.content.substring(0, 50);
 	self.contentFull = data.content.substring(50);
 	self.fullStoryVisible = ko.observable(0);
@@ -70,20 +72,23 @@ function Story(data) {
 	if (self.photocount > 3) {
 		var len = self.photocount;
 		for (var i = 3; i < len; i++) {
-			self.mainPhotos[i] = userGalleryImagesUrl + data.Media.photos[i]
+			self.mainPhotos[i-3] = userGalleryImagesUrl + data.Media.photos[i]
 		}
 	}
 	self.galleryVisible = ko.observable(0);
-	self.commentCount = data.Comments.length;
-	self.commentText = (self.commentComment == 1) ? 'Comment' : 'Comments';
+	self.commentCount = ko.observable(data.Comments.length);
+	self.commentText = (self.commentCount() == 1) ? 'Comment' : 'Comments';
 	self.comments = ko.observableArray([]);
-	for(var i=0; i < self.commentCount; i++) {
+	for(var i=0; i < self.commentCount(); i++) {
 		self.comments.push(new Comment(data.Comments[i]));
 	}
-	self.addComment = function(story) {
-		result = ProfileVM.addComment(story.id, story.newComment);
-		if(result.id) //Check for Existence of ID Value On Object
+	self.addComment = function() {
+		result = ProfileVM.addComment(self.id, self.newComment);
+		if(result.id) {
+			self.newComment("");
 			self.comments.push(new Comment(result));
+			self.commentCount(self.comments().length);
+		}
 	}
 	self.removeComment = function(comment) {
 		result = ProfileVM.removeComment(comment);
@@ -91,7 +96,8 @@ function Story(data) {
 			self.comments.remove(comment);
 	}
 	self.commentsVisible = ko.observable(0);
-	self.newComment = ko.observable();
+	self.newComment = ko.observable("");
+	self.showAddCommentButton = ko.observable(false);
 	self.toggleGallery = function() {
 		(self.galleryVisible()) ? self.galleryVisible(0) : self.galleryVisible(1);
 	}
@@ -106,7 +112,7 @@ function Story(data) {
 function newStory() {
 	var self = this;
 	self.content = ko.observable("");
-	self.photos = ko.observableArray([]);
+	self.gallery = ko.observableArray([]);
 }
 
 function ResourceType(data) {
@@ -152,7 +158,24 @@ ProfileVM = new (function() {
 	self.addNewStory = function() { self.currentPage('NewStory') }
 	
 	self.addStoryPhoto = function(file) {
-		self.newStory().photos.push(file);
+		self.newStory().gallery.push(file);
+	}
+	
+	self.addStory = function() {
+		$.ajax({
+			url : "/profile/addstory",
+			data : ko.toJS(self.newStory),
+			type : "POST",
+			dataType : "text",
+			success : function(result) {
+				if (result == "1") {
+					location.hash = "AboutMe";
+					self.goToPage("MyStories");	
+				}
+				else 
+					return; //Modify for Error Handling
+			}
+		})
 	}
 	
 	self.cancelNewStory = function() {
@@ -244,10 +267,11 @@ ProfileVM = new (function() {
 				comment : comment
 			},
 			type : "POST",
+			async : false,
 			dataType : "json",
 			success : function(result) {
 				if(result.root.id)
-					success = result.root;
+					success = result.root;				
 			}
 		});
 		return success;

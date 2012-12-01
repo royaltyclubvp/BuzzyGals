@@ -240,15 +240,30 @@ class ProfileController extends Base_RestrictedController {
     
     public function addstoryAction() {
         if($this->getRequest()->isPost() & $this->_ajaxRequest) {
-            if($content = $this->getRequest()->getParam('storyContent', FALSE)) {
-                
+            $story = $this->getRequest()->getParams();
+            if(isset($story['content'])) {
+                $storyService = new Service_Userstory();
+                if(is_array($newStory = $storyService->addNew($this->_user->id, $story))) {
+                    $this->_response->appendBody('1');
+                    return;
+                }
+                else {
+                    $this->_response->appendBody('0');
+                    return;
+                }
+            }
+            else {
+                $this->_response->appendBody('0');
+                return;
             }
         }
+        else 
+            return $this->_redirect('/profile');
     }
     
     public function addstorycommentAction() {
         if($this->getRequest()->isPost() && $this->_ajaxRequest) {
-            if($comment = $this->getRequest()->getParam('comment', FALSE) && $story = $this->getRequest()->getParam('story', FALSE)) {
+            if(($comment = $this->getRequest()->getParam('comment', FALSE)) && ($story = $this->getRequest()->getParam('story', FALSE))) {
                 $storyService = new Service_Userstory();
                 if(is_array($newComment = $storyService->addNewComment($this->_user->id, $story, $comment))) {
                     $response['root'] = $newComment;
