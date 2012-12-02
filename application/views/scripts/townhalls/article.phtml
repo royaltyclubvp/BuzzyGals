@@ -1,5 +1,6 @@
 <?php
 $this->additionalBodyClasses = 'townhall';
+$this->additionalScripts = '<script src="/assets/js/articles.js"></script>';
 ?>
 
 <div id="sidebar">
@@ -23,16 +24,16 @@ $this->additionalBodyClasses = 'townhall';
             <div class="clearfix"></div>
             <h2 class="left author" data-bind="text: authorName"></h2>
             <div class="right button">
-                <span data-bind="visible: bookmarked()==0">Bookmark Article</span>
-                <span data-bind="visible: bookmarked()==1">Remove Bookmark</span>    
+                <span data-bind="visible: bookmarked()==0, click: bookmark">Bookmark Article</span>
+                <span data-bind="visible: bookmarked()==1, click: removebookmark">Remove Bookmark</span>    
             </div>
             <div class="clearfix"></div>
         </header>
         <div id="article_content">
             <p data-bind="html: content"></p>
         </div>
-        <div id="comments">
-            <div class="count">Show<span data-bind="visible: commentsVisible()==1">ing</span> <span data-bind="text: commentCount"></span> <span data-bind="text: commentText"></span></div>
+        <div id="comments" data-bind="visible: comments().length > 0">
+            <div class="count" data-bind="click: showComments">Show <span data-bind="text: commentCount()"></span> <span data-bind="text: commentText"></span></div>
             <div class="inner-comment-container" data-bind="visible: commentsVisible()==1, foreach: comments">
                 <div class="comment">
                     <div class="left username" data-bind="text: displayName"></div>
@@ -42,15 +43,16 @@ $this->additionalBodyClasses = 'townhall';
                     <div class="comment_content"><p data-bind="text: content"></p></div>
                     <div class="clearfix"></div>
                 </div>
-            </div>
-            <textarea id="add_comment" data-bind="text: newComment"></textarea>            
+            </div>         
         </div>
+        <textarea class="add_comment expanding" data-bind="expandingTextarea: true, hasfocus: showAddCommentButton, value: newComment"></textarea>
+        <input name="addcomment" type="button" class="submit_button"  value="Post" data-bind="visible: showAddCommentButton()==true || newComment().length > 0, click: addComment"/>
     </article>
 </div>
 <? $this->variablesJS = '<script type="text/javascript">
-    var articleImagesUrl="'.Zend_Registry::get("articleImagesUrl").'/";
+    var articleImagesUrl="'.Zend_Registry::get("articleImagesUrl").'";
     var profileImagesUrl="'.Zend_Registry::get('profileImagesUrl').'";
-    var article="'.Zend_Json::encode($this->article).'";
+    var article='.Zend_Json::encode($this->article).';
     var bookmarked="'.$this->bookmarked.'";
 </script>';
 echo $this->variablesJS; ?>

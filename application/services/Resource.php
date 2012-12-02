@@ -141,7 +141,7 @@ class Service_Resource extends Service_Base_Foundation {
      * @param   integer     $user           Requesting User ID
      * @return  bool | array
      */
-    public function fetchByTopic($topic, $user, $total = FALSE) {
+    public function fetchByTopic($topic, $total = FALSE) {
         $query = Doctrine_Query::create()
                 ->from('Model_Resource r')
                 ->innerJoin('r.Resourcetopics t')
@@ -194,6 +194,34 @@ class Service_Resource extends Service_Base_Foundation {
             Doctrine_Query::create()->from('Model_Resource r')
                             ->leftJoin('r.Bookmarkers b')
                             ->where('r.city = ?', $city)
+                            ->orderby('r.created DESC'),
+                     $page,
+                     $noPerPage
+        );
+        try {
+            $results['resources'] = $pager->execute();
+            $results['total'] = $pager->getNumResults();
+        }        
+        catch (Doctrine_Exception $e) {
+            return $e->getMessage();
+        }
+        $results['resources'] = $results['resources']->toArray();
+        return $results;
+    }
+    
+     /**
+     * Retrieve Resources By State
+     * 
+     * @param   integer     $city      State ID
+     * @param   integer     $page      Page Number Desired | Default = 1
+     * @param   integer     $noPerPage Results Per Page | Default = 5
+     * @return  bool | array
+     */
+    public function fetchByState($state, $page = 1, $noPerPage = 5) {
+        $pager = new Doctrine_Pager(
+            Doctrine_Query::create()->from('Model_Resource r')
+                            ->leftJoin('r.Bookmarkers b')
+                            ->where('r.state = ?', $state)
                             ->orderby('r.created DESC'),
                      $page,
                      $noPerPage

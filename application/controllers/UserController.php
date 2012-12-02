@@ -45,47 +45,78 @@ class UserController extends Base_FoundationController {
      * Process User Registration Attempt
      */
     public function registerAction() {
-        if($this->getRequest()->isPost()) {
+        if($this->getRequest()->isPost() && $this->_ajaxRequest) {
             $values = $this->getRequest()->getPost();
-            $validationerror = array();
-            //Check Username Existence
+            $errors = array();
+            $i = 0;
             if($this->service->exists('username', $values['username'])) {
-                $validationerror[] = 'user_exists';
-                $this->view->errors = $validationerror;
-                return $this->render('registrationerror');
+                $errors[$i]['name'] = 'username';
+                $errors[$i++]['text'] = 'Username exists';
+                $this->_response->appendBody(Zend_Json::encode($errors));
+                return;
             }
             //Validate Values
-            if(!Zend_Validate::is($values['username'], 'EmailAddress')) $validationerror[] = 'username';
-            if(!Zend_Validate::is($values['password'], 'StringLength', array(array('min' => 7, 'max' => 25)))) $validationerror[] = 'password';
-            if(!Zend_Validate::is($values['password_confirm'], 'Identical', array($values['password']))) $validationerror[] = 'password_mismatch';
-            if(!Zend_Validate::is($values['displayName'], 'Alnum', array(TRUE)) || !Zend_Validate::is($values['displayName'], 'StringLength', array(array('min' => 5, 'max' => 30)))) $validationerror[] = 'displayName';
-            if(!checkdate($values['dob_month'], $values['dob_day'], $values-'dob_year')) $validationerror[] = 'date';
-            if(!empty($validationerror)) {
-                $this->view->errors = $validationerror;
-                return $this->render('registrationerror');
+            if(!Zend_Validate::is($values['username'], 'EmailAddress')) {
+                $errors[$i]['name'] = 'username';
+                $errors[$i++]['text'] = 'Invalid E-Mail Format';
             }
-            //Create Date String
+            if(!Zend_Validate::is($values['password'], 'StringLength', array(array('min' => 7, 'max' => 25)))) {
+                $errors[$i]['name'] = 'password';
+                $errors[$i++]['text'] = 'Should be 7-25 characters';
+            }
+            if(!Zend_Validate::is($values['password_confirm'], 'Identical', array($values['password']))) {
+                $errors[$i]['name'] = 'password';
+                $errors[$i++]['text'] = 'Passwords do not match';
+            }
+            if(!Zend_Validate::is($values['displayName'], 'Alnum', array(TRUE)) || !Zend_Validate::is($values['displayName'], 'StringLength', array(array('min' => 5, 'max' => 30)))) {
+                $errors[$i]['name'] = 'displayName';
+                $errors[$i++]['text'] = 'Should be Alpanumeric. 5-30 characters';
+            }
+            if(!checkdate($values['dob_month'], $values['dob_day'], $values-'dob_year')) {
+                $errors[$i]['name'] = 'dob';
+                $errors[$i++]['text'] = 'DOB is invalid';
+            }
+            
+            if($i) {
+                $this->_response->appendBody(Zend_Json::encode($errors));
+                return;
+            }
+            
             $values['dob'] = $values['dob_year'].'-'.$values['dob_month'].'-'.$values['dob_day'];
             //Assign Username to Email Field
             $values['email'] = $values['username'];
             //Create Verification String
             $values['verificationcode'] = md5(uniqid(rand(), TRUE)).time();
-            $new = $this->service->addNew($values);
-            if(!$new) {
-                $this->view->error = "A problem occurred with the registration attempt. Please try again later";
-                return $this->render('registrationfailure');
-            }  
-            //Send Welcome & Verification E-Mail
-            $from = 'registration@ellefab.com';
-            $to = $new['username'];
-            $subject = 'Welcome to ElleFab';
-            $verificationLink = $this->view->baseUrl."/user/verify/v/$new[verificationcode]/u/$new[id]";
-            $body = '';
-            if(!$this->sendEmail($from, $recipients, $subject, $body)) {
-                $this->view->error = "There was a problem contacting the e-mail address you provided";
-                return $this->render('registrationemailfailure');
+            $locationService = new Service_Location();
+            if($location = $locationService->locationExists($values['cityid'], $values['stateprovid'], $values['countryid'])) {
+                $values['location'] = $location;
             }
-            return $this->render('registrationsuccess');
+            else {
+                $locationArray = array(
+                    'cityid' => $values['cityid'],
+                    'stateprovid' => $values['stateprovid'],
+                    'countryid' => $values['countryid'],
+                    'country' => $values['country'],
+                    'state' => $values['state'],
+                    'city' => $values['city']
+                );
+                if($location = $locationService->addLocation($locationArray)) {
+                    $values['location'] = $location;
+                }
+                else {
+                    $values['location'] = 1;
+                }
+            }
+            if(is_array($newAccount = $this->service->addNew($values))) {
+                $from = Zend_Registry::get('registrationEmail');
+                $to = $newAccount['username'];
+                $subject = "Welcome to BuzzyGals: Please Verify Your Account Registration";
+                $verificationLink = "http://buzzygals.com/account/verify/".$newAccount['verificationcode']."/".$newAccount['id'];
+                $body = $verificationLink;
+                $this->sendEmail($from, $to, $subject, $body);
+            }
+            $this->_response->appendBody(Zend_Json::encode($newAccount));
+            return;
         }
         else {
             return $this->_redirect('/profile');
@@ -192,5 +223,22 @@ class UserController extends Base_FoundationController {
         $auth->clearIdentity();
         if(isset($COOKIE['authPersistence'])) setcookie('authPersistence',"", time() - 3600, '/');
         return $this->_redirect('/');
+    }
+    
+    public function getlocationsAction() {
+        if($this->getRequest()->isGet() && $this->_ajaxRequest) {
+            $locationService = new Service_Location();
+            if(is_array($locations = $locationService->getLocationList('country'))) {
+                $this->_response->appendBody(Zend_Json::encode($locations));
+                return;
+            }
+            else {
+                $this->_response->appendBody('0');
+                return;
+            }        
+        }
+        else {
+            return $this->_redirect('/profile');
+        }
     }
 }

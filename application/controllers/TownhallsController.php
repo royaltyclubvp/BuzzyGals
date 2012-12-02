@@ -18,7 +18,7 @@ class TownhallsController extends Base_RestrictedController {
                     $this->view->newest = $newestArticles;
                     $this->view->popular = $articleService->fetchPopular($topic);
                     $this->view->title = ucfirst($name);
-                    $this->view->resourceCount = $resourceService->fetchByTopic($topic, TRUE);
+                    $this->view->resourceCount = $resourceService->fetchByTopic($topic, $this->_user->id, TRUE);
                     $this->view->topic = $topic;
                     return $this->render();
                 }
@@ -68,6 +68,7 @@ class TownhallsController extends Base_RestrictedController {
             $articleService = new Service_Article();
             if($article = $articleService->fetchOneByUri($uri)) {
                 $this->_helper->layout->setLayout('topmenu');
+                $this->view->menuTitle = $article['Topic']['name'];
                 $bookmarked = false;
                 if(count($article['Followers'])) {
                     foreach($article['Followers'] as $follower) {
@@ -83,11 +84,36 @@ class TownhallsController extends Base_RestrictedController {
                 return $this->render();
             }
             else {
-                return $this->render();
+                return $this->render('articlenotfound');
             }
         }
         else {
-            return $this->render();
+            return $this->_redirect('/townhalls/home');
+        }
+    }
+
+    public function addarticlecommentAction() {
+        if($this->getRequest()->isPost() && $this->_ajaxRequest) {
+            if(($article = $this->getRequest()->getParam('article', FALSE)) && ($comment = $this->getRequest()->getParam('comment', FALSE))) {
+                $articleService = new Service_Article();
+                if($newComment = $articleService->addComment($this->_user->id, $article, $comment)) {
+                    $response['root'] = $newComment;
+                    $this->_response->appendBody(Zend_Json::encode($response));
+                    return;
+                }
+                else {
+                    $this->_response->appendBody('0');
+                    return;
+                }
+            }
+            else {
+                $this->_response->appendBody('0');
+                return;
+            }
+        }
+        else {
+            $this->_response->appendBody('0');
+            return;
         }
     }
 }

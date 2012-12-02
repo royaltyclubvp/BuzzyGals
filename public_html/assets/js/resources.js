@@ -10,15 +10,15 @@ function Resource(data) {
 	self.name = data.name;
 	self.contact = data.contact;
 	self.address = data.address;
-	self.bookmarked = 0;
+	self.bookmarked = ko.observable(data.bookmarked)
 	//Check if Browsing User has Bookmarked the Resource
-	self.bookmark = function(resource) {
-		result = ResourceVM.bookmarkResource(resource);
+	self.bookmark = function() {
+		result = ResourceVM.bookmark(self.id);
 		if(result)
 			self.bookmarked(1);
 	}
-	self.removeBookmark = function(resource) {
-		result = ResourceVM.removeBookmark(resource);
+	self.removeBookmark = function() {
+		result = ResourceVM.removebookmark(self.id);
 		if(result)
 			self.bookmarked(0);
 	}
@@ -27,6 +27,9 @@ function Resource(data) {
 ResourceVM = new (function() {
 	//Data
 	var self = this;
+	
+	self.searchValue = ko.observable("");
+	self.showSearchButton = ko.observable(false);
 	
 	self.newestResources = ko.observableArray([]);
 	self.localResources = ko.observableArray([]);
@@ -74,17 +77,55 @@ ResourceVM = new (function() {
 		});
 	}
 	
+	self.bookmark = function(id) {
+		success = false;
+		$.ajax({
+			url : '/resources/bookmark',
+			async : false,
+			data : {
+				resource : id
+			},
+			type: "POST",
+			dataType : "text",
+			success: function(result) {
+				if(result = "1")
+					success = true;
+			}
+		});
+		return success;
+	}
+	
+	self.removebookmark = function(id) {
+		success = false;
+		$.ajax({
+			url : "/profile/removeresourcebookmark",
+			async: false,
+			data : {
+				resource : id
+			},
+			type : "POST",
+			dataType: "text",
+			success: function(result) {
+				if(result=="1")
+					success = true;
+			}
+		});
+		return success;
+	}
+	
+	//Add Check for Data Redundancy in Two Categories on Screen after Bookmark modification
+	
 	self.loadInitialResources = function(newestResources, localResources) {
-		var newestMapped = $.map(newestResources.articles, function(resource) {
+		var newestMapped = $.map(newestResources, function(resource) {
 			return new Resource(resource);
 		});
 		self.newestResources(newestMapped);
-		var localMapped = $.map(localResources.articles, function(resource) {
+		var localMapped = $.map(localResources.resources, function(resource) {
 			return new Resource(resource);
 		});
 		self.localResources(localMapped);
 		self.localResourceTotal(localResources.total);
-		self.localCurrentPageRetrieved(5);
+		self.localCurrentPageRetrieved(1);
 	}
 	
 	//Load Initial Data

@@ -161,6 +161,27 @@ class ProfileController extends Base_RestrictedController {
         else return $this->_redirect('/profile');
     }
     
+    public function addarticlebookmarkAction() {
+        if($this->getRequest()->isPost() && $this->_ajaxRequest) {
+            if($article = $this->getRequest()->getParam('article', FALSE)) {
+                $articleService = new Service_Article();
+                if(is_array($bookmark = $articleService->followArticle($this->_user->id, $article))) {
+                    $this->_response->appendBody('1');
+                    return;
+                }
+                else {
+                    $this->_response->appendBody('0');
+                    return;
+                }
+            }
+            else {
+                $this->_response->appendBody('0');
+                return;
+            }
+        }
+        return $this->_redirect('/profile');
+    }
+    
     public function removearticlebookmarkAction() {
         $articleService = new Service_Article();
         if($this->getRequest()->isPost() && $this->_ajaxRequest) {

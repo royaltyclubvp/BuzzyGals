@@ -14,6 +14,7 @@ class TestController extends Base_FoundationController {
         $this->resourceService = new Service_Resource();
         $this->messageService = new Service_Message();
         $this->articleService = new Service_Article();
+        $this->locationService = new Service_Location();
     }
     
     public function testuserAction() {
@@ -410,6 +411,26 @@ class TestController extends Base_FoundationController {
     public function bytesAction() {
         $upload = new File_Adapter_Uploader("image", array('jpg', 'png'), 50000);
         $this->view->result = $upload->_toBytes("128M");
+        $this->render('message');
+    }
+    
+    public function fetchnewestAction() {
+        $this->view->result = $this->resourceService->fetchNewest();
+        $this->render('message');
+    }
+    
+    public function fetchstateAction() {
+        $this->view->result = $this->resourceService->fetchByState(1);
+        $this->render('message');
+    }
+
+    public function getlocationsAction() {
+        $this->view->result = $this->locationService->getLocationList('country');
+        $this->render('message');
+    }
+    
+    public function getlocationAction() {
+        $this->view->result = $this->locationService->locationExists(2, 1, 1);
         $this->render('message');
     }
 }

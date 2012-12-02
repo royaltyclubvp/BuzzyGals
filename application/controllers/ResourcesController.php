@@ -15,6 +15,19 @@ class ResourcesController extends Base_RestrictedController {
                     $this->_helper->layout->setLayout('topmenu');
                     $resourceService = new Service_Resource();
                     if(is_array($resources = $resourceService->fetchByTopic($topic))) {
+                        for($i=0; $i < $resources['total']; $i++) {
+                            $bookmarked = false;
+                            if(count($resources['resources'][$i]['Bookmarkers'])) {
+                                foreach($resources['resources'][$i]['Bookmarkers'] as $bookmarker) {
+                                    if($this->_user->id = $bookmarker['id']) {
+                                        $bookmarked = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            $resources['resources'][$i]['bookmarked'] = $bookmarked;
+                        }
+                        $this->view->title = ucfirst($topicName);
                         $this->view->resources = $resources['resources'];
                         $this->view->resourceCount = $resources['total'];
                         return $this->render('topicResources');
@@ -33,8 +46,34 @@ class ResourcesController extends Base_RestrictedController {
         else {
             $this->_helper->layout->setLayout('topmenu');
             $resourceService = new Service_Resource();
-            $this->view->newestResources = $resourceService->fetchNewest();
-            $this->view->locationResources = $resourceService->fetchByCity($this->_user->cityid);
+            $newestResources = $resourceService->fetchNewest();
+            for($i=0; $i < count($newestResources); $i++) {
+                $bookmarked = false;
+                if(count($newestResources[$i]['Bookmarkers'])) {
+                    foreach($newestResources[$i]['Bookmarkers'] as $bookmarker) {
+                        if($this->_user->id = $bookmarker['id']) {
+                            $bookmarked = true;
+                            break;
+                        }
+                    }
+                }
+                $newestResources[$i]['bookmarked'] = $bookmarked;    
+            }
+            $this->view->newestResources = $newestResources;
+            $locationResources = $resourceService->fetchByState($this->_user->stateprovid);
+            for($i=0; $i < $locationResources['total']; $i++) {
+                $bookmarked = false;
+                if(count($locationResources['resources'][$i]['Bookmarkers'])) {
+                    foreach($locationResources['resources'][$i]['Bookmarkers'] as $bookmarker) {
+                        if($this->_user->id = $bookmarker['id']) {
+                            $bookmarked = true;
+                            break;
+                        }
+                    }
+                }
+                $locationResources['resources'][$i]['bookmarked'] = $bookmarked;    
+            }
+            $this->view->localResources = $locationResources;
             return $this->render();
         }
     }

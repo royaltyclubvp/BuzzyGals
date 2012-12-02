@@ -28,8 +28,8 @@ class Service_Location extends Service_Base_Foundation {
         $query = Doctrine_Query::create()
                 ->from('Model_Location')
                 ->where('cityid = ?', $city)
-                ->andWhere('stateprovid', $state)
-                ->andWhere('countryid', $country);
+                ->andWhere('stateprovid = ?', $state)
+                ->andWhere('countryid = ?', $country);
         try {
             $results = $query->fetchArray();
         }
@@ -71,5 +71,23 @@ class Service_Location extends Service_Base_Foundation {
             return $e->getMessage();
         }
         return $results;
+    }
+    
+    /**
+     * Add New Location 
+     * 
+     * @param   array      $locationParts      Array of Location Parts
+     * @return  bool | int
+     */
+    public function addLocation($locationParts) {
+        $newLocation = new Model_Location();
+        $newLocation->fromArray($locationParts);
+        try {
+            $newLocation->save();
+        }
+        catch (Doctrine_Exception $e) {
+            return $e->getMessage();
+        }
+        return $newLocation->id;
     }
 }

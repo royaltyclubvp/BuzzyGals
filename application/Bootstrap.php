@@ -72,6 +72,46 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         return $autoloader;
     }
 
+    protected function _initSpecialRoutes() {
+        $router = Zend_Controller_Front::getInstance()->getRouter();
+        //Logout Link
+        $router->addRoute(
+            'logout', new Zend_Controller_Router_Route_Static('logout', array(
+                'controller' => 'user',
+                'action' => 'logout'
+            ))
+        );
+        //Townhall
+        $router->addRoute(
+            'townhall', new Zend_Controller_Router_Route('townhall/:name', array(
+                'controller' => 'townhalls',
+                'action' => 'index'
+            ))
+        );
+        //Topic Resources
+        $router->addRoute(
+            'resourcetopics', new Zend_Controller_Router_Route('resources/:topic', array(
+                'controller' => 'resources',
+                'action' => 'index'
+            ))
+        );
+        //Override For Resource Bookmark
+        $router->addRoute(
+            'bookmarkResource', new Zend_Controller_Router_Route_Static('resources/bookmark', array(
+                'controller' => 'resources',
+                'action' => 'bookmark'
+            ))
+        );
+        //Townhall Articles
+        $router->addRoute(
+            'article', new Zend_Controller_Router_Route('article/:uri', array(
+                'controller' => 'townhalls',
+                'action' => 'article'
+            ))
+        );
+        
+    }
+
 	protected function _initSession() {
 		Zend_Session::start();
 	}

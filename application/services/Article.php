@@ -226,6 +226,7 @@ class Service_Article extends Service_Base_Foundation {
         catch (Doctrine_Exception $e) {
             return $e->getMessage();
         }
+        $new['User']['Profile'];
         return $new->toArray();
     }
     
@@ -282,6 +283,7 @@ class Service_Article extends Service_Base_Foundation {
         $query = Doctrine_Query::create()
                 ->from('Model_Featuredarticles fa')
                 ->innerJoin('fa.Author a')
+                ->innerJoin('fa.Topic t')
                 ->leftJoin('fa.Comments c')
                 ->leftJoin('c.UserProfile p')
                 ->leftJoin('fa.Followers f')

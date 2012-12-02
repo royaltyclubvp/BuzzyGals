@@ -116,6 +116,10 @@ input ::-webkit-input-placeholder {
 input :-moz-placeholder {
     color:    #000000;
 }
+
+.button {
+	cursor: pointer;
+}
 #single form input[type="text"], #single form input[type="password"], #single form select {
 	border-radius: 10px;
 	-moz-border-radius: 10px;
@@ -157,7 +161,7 @@ input :-moz-placeholder {
 	width: 420px;
 }
 
-#topmenutemplate .submit_button {
+.submit_button {
 	border-radius: 10px;
 	-moz-border-radius: 10px;
 	background: #cb1804 url('/assets/img/single-submit-bg.png') repeat-x  0 0;
@@ -168,7 +172,13 @@ input :-moz-placeholder {
 	font-size: 12px;
 }
 
-#topmenutemplate article.story .submit_button {
+.resources .submit_button {
+	display: inline-block;
+	margin: 0 0 0 10px;
+}
+
+article.story .submit_button,
+article.single_page_article .submit_button {
     margin: 15px 0 0;
 }
 
@@ -357,6 +367,7 @@ input :-moz-placeholder {
        width: 685px;
        float: left;
        border-right: 1px solid #CCCCCC;
+       margin: 0 0 50px;
    }
    
    #topmenutemplate #main #content.my_messages {
@@ -655,10 +666,37 @@ input :-moz-placeholder {
    		padding: 0;
    }
    
+   #topmenutemplate #main .resources #resource_search {
+   		width: 500px;
+   		height: auto;
+   		margin: 0 0 15px;
+   }
+   
+   
+   #resource_search input[name="search"] {
+   		display: inline-block;
+   		height: 30px;
+   		border-radius: 5px;
+   		-moz-border-radius: 5px;
+   		font-size: 13px;
+   		border: 1px solid #999999;
+   		padding-left: 10px;
+   		padding-right: 10px;
+   		width: 300px;
+   }
+   
    .townhall .article_listing {
    		border-top: 1px solid #000000;
    		padding: 0 0 20px;
    		margin: 0;
+   }
+   
+   .townhall.resources .article_listing {
+   		margin: 0 10px 0 0;
+   }
+   
+   .townhall.resources.topic .article_listing {
+   		padding: 10px 0 0 ;
    }
    
    .townhall .article_listing>header {
@@ -669,9 +707,18 @@ input :-moz-placeholder {
    		width: 78px;
    }
    
-   .townhall #articles .article_listing>header h2 {
+   .townhall #articles .article_listing>header h2,
+   .townhall.resources .article_listing>header h2 {
    		font-size: 9px;
    		color: #000000;
+   }
+   
+   .townhall.resources #newest_resources.article_listing>header {
+   		width: 88px;
+   }
+   
+   .townhall.resources article.resource {
+   		margin: 0 0 20px;
    }
    
    .townhall #articles .article_listing .listing_footer {
@@ -769,11 +816,13 @@ input :-moz-placeholder {
    }
    
    /**Comments*/
-   .townhall #comments #count,
+  	
+   .townhall #comments .count,
    #profile_content .story .comments .count {
    		color: #000000;
    		font-size: 10px;
    		margin: 0 0 5px;
+   		cursor: pointer;
    }
    
    .townhall #comments #count:hover,
@@ -819,8 +868,8 @@ input :-moz-placeholder {
    		font-size: 10px;
    }
    
-   .townhall #comments #add_comment,
-   #profile_content .story  .add_comment {
+   .townhall .single_page_article .add_comment,
+   #profile_content .story .add_comment {
    		width: 98%;
    		border: 1px solid #000000;
    		-webkit-box-shadow: inset 1px 1px 7px -1px rgba(0, 0, 0, .75);
@@ -1437,6 +1486,9 @@ h1, h2, h3, h4, p, button, form, input {
 	text-align: center;
 }
 
+.bold {
+	font-weight: bold;
+}
 
 
 /* =============================================================================

@@ -9,8 +9,8 @@ $this->additionalScripts = '<script src="/assets/js/townhalls.js"></script>';
     </div>
     <h1><? echo $this->title ?> Townhall</h1>
     <!-- Dynamic Article Count -->
-    <p>Articles: <span data-bind="text: articleTotal"></span></p>
-    <p>Resources: <? echo $this->resourceCount ?></p>
+    <p><span class="bold">Articles:</span> <span data-bind="text: articleTotal"></span></p>
+    <p><span class="bold">Resources:</span> <? echo $this->resourceCount ?></p>
     <!-- Search Form -->
     <div id="townhall_search">
         <form action="/townhalls/search" method="get">
@@ -75,7 +75,7 @@ $this->additionalScripts = '<script src="/assets/js/townhalls.js"></script>';
 </div>
 <? $this->variablesJS = '<script type="text/javascript">
     var articleImagesUrl="'.Zend_Registry::get("articleImagesUrl").'/";
-    var articleBaseUrl="/townhall/article/";
+    var articleBaseUrl="/article/";
     var newestArticles='.Zend_Json::encode($this->newest).';
     var popularArticles='.Zend_Json::encode($this->popular).';
     var topicid='.$this->topic.';

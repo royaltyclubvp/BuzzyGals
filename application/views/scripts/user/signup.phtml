@@ -1,4 +1,6 @@
-<? $this->pageTitle = "Registration" ?>
+<? $this->pageTitle = "Registration";
+$this->additionalScripts = '<script src="/assets/js/register.js"></script>' ?>
+
 <div id="content">
     <div id="left-column" class="left">
         <div id="logo">
@@ -6,32 +8,50 @@
         </div>
     </div>
     <div id="right-column" class="right">
-        <div id="signup">
-            <form action="register" method="post" id="signup_form">
-                <h2 class="lightred">Account Credentials</h2>
-                <input type="text" name="username" id="field_username" placeholder="E-Mail Address"/>
-                <input type="password" name="password" id="field_password" placeholder="Enter Password. Minimum 7 characters"/>
-                <input type="password" name="password_confirm" id="field_password_confirm" placeholder="Confirm Password"/>
-                <h2 class="lightred">Profile</h2>
-                <input type="text" name="fName" id="field_fName" placeholder="First Name" />
-                <input type="text" name="lName" id="field_lName" placeholder="Last Name" />
-                <input type="text" name="displayName" id="field_displayName" placeholder="Display Name. Minimum 5 characters"/>
-                <input type="radio" name="gender" value="male" /><label>Male</label>
-                <input type="radio" name="gender" value="female" /><label>Female</label>
-                <br/><br/>
-                <label>Date of Birth</label>
-                <input type="text" name="dob_month" placeholder="MM" id="field_dob_month" class="square"/>
-                <input type="text" name="dob_day" placeholder="DD" id="field_dob_day" class="square"/>
-                <input type="text" name="dob_year" placeholder="YYYY" id="field_dob_year" class="square"/>
-                <br/>
-                <label>Location</label>
-                <input type="text" name="country" class="square" id="field_country" value="" placeholder="Country"/>
-                <input type="text" name="stateprov" class="square" id="field_stateprov" value="" placeholder="State/Province"/>
-                <input type="text" name="city" class="square" id="field_city" value="" placeholder="City"/>
-      
-                <input type="submit" name="submit" value="Complete Registration"/>
-            </form>
-        </div>
+        <div data-bind="template: {name: 'signup-template', if: processState() == 'New' }"></div>
+        <div data-bind="template: {name: 'success-template, if: processState() == 'Success'}"></div>
+        
+        <!-- Templates -->
+        
+        <!-- REGISTRATION -->
+        <script type="text/html" id="signup-template">
+            <div id="signup">
+                <form id="signup_form" data-bind="with: registration">
+                    <h2 class="lightred">Account Credentials</h2>
+                    <input type="text" data-bind="value: username" id="field_username" placeholder="E-Mail Address"/>
+                    <input type="password" data-bind="value: password" id="field_password" placeholder="Enter Password. Minimum 7 characters"/>
+                    <input type="password" data-bind="value: passwordConfirm" id="field_password_confirm" placeholder="Confirm Password"/>
+                    <h2 class="lightred">Profile</h2>
+                    <input type="text" data-bind="value: fName" id="field_fName" placeholder="First Name" />
+                    <input type="text" data-bind="value: lName" id="field_lName" placeholder="Last Name" />
+                    <input type="text" data-bind="value: displayName" id="field_displayName" placeholder="Display Name. Minimum 5 characters"/>
+                    <input type="radio" name="gender" value="male" /><label>Male</label>
+                    <input type="radio" name="gender" value="female" /><label>Female</label>
+                    <br/><br/>
+                    <label>Date of Birth</label>
+                    <input type="text" data-bind="value: dob_month" placeholder="MM" id="field_dob_month" class="square"/>
+                    <input type="text" data-bind="value: dob_day" placeholder="DD" id="field_dob_day" class="square"/>
+                    <input type="text" data-bind="value: dob_year" placeholder="YYYY" id="field_dob_year" class="square"/>
+                    <br/>
+                    <label>Location</label>
+                    <input type="text" class="square" id="field_country" value="" placeholder="Country" data-bind="autoComplete: $root.countryList, value: countryid, optionsText: 'name', optionsValue: 'id', autoCompleteOptions: {autoFocus: false}"/>
+                    <input type="text" class="square" id="field_stateprov" value="" placeholder="State/Province" data-bind="autoComplete: $root.stateList, value: stateprpovid, optionsText: 'name', optionsValue: 'id', autoCompleteOptions: {autoFocus: false}"/>
+                    <input type="text" class="square" id="field_city" value="" placeholder="City" data-bind="autoComplete: $root.cityList, value: cityid, optionsText: 'name', optionsValue: 'id', autoCompleteOptions: {autoFocus: false}"/>
+                    
+                    <input type="button" class="submit_button" value="Complete Registration" data-bind="click: $root.submitRegistration"/>
+                </form>
+            </div>
+        </script>
+        
+        <!-- REGISTRATION SUCCESS -->
+        <script type="text/html" id="success-template">
+            <div class="message">
+                <h2>Registration Complete!</h2>
+                <p>You have successfully created your account for BuzzyGals. A confirmation e-mail has been sent to the address provided. Please check this message
+                    and follow the instructions in order to verify your account. This is necessary before you can access your account.</p>
+            </div>
+        </script>
+        
     </div>
     <div class="clearfix"></div>
 </div>
