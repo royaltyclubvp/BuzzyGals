@@ -50,31 +50,31 @@ class UserController extends Base_FoundationController {
             $errors = array();
             $i = 0;
             if($this->service->exists('username', $values['username'])) {
-                $errors[$i]['name'] = 'username';
-                $errors[$i++]['text'] = 'Username exists';
+                $errors['root'][$i]['name'] = 'username';
+                $errors['root'][$i++]['text'] = 'Username exists';
                 $this->_response->appendBody(Zend_Json::encode($errors));
                 return;
             }
             //Validate Values
             if(!Zend_Validate::is($values['username'], 'EmailAddress')) {
-                $errors[$i]['name'] = 'username';
-                $errors[$i++]['text'] = 'Invalid E-Mail Format';
+                $errors['root'][$i]['name'] = 'username';
+                $errors['root'][$i++]['text'] = 'Invalid E-Mail Format';
             }
             if(!Zend_Validate::is($values['password'], 'StringLength', array(array('min' => 7, 'max' => 25)))) {
-                $errors[$i]['name'] = 'password';
-                $errors[$i++]['text'] = 'Should be 7-25 characters';
+                $errors['root'][$i]['name'] = 'password';
+                $errors['root'][$i++]['text'] = 'Should be 7-25 characters';
             }
-            if(!Zend_Validate::is($values['password_confirm'], 'Identical', array($values['password']))) {
-                $errors[$i]['name'] = 'password';
-                $errors[$i++]['text'] = 'Passwords do not match';
+            if(!Zend_Validate::is($values['passwordConfirm'], 'Identical', array($values['password']))) {
+                $errors['root'][$i]['name'] = 'password';
+                $errors['root'][$i++]['text'] = 'Passwords do not match';
             }
             if(!Zend_Validate::is($values['displayName'], 'Alnum', array(TRUE)) || !Zend_Validate::is($values['displayName'], 'StringLength', array(array('min' => 5, 'max' => 30)))) {
-                $errors[$i]['name'] = 'displayName';
-                $errors[$i++]['text'] = 'Should be Alpanumeric. 5-30 characters';
+                $errors['root'][$i]['name'] = 'displayName';
+                $errors['root'][$i++]['text'] = 'Should be Alpanumeric. 5-30 characters';
             }
-            if(!checkdate($values['dob_month'], $values['dob_day'], $values-'dob_year')) {
-                $errors[$i]['name'] = 'dob';
-                $errors[$i++]['text'] = 'DOB is invalid';
+            if(!checkdate($values['dob_month'], $values['dob_day'], $values['dob_year'])) {
+                $errors['root'][$i]['name'] = 'dob';
+                $errors['root'][$i++]['text'] = 'DOB is invalid';
             }
             
             if($i) {
@@ -97,7 +97,7 @@ class UserController extends Base_FoundationController {
                     'stateprovid' => $values['stateprovid'],
                     'countryid' => $values['countryid'],
                     'country' => $values['country'],
-                    'state' => $values['state'],
+                    'stateprov' => $values['stateprov'],
                     'city' => $values['city']
                 );
                 if($location = $locationService->addLocation($locationArray)) {
@@ -107,6 +107,8 @@ class UserController extends Base_FoundationController {
                     $values['location'] = 1;
                 }
             }
+            //Set UserGroup
+            $values['usergroup'] = 1;
             if(is_array($newAccount = $this->service->addNew($values))) {
                 $from = Zend_Registry::get('registrationEmail');
                 $to = $newAccount['username'];
@@ -115,7 +117,8 @@ class UserController extends Base_FoundationController {
                 $body = $verificationLink;
                 $this->sendEmail($from, $to, $subject, $body);
             }
-            $this->_response->appendBody(Zend_Json::encode($newAccount));
+            $response['root'] = $newAccount;
+            $this->_response->appendBody(Zend_Json::encode($response));
             return;
         }
         else {

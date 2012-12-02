@@ -32,7 +32,7 @@ class Service_User extends Service_Base_Foundation {
            $new->save();
        }
        catch (Doctrine_Exception $e) {
-           return FALSE;
+           return $e->getMessage();
        }
        return $new->toArray();
    }

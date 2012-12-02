@@ -74,6 +74,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     protected function _initSpecialRoutes() {
         $router = Zend_Controller_Front::getInstance()->getRouter();
+        //Register Link
+        $router->addRoute(
+            'signup', new Zend_Controller_Router_Route_Static('signup', array(
+                'controller' => 'user',
+                'action' => 'signup'
+            ))
+        );
         //Logout Link
         $router->addRoute(
             'logout', new Zend_Controller_Router_Route_Static('logout', array(
@@ -138,5 +145,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		Zend_Registry::set('articlesCachePath', $Config['articlesCachePath']);
         Zend_Registry::set('topicsCachePath', $Config['topicsCachePath']);
 	}
+    
+    protected function _initEmailSettings() {
+        $Config = $this->getOption('email');
+        Zend_Registry::set('registrationEmail', $Config['registrationEmail']);
+    }
 }
 

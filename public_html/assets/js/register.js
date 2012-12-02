@@ -61,6 +61,32 @@ RegistrationVM = new (function() {
 	
 	self.registration = ko.observable(new registration());
 	
+	self.usernameError = ko.observable("");
+	
+	//Subscriptions
+	self.registration().countryid.subscribe(function(newValue) {
+		var selected = ko.utils.arrayFirst(self.countryList(), function(country) {
+			if(country.id==newValue) return true;
+		});
+		self.registration().country(selected.name);
+		self.stateList(selected.states());
+	});
+	
+	self.registration().stateprovid.subscribe(function(newValue) {
+		var selected = ko.utils.arrayFirst(self.stateList(), function(state) {
+			if(state.id==newValue) return true;
+		});
+		self.registration().stateprov(selected.name);
+		self.cityList(selected.cities());
+	});
+	
+	self.registration().cityid.subscribe(function(newValue) {
+		var selected = ko.utils.arrayFirst(self.cityList(), function(city) {
+			if(city.id==newValue) return true;
+		});
+		self.registration().city(selected.name);
+	})
+	
 	//Behaviours
 	self.loadLocations = function() {
 		$.ajax({
@@ -69,8 +95,8 @@ RegistrationVM = new (function() {
 			dataType : "json",
 			success : function(result) {
 				if(result.length) {
-					var mappedLocations = $.map(result, function(country) {
-						return new country(country);
+					var mappedLocations = $.map(result, function(location) {
+						return new country(location);
 					});
 					self.countryList(mappedLocations);
 				}
@@ -85,11 +111,20 @@ RegistrationVM = new (function() {
 			type : "POST",
 			dataType : "json",
 			success : function(result) {
-				if(result.id) {
+				if(result.root.id) {
 					self.processState("Success");
+				}
+				else {
+					self.processErrors(result.root);
 				}
 			}
 		});
+	}
+	
+	self.processErrors = function(errors) {
+		for(var i=0; i < errors.length; i++) {
+			
+		}
 	}
 	
 	//Load Locations By Default
