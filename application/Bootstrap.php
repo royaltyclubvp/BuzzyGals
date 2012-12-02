@@ -66,7 +66,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 	                'crypto' => array(
 	                    'path' => 'Cryptography/',
 	                    'namespace' => 'Cryptography_'
-	                )
+	                ),
+	                'image' => array(
+                        'path' => 'Polycast/',
+                        'namespace' => 'Polycast_'
+                    )
 	            )
 	        ));
         return $autoloader;

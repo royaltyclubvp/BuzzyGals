@@ -1,0 +1,20 @@
+<?php
+$this->additionalBodyClasses = 'resources townhall';
+$this->menuTitle = 'Townhall Center';
+?>
+<div id="townhalls" class="townhall_listing">
+    <? foreach($this->topics as $topic): ?>
+        <article class="townhall_item">
+            <div class="townhall_icon left">
+                <a href="/townhall/<? echo strtolower(preg_replace('/\s+/', '', $topic['name'])); ?>">
+                    <img src="/assets/img/townhall-large.png" width="90" height="93"/>
+                </a>
+            </div>
+            <div class="townhall_details right">
+                <h2 class="lightred"><a href="/townhall/<? echo strtolower(preg_replace('/\s+/', '', $topic['name'])); ?>"><? echo $topic['name']; ?></a></h2>
+                <p><? echo $topic['description']; ?></p>
+            </div> 
+            <div class="clearfix"></div>
+        </article>
+    <? endforeach ?>
+</div>

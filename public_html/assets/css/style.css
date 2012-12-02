@@ -212,6 +212,7 @@ article.single_page_article .submit_button {
     width: 770px;
     margin: 0 auto;
     background: none;
+    z-index: 100;
 }
 
     /*Top Bar Fixed Menu*/
@@ -683,6 +684,28 @@ article.single_page_article .submit_button {
    		padding-left: 10px;
    		padding-right: 10px;
    		width: 300px;
+   }
+   
+   .townhall_listing .townhall_item {
+   		margin: 0 0 20px;
+   }
+   
+   .townhall_listing .townhall_item .townhall_icon {
+   		width: 93px;
+   }
+   
+   .townhall_listing .townhall_item .townhall_details {
+   		padding: 0 15px;
+   		width: 560px;
+   		text-align: left;
+   }
+   
+   .townhall_listing .townhall_item .townhall_details h2 {
+   		font-size: 18px;
+   }
+   
+   .townhall_listing .townhall_item .townhall_details p {
+   		font-size: 14px;
    }
    
    .townhall .article_listing {

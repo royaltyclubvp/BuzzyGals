@@ -212,7 +212,7 @@ if ($this -> profile['Location']['country'] != '')
                    <label>Story:</label>
                    <textarea class="expanding" data-bind="expandingTextarea: true, value: content"></textarea>
                </div>
-               <input name="add_gallery" type="button" class="submit_button"  value="Add Photos" data-bind="click: $root.showAddGalleryInterface"/>
+               <input name="add_gallery" type="button" class="submit_button"  value="Add Photos" data-bind="click: $root.showAddGalleryInterface, visible: $root.galleryInterfaceVisible()==0"/>
                <div class="add_photos" data-bind="visible: $root.galleryInterfaceVisible()==1">
                    <div class="upload_container unstyled" data-bind="uploader: true"></div>
                </div>
