@@ -10,6 +10,7 @@ function Comment(data) {
 	this.userPhoto = profileImagesUrl + data.UserProfile.photo;
 	this.displayName = data.UserProfile.displayName;
 	this.content = data.content;
+	this.owned = (data.user == userId) ? true : false;
 }
 
 function newComment(data) {
@@ -20,6 +21,7 @@ function newComment(data) {
 	this.userPhoto = profileImagesUrl + data.User.Profile.photo;
 	this.displayName = data.User.Profile.displayName;
 	this.content = data.content;
+	this.owned = (data.user == userId) ? true : false;
 }
 
 function Article(data, bookmarked)	{
@@ -45,13 +47,16 @@ function Article(data, bookmarked)	{
 		if(result.id) {
 			self.newComment("");
 			self.comments.push(new newComment(result));
-			self.commentCount(self.comments().length)
+			self.commentCount(self.comments().length);
+			setTimeout(ArticleVM.timeAgo, 2000);
 		}
 	}
 	self.removeComment = function(comment) {
-		result = ArticleVM.removeComment(comment.id);
-		if(result)
+		result = ArticleVM.removeComment(self.id, comment.id);
+		if(result) {
 			self.comments.remove(comment);
+			self.commentCount(self.comments().length);
+		}
 	}
 	self.bookmark = function() {
 		result = ArticleVM.bookmark(self.id);
@@ -79,7 +84,11 @@ ArticleVM = new (function() {
 	self.article = ko.observable();
 	
 	//Behaviours
-	//
+	
+	self.timeAgo = function() {
+		$('time.date').timeago();
+	}
+	
 	self.addComment = function(articleid, comment) {
 		success = "";
 		$.ajax({
@@ -94,6 +103,26 @@ ArticleVM = new (function() {
 			success : function(result) {
 				if(result.root.id)
 					success = result.root;
+			}
+		});
+		return success;
+	}
+	
+	self.removeComment = function(articleid, commentid) {
+		success = false,
+		$.ajax({
+			url : "/townhalls/deletestoryownedcomment",
+			data : {
+				article : articleid,
+				comment : commentid
+			},
+			type : "POST",
+			async : false,
+			dataType : 'text',
+			success : function(result) {
+				if(result ==  "1") {
+					success = true;
+				}
 			}
 		});
 		return success;

@@ -81,6 +81,7 @@ class TownhallsController extends Base_RestrictedController {
                 $this->view->bookmarked = $bookmarked;
                 unset($article['Followers']);
                 $this->view->article = $article;
+                $this->view->userId = $this->_user->id;
                 return $this->render();
             }
             else {
@@ -99,6 +100,30 @@ class TownhallsController extends Base_RestrictedController {
                 if($newComment = $articleService->addComment($this->_user->id, $article, $comment)) {
                     $response['root'] = $newComment;
                     $this->_response->appendBody(Zend_Json::encode($response));
+                    return;
+                }
+                else {
+                    $this->_response->appendBody('0');
+                    return;
+                }
+            }
+            else {
+                $this->_response->appendBody('0');
+                return;
+            }
+        }
+        else {
+            $this->_response->appendBody('0');
+            return;
+        }
+    }
+    
+    public function deletestoryownedcommentAction() {
+        if($this->getRequest()->isPost() && $this->_ajaxRequest) {
+            if(($article = $this->getRequest()->getParam('article', FALSE)) && ($comment = $this->getRequest()->getParam('comment', FALSE))) {
+                $articleService = new Service_Article();
+                if($result = $articleService->deleteComment($this->_user->id, $comment, $article)) {
+                    $this->_response->appendBody($result);
                     return;
                 }
                 else {

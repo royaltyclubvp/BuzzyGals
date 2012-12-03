@@ -2,6 +2,7 @@
 $this -> menuTitle = 'My Profile';
 $this -> additionalBodyClasses = 'my_profile';
 $this -> additionalScripts = '
+    <script src="/assets/js/jquery.imgareaselect-0.3.min.js"></script>
     <script src="/assets/js/uploader/header.js"></script>
     <script src="/assets/js/uploader/util.js"></script>
     <script src="/assets/js/uploader/button.js"></script>
@@ -14,6 +15,7 @@ $this -> additionalScripts = '
     <script src="/assets/js/profile.js"></script>';
 $this->profileImagesUrl = Zend_Registry::get('profileImagesUrl');
 $this->userGalleryImagesUrl = Zend_Registry::get('userGalleryImagesUrl');
+$this->userGalleryThumbsUrl = Zend_Registry::get('userGalleryThumbsUrl');
 $this -> profileLocation = '';
 if ($this -> profile['Location']['city'] != '')
     $this -> profileLocation .= $this -> profile['Location']['city'] . ', ';
@@ -24,7 +26,11 @@ if ($this -> profile['Location']['country'] != '')
 ?>
 <div id="photo">
     <div id="profile_photo">
-        <img src="<? echo $this->profileImagesUrl.$this->profile['photo'] ?>" alt="Profile Image - <? echo $this->profile['displayName'] ?>" />
+        <img src="<? echo $this->profileImagesUrl.$this->profile['photo'] ?>" alt="Profile Image - <? echo $this->profile['displayName'] ?> height="250" width="200" />
+        <input type="button" class="submit_button change_photo" value="Change Photo" data-bind="click: $root.showProfileUpload, visible: $root.profileUploadVisible()==0"/>
+    </div>
+    <div class="change_profile_photo" data-bind="visible: $root.profileUploadVisible()==1">
+        <div class="profile_upload_container unstyled" data-bind="profileUploader: true"></div>
     </div>
     <div id="display_name">
         <h2><? echo $this->profile['displayName'] ?></h2>
@@ -47,6 +53,7 @@ if ($this -> profile['Location']['country'] != '')
         <div data-bind="template: { name: 'stories-template', if: currentPage() == 'MyStories'}"></div>
         <div data-bind="template: { name: 'resources-template', if: currentPage() == 'MyResources' }"></div>
         <div data-bind="template: { name: 'new-story-template', if: currentPage() == 'NewStory' }"></div>
+        <div data-bind="template: { name: 'crop-profile-image-template', if: currentPage() == 'CropProfileImage' }"></div>
         
         <!-- Templates -->
         
@@ -150,14 +157,14 @@ if ($this -> profile['Location']['country'] != '')
                     <section class="photogallery" data-bind="if: galleryAvailable">
                         <!-- Preview Photos -->
                         <div class="preview" data-bind="foreach: previewPhotos">
-                            <a class="thumb modal" data-bind="attr: { 'rel': $parent.id , 'href': $data }, galleryModal: true">
-                                <img data-bind="attr: { 'src': $data }" alt="" width="140" height="140" />
+                            <a class="thumb modal" data-bind="attr: { 'rel': $parent.id , 'href': full }, galleryModal: true">
+                                <img data-bind="attr: { 'src': thumbnail }" alt="" width="140" height="140" />
                             </a>
                         </div>
                         <!-- Main Gallery -->
                         <div class="main_gallery" data-bind="foreach: mainPhotos, visible: galleryVisible()==1">
-                            <a class="thumb modal" data-bind="attr: { 'rel': $parent.id , 'href': $data }, galleryModal: true">
-                                <img data-bind="attr: { 'src': $data }" alt="" width="140" height="140" />
+                            <a class="thumb modal" data-bind="attr: { 'rel': $parent.id , 'href': full }, galleryModal: true">
+                                <img data-bind="attr: { 'src': thumbnail }" alt="" width="140" height="140" />
                             </a>
                         </div>
                         <span class="photo_total"><span data-bind="text: photocount"></span> Photos</span>
@@ -169,11 +176,11 @@ if ($this -> profile['Location']['country'] != '')
                     </section>
                     <!-- Story -->
                     <section class="story_body">
-                        <span class="preview" data-bind="html: contentPreview"></span>
+                        <span class="preview" data-bind="html: contentPreview"></span><span data-bind="visible: fullStoryVisible()==0 && contentFull.length > 0">...</span>
                         <span class="main_story_body" data-bind="html: contentFull, visible: fullStoryVisible()==1"></span>
                         <div data-bind="visible: contentFull.length > 0">
-                            <span class="option_more" data-bind="visible: fullStoryVisible()==0, click: $parent.toggleFullStory">Show All</span>
-                            <span class="option_more" data-bind="visible: fullStoryVisible()==1, click: $parent.toggleFullStory">Hide</span>
+                            <span class="option_more" data-bind="visible: fullStoryVisible()==0, click: toggleFullStory">Show All</span>
+                            <span class="option_more" data-bind="visible: fullStoryVisible()==1, click: toggleFullStory">Hide</span>
                         </div>
                         <div class="clearfix"></div>
                     </section>
@@ -189,6 +196,7 @@ if ($this -> profile['Location']['country'] != '')
                                 <div class="comment_content">
                                        <p data-bind="text: content"></p>
                                 </div>
+                                <div class="right delete" data-bind="click: $parent.removeComment">Delete?</div>
                                 <div class="clearfix"></div>
                             </div>
                         </div>
@@ -210,13 +218,36 @@ if ($this -> profile['Location']['country'] != '')
            <div class="profile_section_content" data-bind="with: newStory">
                <div class="new_story_content">
                    <label>Story:</label>
-                   <textarea class="expanding" data-bind="expandingTextarea: true, value: content"></textarea>
+                   <textarea class="expanding story_edit" data-bind="expandingTextarea: true, value: content" placeholder="What's Your Story?"></textarea>
                </div>
                <input name="add_gallery" type="button" class="submit_button"  value="Add Photos" data-bind="click: $root.showAddGalleryInterface, visible: $root.galleryInterfaceVisible()==0"/>
                <div class="add_photos" data-bind="visible: $root.galleryInterfaceVisible()==1">
                    <div class="upload_container unstyled" data-bind="uploader: true"></div>
                </div>
                <input name="add_story" type="button" class="submit_button" value="Add Story" data-bind="click: $root.addStory"/>
+           </div>
+        </script>
+        
+        <!-- CROP PROFILE IMAGE -->
+        <script type="text/html" id="crop-profile-image-template">
+            <div class="profile_section_title" id="crop-profile-image">
+                <div class="left section_title">Please Crop Your Uploaded Image</div>
+                <div class="clearfix"></div>
+           </div>
+           <div class="prifle_section_content" data-bind="with: newProfileImage">
+               <div class="full_image">
+                   <img data-bind="attr: { 'src': fullSizeImage }, imageCrop: true" style="max-width: 450px;"  class="upload_fullsize"/>
+               </div>
+               <div class="thumb_image">
+                   <img data-bind="attr: { 'src': fullSizeImage }" style="max-width: 450px;"/>
+                   <input type="hidden" id="x1" data-bind="value: xCoord"/>
+                   <input type="hidden" id="x2" data-bind="value: x2Coord"/>
+                   <input type="hidden" id="y1" data-bind="value: yCoord"/>
+                   <input type="hidden" id="y2" data-bind="value: y2Coord"/>
+                   <input type="hidden" id="w" data-bind="value: width"/>
+                   <input type="hidden" id="h" data-bind="value: height"/>
+               </div>
+               <input type="button" value="Save Image" data-bind="click: $root.submitImageCrop" class="submit_button" />
            </div>
         </script>
         
@@ -230,14 +261,14 @@ if ($this -> profile['Location']['country'] != '')
                 <section class="resource_topic" data-bind="visible: resources().length > 0">
                     <div class="resource_topic_header">
                         <div class="resource_topic_name left" data-bind="text: name"></div>
-                        <div class="minimize right"><img src="/assets/img/minimize-red.png" alt="Minimise"/></div>
+                        <div class="minimize right" data-bind="click: toggleVisibility"><img src="/assets/img/minimize-red.png" alt="Minimise"/></div>
                         <div class="clearfix"></div>
                     </div>
-                    <div class="resources" data-bind="foreach: resources">
+                    <div class="resources" data-bind="foreach: resources, visible: listVisible()==1">
                         <article class="resource">
                             <div class="resource_header">
                                 <div class="resource_title left" data-bind="text: name"></div>
-                                <div class="resource_options right"><span data-bind="click: $root.viewResource">View</a> &lt;&gt; <span data-bind="click: $parent.deleteResource">Delete</span></div>
+                                <div class="resource_options right"><span data-bind="click: $parent.deleteResource">Delete</span></div>
                                 <div class="clearfix"></div>    
                             </div>
                             <div class="resource_content">
@@ -257,6 +288,7 @@ if ($this -> profile['Location']['country'] != '')
 <? $this->variablesJS = '<script type="text/javascript">
     var profileImagesUrl="'.$this->profileImagesUrl.'";
     var userGalleryImagesUrl="'.$this->userGalleryImagesUrl.'";
+    var userGalleryThumbsUrl="'.$this->userGalleryThumbsUrl.'";
     var townhallBaseUrl="/townhall/";
     var friendProfileBaseUrl="/profile/";
     var articleBaseUrl="/featured/";

@@ -39,9 +39,5 @@ class File_Adapter_Image_Filter {
     
     public function generateThumb($original) {
         $output = $this->_filter->filter($original);
-        header($this->_imageType);
-        $fh = fopen($output, 'r');
-        fpassthru($fh);
-        fclose($fh);
     }
 }

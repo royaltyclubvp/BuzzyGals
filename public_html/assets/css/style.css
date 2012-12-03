@@ -147,7 +147,8 @@ input :-moz-placeholder {
 
 #topmenutemplate .my_messages .new-message .fields input[type="text"],
 #topmenutemplate .my_messages .new-message .fields textarea,
-#topmenutemplate #profile_content .profile_section_content textarea.profile_edit {
+#topmenutemplate #profile_content .profile_section_content textarea.profile_edit,
+#topmenutemplate #profile_content .profile_section_content textarea.story_edit {
 	border-radius: 10px;
 	-moz-border-radius: 10px;
 	border: 1px solid #d8d8d8;
@@ -206,6 +207,7 @@ article.single_page_article .submit_button {
     width: 100%;
     position: fixed;
     top: 0;
+    z-index: 100;
 }
 
 #topmenutemplate #body_header #top-menu {
@@ -903,6 +905,20 @@ article.single_page_article .submit_button {
         font-size: 12px;
    }
    
+   #profile_content .story .comments .comment .delete,
+   .townhall #comments .comment .delete {
+   		font-size: 10px;
+   		color: red;
+   		text-align: right;
+   		display: none;
+   		cursor: pointer;
+   }
+   
+   #profile_content .story .comments .comment:hover .delete,
+   .townhall #comments .comment:hover .delete {
+   		display: inline-block;
+   }
+   
    /* Profile */
    
    #topmenutemplate #main #content #photo {
@@ -917,8 +933,17 @@ article.single_page_article .submit_button {
    }
    
    #topmenutemplate #main #content #photo #profile_photo {
-       height: 250px;
+       height: auto;
        margin: 0 0 12px;
+   }
+   
+   #topmenutemplate #main #content #photo #profile_photo .change_photo {
+   		display: none;
+   		margin: 10px 0 0;
+   }
+   
+   #topmenutemplate #main #content #photo #profile_photo:hover .change_photo {
+   		display: block;
    }
    
    #topmenutemplate #main #content #photo #profile_photo img {
@@ -1097,11 +1122,20 @@ article.single_page_article .submit_button {
      
      #profile_content .story .details {
      		margin: 0 0 5px;
+     		text-align: right;
      }
      
      #profile_content .story .details time.date {
      		font-size: 9px;
      		color: #363434;
+     }
+     
+     .add_photos .upload_container .images_uploaded {
+     		margin: 10px 0 0;
+     }
+     
+     .add_photos .upload_container input.submit_button {
+     		margin-bottom: 15px;
      }
      
      #profile_content .story .photogallery .thumb,
@@ -1211,15 +1245,23 @@ article.single_page_article .submit_button {
    			display: block;
    	}
     
-    #profile_content .new_story_content textarea {
+    #topmenutemplate #profile_content .profile_section_content .new_story_content textarea.story_edit {
     	width: 420px;
+    	font-size: 12px;
     }
     
     #profile_content .add_photos .drop_zone {
-    	width: 420px;
-    	height: 250px;
-    	background: #F61A01;
-    	margin: 0 0 10px;
+    	width: 450px;
+    	height: 170px;
+    	background: #FFFFFF;
+    	margin: 30px 0;
+    	border: 1px dotted red;
+    	padding: 80px 0 0;
+    	text-align: center;
+    }
+    
+    .no-draganddrop .drop_zone {
+    	display: none;
     }
     
     /**My Resources**/

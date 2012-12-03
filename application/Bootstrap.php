@@ -115,7 +115,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         );
         //Townhall Articles
         $router->addRoute(
-            'article', new Zend_Controller_Router_Route('article/:uri', array(
+            'article', new Zend_Controller_Router_Route('featured/:uri', array(
                 'controller' => 'townhalls',
                 'action' => 'article'
             ))
@@ -137,11 +137,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Zend_Registry::set('basepath', $Config['basePath']);
         Zend_Registry::set('userImagesPath', $Config['basePath'].$Config['userImagesPath']);
         Zend_Registry::set('userGalleryImagesPath', $Config['basePath'].$Config['userGalleryImagesPath']);
+        Zend_Registry::set('userGalleryThumbsPath', $Config['basePath'].$Config['userGalleryThumbsPath']);
         Zend_Registry::set('profileImagesPath', Zend_Registry::get('userImagesPath').$Config['profileImagesDir']);
         Zend_Registry::set('userImagesUrl', $Config['userImagesUrl']);
         Zend_Registry::set('profileImagesUrl', $Config['profileImagesUrl']);
         Zend_Registry::set('articleImagesUrl', $Config['articleImagesUrl']);
         Zend_Registry::set('userGalleryImagesUrl', $Config['userGalleryImagesUrl']);
+        Zend_Registry::set('userGalleryThumbsUrl', $Config['userGalleryThumbsUrl']);
     }
 	
 	protected function _initCachepaths() {

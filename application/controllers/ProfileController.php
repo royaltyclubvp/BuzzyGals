@@ -235,6 +235,40 @@ class ProfileController extends Base_RestrictedController {
             $uploader = new File_Adapter_Uploader('image', array('jpg', 'jpeg'), '5M');
             if(($settings = $uploader->checkServerSettings()) === true) {
                 $result = $uploader->handleUpload(Zend_Registry::get('userGalleryImagesPath'), $this->_user->id);
+                if(isset($result['filename'])) {
+                    $thumbGenerator = new File_Adapter_Image_Filter(Zend_Registry::get('userGalleryThumbsPath'));
+                    $thumbGenerator->setConfig(140, 140, 90, 'jpeg');
+                    $thumbGenerator->generateThumb(Zend_Registry::get('userGalleryImagesPath').$result['filename']);   
+                }
+                if($this->_ajaxRequest) {
+                    $this->_response->appendBody(Zend_Json::encode($result));
+                    return;
+                }
+                else {
+                    $this->view->uploadresponse = $result;
+                    return $this->render('uploadstoryphotos');
+                }
+            }
+            else {
+                if($this->_ajaxRequest) {
+                    $this->_response->appendBody(Zend_Json::encode($settings));
+                    return;
+                }
+                else {
+                    $this->view->uploadresponse = $settings;
+                    return $this->render('uploadstoryphotos');
+                }
+            }
+        }
+        else 
+            return $this->_redirect('/profile'); 
+    }
+
+    public function uploadprofilephotoAction() {
+        if($this->getRequest()->isPost()) {
+            $uploader = new File_Adapter_Uploader('image', array('jpg', 'jpeg'), '5M');
+            if(($settings = $uploader->checkServerSettings()) === true) {
+                $result = $uploader->handleUpload(Zend_Registry::get('profileImagesPath'), $this->_user->id);                
                 if($this->_ajaxRequest) {
                     $this->_response->appendBody(Zend_Json::encode($result));
                     return;
@@ -304,11 +338,11 @@ class ProfileController extends Base_RestrictedController {
         else return $this->_redirect('/profile');
     }
     
-    public function deletestorycommentAction() {
+    public function deleteownedstorycommentAction() {
         if($this->getRequest()->isPost() && $this->_ajaxRequest) {
             if($commentid = $this->getRequest()->getParam('comment', FALSE)) {
                 $storyService = new Service_Userstory();
-                if($storyService->deleteStoryComment($commentid, $this->_user->id)) {
+                if($storyService->deleteOwnedStoryComment($commentid)) {
                     $this->_response->appendBody('1');
                     return;
                 }
@@ -324,6 +358,8 @@ class ProfileController extends Base_RestrictedController {
         }
         else return $this->_redirect('/profile');
     }
+    
+    
     
     public function loadmorestoriesAction() {
         if($this->getRequest()->isGet() && $this->_ajaxRequest) {

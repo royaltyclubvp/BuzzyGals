@@ -73,10 +73,8 @@ class Polycast_Filter_ImageSize_PathBuilder_Standard implements Polycast_Filter_
                 $ext = ".$ext";
         } 
         
-        return sprintf('%s-%sx%s%s',
+        return sprintf('%s%s',
             $basename,
-            $this->_config->getWidth(),
-            $this->_config->getHeight(),
             $ext 
         );
     }

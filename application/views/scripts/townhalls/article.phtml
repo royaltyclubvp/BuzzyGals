@@ -41,6 +41,7 @@ $this->additionalScripts = '<script src="/assets/js/articles.js"></script>';
                     <div class="clearfix"></div>
                     <img data-bind="attr: { 'src': userPhoto, 'alt': displayName }" width="35" height="30"/>
                     <div class="comment_content"><p data-bind="text: content"></p></div>
+                    <div class="right delete" data-bind="if: owned, click: $parent.removeComment">Delete?</div>
                     <div class="clearfix"></div>
                 </div>
             </div>         
@@ -54,5 +55,6 @@ $this->additionalScripts = '<script src="/assets/js/articles.js"></script>';
     var profileImagesUrl="'.Zend_Registry::get('profileImagesUrl').'";
     var article='.Zend_Json::encode($this->article).';
     var bookmarked="'.$this->bookmarked.'";
+    var userId='.$this->userId.';
 </script>';
 echo $this->variablesJS; ?>

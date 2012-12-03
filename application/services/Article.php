@@ -235,12 +235,14 @@ class Service_Article extends Service_Base_Foundation {
      * 
      * @param   integer     $user       User ID
      * @param   integer     $comment    Comment ID
+     * @param   integer     $article    Article ID
      * @return  bool
      */
-    public function deleteComment($user, $comment) {
+    public function deleteComment($user, $comment, $article) {
         $query = Doctrine_Query::create()->delete('Model_Articlecomment c')
                 ->where('c.id = ?', $comment)
-                ->andWhere('c.user = ?', $user);
+                ->andWhere('c.user = ?', $user)
+                ->andWhere('c.article = ?', $article);
         try {
             $result = $query->execute();
         }

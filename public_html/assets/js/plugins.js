@@ -221,11 +221,87 @@ ko.bindingHandlers.galleryModal = {
 	}
 };
 
-//UPLOADER Binding
+//UPLOADER Bindings
+ko.bindingHandlers.profileUploader = {
+	completeHandler : function(event, id, filename, response) {
+		ProfileVM.newProfileImage().fullSizeImage(profileImagesUrl + response.filename);
+		ProfileVM.currentPage('CropProfileImage');
+	},
+	init: function(element) {
+		$(element).fineUploader({
+			debug: true,
+			request: {
+				endpoint : '/profile/uploadprofilephoto',
+				inputName : 'filename'
+			},
+			validation : {
+				sizeLimit : 5242880
+			},
+			dragAndDrop : {
+				hideDropzones : true,
+				disableDefaultDropzone : true
+			},
+			text: {
+				uploadButton: "Change Photo",
+			},
+			template: '<div class="qq-uploader">' +
+            '<div class="qq-upload-button submit_button"><div>{uploadButtonText}</div></div>' +
+            '<ul class="qq-upload-list" style="display: none;"></ul>' +
+            '</div>',
+
+        // template for one item in file list
+        fileTemplate: '<li>' +
+            '<div class="qq-progress-bar"></div>' +
+            '<span class="qq-upload-spinner"></span>' +
+            '<span class="qq-upload-finished"></span>' +
+            '<span class="qq-upload-file"></span>' +
+            '<span class="qq-upload-size"></span>' +
+            '<a class="qq-upload-cancel" href="#">{cancelButtonText}</a>' +
+            '<a class="qq-upload-retry" href="#">{retryButtonText}</a>' +
+            '<span class="qq-upload-status-text">{statusText}</span>' +
+            '</li>',
+        classes: {
+            // used to get elements from templates
+            button: 'qq-upload-button',
+            drop: 'qq-upload-drop-area',
+            dropActive: 'qq-upload-drop-area-active',
+            dropDisabled: 'qq-upload-drop-area-disabled',
+            list: 'qq-upload-list',
+            progressBar: 'qq-progress-bar',
+            file: 'qq-upload-file',
+            spinner: 'qq-upload-spinner',
+            finished: 'qq-upload-finished',
+            retrying: 'qq-upload-retrying',
+            retryable: 'qq-upload-retryable',
+            size: 'qq-upload-size',
+            cancel: 'qq-upload-cancel',
+            retry: 'qq-upload-retry',
+            statusText: 'qq-upload-status-text',
+
+            // added to list item <li> when upload completes
+            // used in css to hide progress spinner
+            success: 'qq-upload-success',
+            fail: 'qq-upload-fail',
+
+            successIcon: null,
+            failIcon: null
+        },
+		}).on('complete', ko.bindingHandlers.profileUploader.completeHandler);
+	}
+}
+
+ko.bindingHandlers.imageCrop = {
+	init: function(element) {
+		$(element).imgAreaSelect({
+			aspectRatio : "1:1.25",
+			onSelectChange : ProfileVM.previewPhotoCrop
+		});
+	}
+}
 ko.bindingHandlers.uploader = {
 	completeHandler : function(event, id, filename, response) {
 		file = $(this).fineUploader('getItemByFileId', id);
-		imageUrl = userGalleryImagesUrl + response.filename;
+		imageUrl = userGalleryThumbsUrl + response.filename;
 		$(this).find(file).find('.image_uploaded').html('<img src="'+imageUrl+'" width="140" height="140"/>');
 		ProfileVM.addStoryPhoto(response.filename);
 	},
@@ -239,11 +315,15 @@ ko.bindingHandlers.uploader = {
 			validation : {
 				sizeLimit : 5242880
 			},
+			dragAndDrop : {
+				hideDropzones: false
+			},
 			text : {
-				uploadButton : 'Upload Photos'
+				uploadButton : 'Upload Photos',
+				dragZone: 'Drag Images Here To Upload<br/>Or<br/>Use The Browse Button Below'
 			},
 			template: '<div class="drop_zone"><span>{dragZoneText}</span></div>' + 
-				'<input name="upload_photos" type="button" class="submit_button upload_button" value="{uploadButtonText}"/>' +
+				'<input name="upload_photos" type="file" class="submit_button upload_button" value="{uploadButtonText}"/>' +
 				'<div class="images_uploaded"></div>',
 				
 			fileTemplate: '<div class="image_upload">' + 
@@ -252,7 +332,7 @@ ko.bindingHandlers.uploader = {
 				'<div class="image_uploaded"></div>' +
 				'<div class="image_failed"></div>' + 
 				'<div class="retry">{retryButtonText}</div>' +
-				'<div class="upload_size"></div>' +
+				'<div class="upload_size" style="display: none"></div>' +
 				'<div class="upload_cancel">{cancelButtonText}</div>' + 
 				'<div class="upload_status_text">{statusText}</span>' +
 				'</div>',

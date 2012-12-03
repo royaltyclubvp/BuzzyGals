@@ -117,6 +117,25 @@ class Service_Userstory extends Service_Base_Foundation {
     }
     
     /**
+     * Deletes Owned Story Comment
+     * 
+     * @param   integer     $comment     Comment ID
+     * @param   integer     $user        User ID
+     * @return  bool | array
+     */
+    public function deleteOwnedStoryComment($comment) {
+        $query = Doctrine_Query::create()->delete('Model_Userstorycomment')
+                ->where('id = ?',$comment);
+        try {
+            $results = $query->execute();
+        }
+        catch (Doctrine_Exception $e) {
+            return $e->getMessage();
+        }
+        return $results;
+    }
+    
+    /**
      * Follow User Story
      * 
      * @param   integer     $story      Story ID

@@ -282,10 +282,11 @@ qq.extend(qq.FineUploader.prototype, {
 
         // Update progress bar element
         qq(progressBar).css({width: percent + '%'});
-
-        size = this._find(item, 'size');
-        qq(size).css({display: 'inline'});
-        qq(size).setText(text);
+        
+		//Removing Size Showing
+        //size = this._find(item, 'size');
+        //qq(size).css({display: 'inline'});
+        //qq(size).setText(text);
     },
     _onComplete: function(id, fileName, result, xhr){
         qq.FineUploaderBasic.prototype._onComplete.apply(this, arguments);

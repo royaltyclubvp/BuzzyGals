@@ -75,7 +75,7 @@ $this->additionalScripts = '<script src="/assets/js/townhalls.js"></script>';
 </div>
 <? $this->variablesJS = '<script type="text/javascript">
     var articleImagesUrl="'.Zend_Registry::get("articleImagesUrl").'/";
-    var articleBaseUrl="/article/";
+    var articleBaseUrl="/featured/";
     var newestArticles='.Zend_Json::encode($this->newest).';
     var popularArticles='.Zend_Json::encode($this->popular).';
     var topicid='.$this->topic.';

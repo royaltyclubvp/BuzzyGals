@@ -45,16 +45,22 @@ function Comment(data) {
 	this.content = data.content;
 }
 
+function GalleryPhoto(data) {
+	var self = this;
+	self.thumbnail = userGalleryThumbsUrl + data;
+	self.full = userGalleryImagesUrl + data;
+}
+
 function Story(data) {
 	var self = this;
 	self.id = data.id;
 	var da = data.date.split(/[- :]/);
 	self.date = new Date(da[0], da[1]-1, da[2], da[3], da[4], da[5]);
 	self.date = ISODateString(self.date);
-	self.contentPreview = data.content.substring(0, 50);
-	self.contentFull = data.content.substring(50);
+	self.contentPreview = data.content.substring(0, 150);
+	self.contentFull = data.content.substring(150);
 	self.fullStoryVisible = ko.observable(0);
-	self.photocount = data.Media.totalphotos;
+	self.photocount = (typeof data.Media != 'undefined') ? data.Media.totalphotos : 0;
 	if (self.photocount != 0) {
 		self.galleryAvailable = true;
 		self.previewPhotos = new Array();
@@ -62,8 +68,9 @@ function Story(data) {
 			var len = self.photocount;
 		else
 			var len = 3;
-		for (var i = 0; i < len; i++)
-			self.previewPhotos[i] = userGalleryImagesUrl + data.Media.photos[i];
+		for (var i = 0; i < len; i++) {
+			self.previewPhotos.push(new GalleryPhoto(data.Media.photos[i]));
+		}
 	}
 	else {
 		self.galleryAvailable = false;
@@ -72,7 +79,7 @@ function Story(data) {
 	if (self.photocount > 3) {
 		var len = self.photocount;
 		for (var i = 3; i < len; i++) {
-			self.mainPhotos[i-3] = userGalleryImagesUrl + data.Media.photos[i]
+			self.mainPhotos.push(new GalleryPhoto(data.Media.photos[i]));
 		}
 	}
 	self.galleryVisible = ko.observable(0);
@@ -88,12 +95,15 @@ function Story(data) {
 			self.newComment("");
 			self.comments.push(new Comment(result));
 			self.commentCount(self.comments().length);
+			setTimeout(ProfileVM.timeAgo, 2000);
 		}
 	}
 	self.removeComment = function(comment) {
-		result = ProfileVM.removeComment(comment);
-		if(result)
+		result = ProfileVM.removeComment(comment.id);
+		if(result) {
 			self.comments.remove(comment);
+			self.commentCount(self.comments().length);
+		}
 	}
 	self.commentsVisible = ko.observable(0);
 	self.newComment = ko.observable("");
@@ -125,6 +135,26 @@ function ResourceType(data) {
 		if(result)
 			self.resources.remove(resource);
 	}
+	self.listVisible = ko.observable(1);
+	self.toggleVisibility = function() {
+		if(self.listVisible()) {
+			self.listVisible(0);
+		}
+		else {
+			self.listVisible(1);
+		}
+	}
+}
+
+function newProfileImage() {
+	var self = this;
+	self.fullSizeImage = ko.observable("");
+	self.xCoord = ko.observable("");
+	self.x2Coord = ko.observable("");
+	self.yCoord = ko.observable("");
+	self.y2Coord = ko.observable("");
+	self.width = ko.observable("");
+	self.height = ko.observable("");
 }
 
 //View Model
@@ -143,11 +173,13 @@ ProfileVM = new (function() {
 	self.stories = ko.observableArray([]);
 	self.resourceTypes = ko.observableArray([]);
 	self.newStory = ko.observable(new newStory());
+	self.newProfileImage = ko.observable(new newProfileImage());
 	
 	//Edit Toggles
 	self.aboutEdit = ko.observable(false);
 	self.interestsEdit = ko.observable(false);
 	self.galleryInterfaceVisible = ko.observable(0);
+	self.profileUploadVisible = ko.observable(0);
 
 	//Behaviours
 	self.goToPage = function(page) {
@@ -185,6 +217,29 @@ ProfileVM = new (function() {
 	
 	self.showAddGalleryInterface = function() {
 		self.galleryInterfaceVisible(1);
+	}
+	
+	self.showProfileUpload = function() {
+		self.profileUploadVisible(1);
+	}
+	
+	self.previewPhotoCrop = function(image, selection) {
+		var scaleX = 200 / selection.width;
+		var scaleY = 250 / selection.height;
+		
+		$(".upload_fullsize").css({
+			width: Math.round(scaleX * 200) + "px",
+			height: Math.round(scaleY * 250) + "px",
+			marginLeft: "-" + Math.round(scaleX * selection.x1) + "px",  
+        	marginTop: "-" + Math.round(scaleY * selection.y1) + "px" 
+		});
+		
+		$("#x1").val(selection.x1);  
+    	$("#y1").val(selection.y1);  
+    	$("#x2").val(selection.x2);  
+    	$("#y2").val(selection.y2);  
+    	$("#w").val(selection.width);  
+    	$("#h").val(selection.height);  
 	}
 	
 	self.removeBookmark = function(bookmark) {
@@ -277,6 +332,29 @@ ProfileVM = new (function() {
 		return success;
 	}
 	
+	self.removeComment = function(id) {
+		success = false;
+		$.ajax({
+			url : "/profile/deleteownedstorycomment",
+			data : {
+				comment : id
+			},
+			type: "POST",
+			async : false,
+			dataType : "text",
+			success : function(result) {
+				if(result == "1") {
+					success = true;
+				}
+			}
+		});
+		return success;
+	}
+	
+	self.timeAgo = function() {
+		$('time.date').timeago();
+	}
+	
 	//Client-Side Routes
 	Sammy(function() {
 		//Page Routes
@@ -314,6 +392,7 @@ ProfileVM = new (function() {
 					});
 					self.stories(mappedStories);
 				});
+				setTimeout(self.timeAgo, 2000);
 			}
 			else if(this.params.page == "MyResources") {
 				$.getJSON("/profile/loadresources", function(allData) {
@@ -328,7 +407,9 @@ ProfileVM = new (function() {
 	
 	
 	//Load Default Page
-	//self.goToPage({title: 'About Me', alias: 'about'});
+	if(location.hash == "") {
+		self.goToPage("My Stories");
+	}
 });
 
 ko.applyBindings(ProfileVM, $("#content")[0]);
