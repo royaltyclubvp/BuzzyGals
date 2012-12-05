@@ -85,11 +85,32 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'action' => 'signup'
             ))
         );
+        //Verification Link
+        $router->addRoute(
+            'verify', new Zend_Controller_Router_Route('account/verify/:verificationcode/:userid', array(
+                'controller' => 'user',
+                'action' => 'verify'
+            ))
+        );
         //Logout Link
         $router->addRoute(
             'logout', new Zend_Controller_Router_Route_Static('logout', array(
                 'controller' => 'user',
                 'action' => 'logout'
+            ))
+        );
+        //Login Link
+        $router->addRoute(
+            'login', new Zend_Controller_Router_Route_Static('login', array(
+                'controller' => 'user',
+                'action' => 'login'
+            ))
+        );
+        //View Friend Profile Link
+        $router->addRoute(
+            'friendProfile', new Zend_Controller_Router_Route(':username/view', array(
+                'controller' => 'profile',
+                'action' => 'friendprofile'
             ))
         );
         //Townhall
@@ -155,6 +176,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initEmailSettings() {
         $Config = $this->getOption('email');
         Zend_Registry::set('registrationEmail', $Config['registrationEmail']);
+        Zend_Registry::set('registrationSender', $Config['registrationSender']);
     }
 }
 

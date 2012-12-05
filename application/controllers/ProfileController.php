@@ -8,15 +8,23 @@ class ProfileController extends Base_RestrictedController {
     
     public function indexAction() {
         $profileService = new Service_Profile();
-        if($this->getRequest()->getParam('user', FALSE)) {
-            //Implement Find User by Username
+        $this->_helper->layout->setLayout('topmenu');
+        $this->view->profile = $profileService->fetchProfile($this->_user->id);
+    }
+    
+    public function friendprofileAction() {
+        if($username = $this->getRequest()->getParam('username', FALSE)) {
+            $profileService = new Service_Profile();
+            if(is_array($profile = $profileService->fetchProfileByUsername)) {
+                $this->view->profile = $profile;
+                return $this->render();
+            }
+            else {
+                return $this->render('friendprofilenotfound');
+            }
         }
         else {
-            $this->view->profile = $profileService->fetchProfile($this->_user->id);
-            $messageService = new Service_Message();
-            $this->view->newMessages = $messageService->messageCount($this->_user->id);
-            $this->_helper->layout->setLayout('topmenu');
-            return $this->render();
+            return $this->_redirect('/profile');
         }
     }
     

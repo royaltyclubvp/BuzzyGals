@@ -236,9 +236,9 @@ if ($this -> profile['Location']['country'] != '')
            </div>
            <div class="prifle_section_content" data-bind="with: newProfileImage">
                <div class="full_image">
-                   <img data-bind="attr: { 'src': fullSizeImage }, imageCrop: true" style="max-width: 450px;"  class="upload_fullsize"/>
+                   <img data-bind="attr: { 'src': fullSizeImage }, imageCrop: true" style=""  class="upload_fullsize"/>
                </div>
-               <div class="thumb_image">
+               <div class="thumb_image" style="margin-top: 20px; border: 2px solid red;">
                    <img data-bind="attr: { 'src': fullSizeImage }" style="max-width: 450px;"/>
                    <input type="hidden" id="x1" data-bind="value: xCoord"/>
                    <input type="hidden" id="x2" data-bind="value: x2Coord"/>
@@ -290,7 +290,6 @@ if ($this -> profile['Location']['country'] != '')
     var userGalleryImagesUrl="'.$this->userGalleryImagesUrl.'";
     var userGalleryThumbsUrl="'.$this->userGalleryThumbsUrl.'";
     var townhallBaseUrl="/townhall/";
-    var friendProfileBaseUrl="/profile/";
     var articleBaseUrl="/featured/";
  </script>';
 echo $this->variablesJS; ?>

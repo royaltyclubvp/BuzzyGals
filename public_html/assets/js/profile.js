@@ -24,7 +24,7 @@ function Friend(data) {
 	this.id = data.id;
 	this.userid = data.Friend.id;
 	this.displayName = data.Friend.Profile.displayName;
-	this.url = friendProfileBaseUrl + data.Friend.Profile.displayName.toLowerCase();
+	this.url = '/' + data.Friend.Profile.displayName.toLowerCase(); + '/view';
 	this.photo = profileImagesUrl + data.Friend.Profile.photo;
 	this.location = "";
 	if (data.Friend.Profile.Location.city != '')
@@ -224,15 +224,15 @@ ProfileVM = new (function() {
 	}
 	
 	self.previewPhotoCrop = function(image, selection) {
-		var scaleX = 200 / selection.width;
-		var scaleY = 250 / selection.height;
+		var scaleX = 100 / selection.width;
+		var scaleY = 100 / selection.height;
 		
-		$(".upload_fullsize").css({
-			width: Math.round(scaleX * 200) + "px",
-			height: Math.round(scaleY * 250) + "px",
+		/*$(".thumb_image>img").css({
+			width: Math.round(scaleX * 450) + "px",
+			height: Math.round(scaleY * 167) + "px",
 			marginLeft: "-" + Math.round(scaleX * selection.x1) + "px",  
         	marginTop: "-" + Math.round(scaleY * selection.y1) + "px" 
-		});
+		});*/
 		
 		$("#x1").val(selection.x1);  
     	$("#y1").val(selection.y1);  
