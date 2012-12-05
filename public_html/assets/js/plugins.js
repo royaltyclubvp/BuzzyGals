@@ -293,7 +293,7 @@ ko.bindingHandlers.profileUploader = {
 ko.bindingHandlers.imageCrop = {
 	init: function(element) {
 		$(element).imgAreaSelect({
-			aspectRatio : "1:1.25",
+			aspectRatio : "1:1",
 			onSelectChange : ProfileVM.previewPhotoCrop
 		});
 	}

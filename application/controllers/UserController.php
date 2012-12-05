@@ -111,11 +111,17 @@ class UserController extends Base_FoundationController {
             $values['usergroup'] = 1;
             if(is_array($newAccount = $this->service->addNew($values))) {
                 $from = Zend_Registry::get('registrationEmail');
-                $to = $newAccount['username'];
+                $fromName = Zend_Registry::get('registrationSender');
+                $recipients = array(
+                    array(
+                        'email' => $newAccount['username'],
+                        'name' => $newAccount['Profile']['fName'].' '.$newAccount['Profile']['lName']
+                    )
+                );
                 $subject = "Welcome to BuzzyGals: Please Verify Your Account Registration";
-                $verificationLink = "http://buzzygals.com/account/verify/".$newAccount['verificationcode']."/".$newAccount['id'];
-                $body = $verificationLink;
-                $this->sendEmail($from, $to, $subject, $body);
+                $verificationLink = $this->view->baseUrl()."account/verify/".$newAccount['verificationcode']."/".$newAccount['id'];
+                $body = '<div>'.$verificationLink.'</div>';
+                $this->sendEmail($from, $fromName, $recipients, $subject, $body);
             }
             $response['root'] = $newAccount;
             $this->_response->appendBody(Zend_Json::encode($response));
@@ -130,7 +136,8 @@ class UserController extends Base_FoundationController {
      * Verify User Account
      */
     public function verifyAction() {
-         if($userid = $this->getRequest()->getParam('u', FALSE) && $verifystring = $this->getRequest()->getParam('v', FALSE)) {
+         if(($userid = $this->getRequest()->getParam('userid', FALSE)) && ($verifystring = $this->getRequest()->getParam('verificationcode', FALSE))) {
+             $this->_helper->layout->setLayout('single');
              $user = $this->service->getUser('id', $userid);
              if($user->verificationcode != $verifystring) {
                  //Check if Verification Code is In Record

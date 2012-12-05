@@ -1,0 +1,135 @@
+<?php
+$this->menuTitle = $this->friendDisplayName;
+$this->additionalBodyClasses = "my_profile friend_profile";
+$this->additionalScripts = '<script src="/assets/js/friendprofile.js"></script>';
+$this->profileImagesUrl = Zend_Registry::get('profileImagesUrl');
+$this->userGalleryImagesUrl = Zend_Registry::get('userGalleryImagesUrl');
+$this->userGalleryThumbsUrl = Zend_Registry::get('userGalleryThumbsUrl');
+$this->profileLocation = '';
+if ($this->profile['Location']['city'] != '')
+    $this->profileLocation .= $this->profile['Location']['city'] . ', ';
+if ($this->profile['Location']['stateprov'] != '')
+    $this->profileLocation .= $this->profile['Location']['stateprov'] . ', ';
+if ($this->profile['Location']['country'] != '')
+    $this->profileLocation .= $this->profile['Location']['country'];
+?>
+<div id="photo">
+    <div id="profile_photo">
+        <img src="<? echo $this->profileImagesUrl.$this->profile['photo'] ?>" alt="Profile Image - <? echo $this->profile['displayName'] ?> height="250" width="200" />
+    </div>
+    <div id="display_name">
+        <h2><? echo $this->profile['displayName'] ?></h2>
+    </div>
+    <div id="location">
+        <p><? echo $this->profileLocation ?></p>
+    </div>
+</div>
+<div id="profile_content">
+    <div id="profile_menu">
+        <ul data-bind="foreach: pages">
+            <li data-bind="text: $data, css: { selected: $data.replace(/\s/g, '') == $root.currentPage() }, click: $root.goToPage"></li>
+        </ul>
+        <div class="clearfix"></div>
+    </div>
+    <div id="profile_page">
+        <div data-bind="template: { name: 'about-template', if currentPage() == 'About' }"></div>
+        <div data-bind="template: { name: 'stories-template', if currentPage() == 'Stories' }"></div>
+        
+        <!-- Templates -->
+        
+        <!-- ABOUT -->
+        <script type="text/html" id="about-template">
+            <div class="profile_section_title" id="aboutme">
+                <div class="section_title">About <span data-bind="text: displayName"></span></div>
+            </div>
+            <div class="profile_section_content" data-bind="with: profile">
+                <p data-bind="text: about"></p>
+            </div>
+            <div class="profile_section_title" id="interests">
+                <div class="section_title">Interests</div>
+            </div>
+            <div class="profile_section_content" data-bind="with: profile">
+                <p data-bind="text: interests"></p>
+            </div>
+        </script>
+        
+        <!-- STORIES -->
+        <script type="text/html" id="stories-template">
+            <div class="profile_section_title" id="stories">
+                <div class="section_title">Stories</div>
+            </div>
+            <div class="profile_section_content" data-bind="foreach: stories">
+                <article class="story">
+                    <aside class="details">
+                        <time class="date" data-bind="attr: { 'datetime': date }"></time>
+                    </aside>
+                    <!-- Photo Gallery -->
+                    <section class="photogallery" data-bind="if: galleryAvailable">
+                        <!-- Preview Photos -->
+                        <div class="preview" data-bind="foreach: previewPhotos">
+                            <a class="thumb modal" data-bind="attr: { 'rel': $parent.id , 'href': full }, galleryModal: true">
+                                <img data-bind="attr: { 'src': thumbnail }" alt="" width="140" height="140" />
+                            </a>
+                        </div>
+                        <!-- Main Gallery -->
+                        <div class="main_gallery" data-bind="foreach: mainPhotos, visible: galleryVisible()==1">
+                            <a class="thumb modal" data-bind="attr: { 'rel': $parent.id , 'href': full }, galleryModal: true">
+                                <img data-bind="attr: { 'src': thumbnail }" alt="" width="140" height="140" />
+                            </a>
+                        </div>
+                        <span class="photo_total"><span data-bind="text: photocount"></span> Photos</span>
+                        <div data-bind="visible: photocount > 3">
+                            <span class="more_photos" data-bind="visible: galleryVisible()==0, click: toggleGallery">Show Full Gallery</span>
+                            <span class="more_photos" data-bind="visible: galleryVisible()==1, click: toggleGallery">Hide Full Gallery</span>
+                        </div>
+                        <span class="clearfix"></span>
+                    </section>
+                    <!-- Story -->
+                    <section class="story_body">
+                        <span class="preview" data-bind="html: contentPreview"></span><span data-bind="visible: fullStoryVisible()==0 && contentFull.length > 0">...</span>
+                        <span class="main_story_body" data-bind="html: contentFull, visible: fullStoryVisible()==1"></span>
+                        <div data-bind="visible: contentFull.length > 0">
+                            <span class="option_more" data-bind="visible: fullStoryVisible()==0, click: toggleFullStory">Show All</span>
+                            <span class="option_more" data-bind="visible: fullStoryVisible()==1, click: toggleFullStory">Hide</span>
+                        </div>
+                        <div class="clearfix"></div>
+                    </section>
+                    <!-- Comments-->
+                    <section class="comments" data-bind="visible: comments().length > 0">
+                        <div class="count" data-bind="click: showComments">Show <span data-bind="text: commentCount()"></span> <span data-bind="text: commentText"></span></div>
+                        <div class="inner-comment-container" data-bind="visible: commentsVisible()==1, foreach: comments">
+                            <div class="comment">
+                                <div class="left username" data-bind="text: displayName"></div>
+                                <time class="right date" data-bind="attr: { 'datetime': date }"></time>
+                                <div class="clearfix"></div>
+                                <img data-bind="attr: { 'src': userPhoto }" alt="User Profile Image" width="35" height="30"/>
+                                <div class="comment_content">
+                                       <p data-bind="text: content"></p>
+                                </div>
+                                <div class="right delete" data-bind="if: owned, click: $parent.removeComment">Delete?</div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </section>
+                    <textarea class="add_comment expanding" data-bind="expandingTextarea: true, hasfocus: showAddCommentButton, value: newComment"></textarea>
+                    <input name="addcomment" type="button" class="submit_button"  value="Post" data-bind="visible: showAddCommentButton()==true || newComment().length > 0, click: addComment"/>      
+                </article>
+                <hr class="article_separator"/>
+            </div>
+        </script>
+        
+    </div>
+</div>
+<div class="clearfix"></div>
+<? $this->variablesJS = '<script type="text/javascript">
+    var profileImagesUrl="'.$this->profileImagesUrl.'";
+    var userGalleryImagesUrl="'.$this->userGalleryImagesUrl.'";
+    var userGalleryThumbsUrl="'.$this->userGalleryThumbsUrl.'";
+    var townhallBaseUrl="/townhall/";
+    var friendProfileBaseUrl="/profile/";
+    var articleBaseUrl="/featured/";   
+    var displayName="'.$this->displayName.'";
+    var userId="'.$this->userId.'";
+ </script>';
+echo $this->variablesJS; ?>
+

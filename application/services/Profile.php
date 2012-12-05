@@ -38,6 +38,27 @@ class Service_Profile extends Service_Base_Foundation {
     }
     
     /**
+     * Return User Profile By Username
+     * 
+     * @param   string      $username   Username
+     * @return  array | bool
+     */
+    public function fetchProfileByUsername($username) {
+        $query = Doctrine_Query::create()
+                ->from('Model_Profile p')
+                ->innerJoin('p.Location l')
+                ->where('displayName = ?', $username)
+                ->limit(1);
+        try {
+            $results = $query->fetchOne(array(), Doctrine::HYDRATE_ARRAY);
+        }
+        catch (Doctrine_Exception $e) {
+            return FALSE;
+        }
+        return $results;
+    }
+    
+    /**
      * Edit User Profile Fields
      * 
      * @param   integer     $userid     User ID
