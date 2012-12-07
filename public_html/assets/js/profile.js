@@ -24,7 +24,7 @@ function Friend(data) {
 	this.id = data.id;
 	this.userid = data.Friend.id;
 	this.displayName = data.Friend.Profile.displayName;
-	this.url = '/' + data.Friend.Profile.displayName.toLowerCase(); + '/view';
+	this.url = '/' + data.Friend.Profile.displayName.toLowerCase() + '/view';
 	this.photo = profileImagesUrl + data.Friend.Profile.photo;
 	this.location = "";
 	if (data.Friend.Profile.Location.city != '')
