@@ -87,7 +87,21 @@ ResourceVM = new (function() {
 		self.currentPage(1);
 		self.noPerPage(noPerPage);
 		self.currentResultsLower(0);
-		self.currentResultsUpper(self.currentResources().length); //Modify to Slice Array. Loaded Array Will Contain All
+		self.currentResultsUpper(self.currentResources().length);
+	}
+	
+	self.showPreviousResultsPage = function() {
+		self.currentPage(self.currentPage()-1);
+		self.currentResultsLower(((self.currentPage()-1)*self.noPerPage())+1);
+		self.currentResultsUpper(self.currentPage()*self.noPerPage());
+		self.currentResources(self.resources().slice(self.currentResultsLower()-1, self.currentResultsUpper()));
+	}
+	
+	self.showNextResultsPage = function() {
+		self.currentPage(self.currentPage()+1);
+		self.currentResultsLower(((self.currentPage()-1)*self.noPerPage())+1);
+		self.currentResultsUpper(self.currentPage()*self.noPerPage());
+		self.currentResources(self.resources().slice(self.currentResultsLower()-1, self.currentResultsUpper()));
 	}
 	
 })
