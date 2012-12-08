@@ -70,18 +70,58 @@ function Recipient(data) {
 	this.displayName = data.Friend.Profile.displayName;
 }
 
+
+function receivedFriendRequest(data) {
+	var self = this;
+	self.id = data.id;
+	self.photo = profileImagesUrl + data.Requestor.Profile.photo;
+	self.displayName = data.Requestor.Profile.displayName;
+	self.responded = ko.observable(false);
+	self.accepted = ko.observable(false);
+	self.acceptFriendRequest = function() {
+		success = MessagesVM.acceptFriendRequest(self.id);
+		if(success) {
+			self.responded(true);
+			self.accepted(true);
+		}
+	}
+	self.rejectFriendRequest = function() {
+		success = MessagesVM.rejectFriendRequest(self.id);
+		if(success) {
+			self.responded(true);
+		}
+	}
+}
+
+function sentFriendRequest(data) {
+	var self = this;
+	self.id = data.id;
+	self.photo = profileImagesUrl + data.Requestee.Profile.photo;
+	self.displayName = data.Requestee.Profile.photo;
+	self.responded = ko.observable(false);
+	self.cancelFriendRequest = function() {
+		success = MessagesVM.rejectFriendRequest(self.id);
+		if(success) {
+			self.responded(true);
+		}
+	}
+}
+
+
 //View Model
-function MessagesViewModel() {
+MessagesVM = new (function() {
 	//Data
 	var self = this;
 	
-	self.folder = ['New','Inbox','Sent'];
+	self.folder = ['New','Inbox','Sent', 'Requests Received', 'Requests Sent'];
 	self.currentFolder = ko.observable();
 	
 	self.newMessage = ko.observable(new NewMessage("","","n",""));
 	self.message = ko.observable();
 	self.inboxMessages = ko.observableArray([]);
 	self.sentMessages = ko.observableArray([]);
+	self.requestsReceived = ko.observableArray([]);
+	self.requestsSent = ko.observableArray([]);
 	self.recipientList = ko.observableArray([]);
 	
 	self.recipientSelect = ko.observable(0);
@@ -101,7 +141,10 @@ function MessagesViewModel() {
 	});
 	
 	//Behaviours 
-	self.goToFolder = function(folder) { location.hash = folder };
+	self.goToFolder = function(folder) { 
+		folder = folder.replace(/\s/g, ""); 
+		location.hash = folder 
+	};
 	self.goToMessage = function(message) { location.hash = self.currentFolder() + '/' + message.id };
 	self.replyToMessage = function(message) {
 		var subject = "Re: " + message.subject;
@@ -183,6 +226,40 @@ function MessagesViewModel() {
 		});
 	}
 	
+	self.acceptFriendRequest = function(id) {
+		success = false;
+		$.ajax({
+			url : "/profile/acceptrequest",
+			data : {
+				requestid : id
+			},
+			type : "GET",
+			dataType : "text",
+			success : function(result) {
+				if(result = "1")
+					success = true;
+			}
+		});
+		return success;
+	}
+	
+	self.rejectFriendRequest = function(id) {
+		success = false;
+		$.ajax({
+			url : "/profile/rejectrequest",
+			data : {
+				requestid : id
+			},
+			type : "GET",
+			dataType : "text",
+			success : function(result) {
+				if(result = "1")
+					success = true;
+			}
+		});
+		return success;
+	}
+	
 	//Client-Side Routes
 	Sammy(function() {
 		this.get('#:folder', function() {
@@ -212,6 +289,22 @@ function MessagesViewModel() {
 				});
 				$('.new-message .fields .expanding').expandingTextarea();
 			}
+			else if(this.params.folder == "RequestsReceived") {
+				$.getJSON("/messages/loadreceivedrequests", function(allData) {
+					var mappedRequests = $.map(allData.root, function(request) {
+						return new receivedFriendRequest(request);
+					});
+					self.requestsReceived(mappedRequests);
+				});
+			}
+			else if(this.params.folder == "RequestsSent") {
+				$.getJSON("/messages/loadsentrequests", function(allData) {
+					var mappedRequests = $.map(allData.root, function(request) {
+						return new receivedFriendRequest(request);
+					});
+					self.requestsReceived(mappedRequests);
+				});
+			}
 		});
 		
 		this.get('#:folder/:messageId', function() {
@@ -224,10 +317,12 @@ function MessagesViewModel() {
 	}).run();
 	
 	//Load Default Page
-	self.goToFolder("Inbox");
+	if(location.hash = "") {
+		self.goToFolder("Inbox");	
+	}
 	
-};
+});
 
-ko.applyBindings(new MessagesViewModel(), $("#content")[0]);
+ko.applyBindings(MessagesVM, $("#content")[0]);
 
 

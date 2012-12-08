@@ -13,6 +13,8 @@ $this->additionalScripts = '<script src="/assets/js/messages.js"></script>';
     <div data-bind="template: { name: 'new-template', if: currentFolder() == 'New'}"></div>
     <div data-bind="template: { name: 'receivedMessage-template', if: currentFolder() == 'ReceivedMessage'}"></div>
     <div data-bind="template: { name: 'sentMessage-template', if: currentFolder() == 'SentMessage'}"></div>
+    <div data-bind="template: { name: 'friendreqreceived-template', if: currentFolder() == 'RequestsReceived' }"></div>
+    <div data-bind="template: { name: 'friendreqsent-template', if: currentFolder() == 'RequestsSent' }"></div>
     
     <!-- Templates -->
     
@@ -111,6 +113,45 @@ $this->additionalScripts = '<script src="/assets/js/messages.js"></script>';
                 <textarea data-bind="value: content" placeholder="Enter your message here" class="expanding"></textarea>
             </div>
             <input type="button" id="button_send" class="submit_button"  value="Send" data-bind="click: $root.sendMessage"/>
+        </div>
+    </script>
+    
+    <!-- RECEIVED FRIEND REQUESTS -->
+    <script type="text/html" id="friendreqreceived-template">
+        <div class="requests" data-bind="foreach: requestsReceived">
+            <div class="request">
+                <img data-bind="attr: { 'src': photo, 'alt': displayName }" class="left" width="65" height="65"/>
+                <div class="info right">
+                    <div class="username" data-bind="text: displayName"></div>
+                    <div class="request_response" data-bind="ifnot: responded">                      
+                        <input type="button" class="submit_button" value="Accept Request" data-bind="click: acceptFriendRequest"/>
+                        <input type="button" class="submit_button" value="Reject Request" data-bind="click: rejectFriendRequest"/>
+                    </div>
+                    <div class="responded" data-bind="if: responded">
+                        <span data-bind="if: accepted">Accepted!</span><span data-bind="ifnot: accepted">Rejected!</span>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </script>
+    
+    <!-- SENT FRIEND REQUESTS -->
+    <script type="text/html" id="friendreqsent-template">
+        <div class="requests" data-bind="foreach: requestsSent">
+            <div class="request">
+                <img data-bind="attr: { 'src': photo, 'alt': displayName }" class="left" width="65" height="65"/>
+                <div class="info right">
+                    <div class="username" data-bind="text: displayName"></div>
+                    <div class="request_response" data-bind="ifnot: responded"> 
+                        <input type="button" class="submit_button" value="Cancel Request" data-bind="click: cancelFriendRequest"/>
+                    </div>
+                    <div class="responded" data-bind="if: responded">
+                        Cancelled!
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
         </div>
     </script>
     

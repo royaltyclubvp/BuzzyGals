@@ -142,5 +142,8 @@ abstract class Model_Base_Resource extends Doctrine_Record
              'local' => 'resource',
              'foreign' => 'user',
              'refClass' => 'Model_Bookmarkedresource'));
+        $this->actAs('Searchable', array(
+            'fields' => array('name', 'notes', 'address')
+        ));
     }
 }

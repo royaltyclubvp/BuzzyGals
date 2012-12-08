@@ -102,5 +102,21 @@ class ResourcesController extends Base_RestrictedController {
         }
     }
     
+    public function searchAction() {
+        if($this->getRequest()->isGet()) {
+            if($terms = $this->getRequest()->getParams('searchTerms', FALSE)) {
+                $resourceService = new Service_Resource();
+                if(is_array($results = $resourceService->searchResources($terms))) {
+                    $this->_helper->layout->setLayout('topmenu');
+                    $result['root'] = $results;
+                    $this->view->searchTerms = $terms;
+                    $this->view->resultTotal = count($results);
+                    $this->view->searchNoPerPage = 10;
+                    $this->view->resources = $result;
+                    return $this->render('searchresults');
+                }
+            }
+        }
+    }
     //Remove Resource Function Located in Profile Controller. Removed from this location to eliminate unnecessary Code Duplication
 }

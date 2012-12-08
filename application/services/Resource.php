@@ -257,5 +257,36 @@ class Service_Resource extends Service_Base_Foundation {
         }
         return $results;
     }
+
+    /**
+     * Search Resources
+     * 
+     * @param   array       $terms      Search Terms
+     * @return  array | bool
+     */
+    public function searchResources($terms) {
+        $resourceTable = Doctrine_Core::getTable('Model_Resource');
+        try {
+            $results = $resourceTable->search($terms);
+        }
+        catch (Doctrine_Exception $e) {
+            return $e->getMessage();
+        }
+        $ids = array();
+        foreach($results as $result) {
+            $ids[] = $result['id'];
+        }
+        $query = Doctrine_Query::create()
+                ->from('Model_Resource r')
+                ->leftJoin('r.Bookmarkers b')
+                ->orderby('r.created DESC');
+        try {
+            $results = $query->fetchArray();
+        }
+        catch (Doctrine_Exception $e) {
+            return $e->getMessage();
+        }
+        return $results;
+    }
     
 }

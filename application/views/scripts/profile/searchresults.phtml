@@ -30,6 +30,7 @@ $this->profileImagesUrl = Zend_Registry::get('profileImagesUrl');
                   <input type="button" class="submit_button" value="Request Sent" data-bind="if: requested, disable: requested" />
               </div>
           </div>
+          <div class="clearfix"></div>
       </div>
 </div>
 <div id="pagination">
@@ -39,6 +40,7 @@ $this->profileImagesUrl = Zend_Registry::get('profileImagesUrl');
     <span id="next_page" class="right" data-bind-"click: loadNextPage">
         Next >>
     </span>
+    <div class="clearfix"></div>
 </div>
 <? $this->variablesJS = '<script type="text/javascript">
     var profileImagesUrl="'.$this->profileImagesUrl.'";

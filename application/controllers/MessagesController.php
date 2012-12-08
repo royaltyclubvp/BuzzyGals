@@ -55,9 +55,42 @@ class MessagesController extends Base_RestrictedController {
         else return $this->_redirect('/messages');
     }
     
+    public function loadreceivedrequestsAction() {
+        if($this->getRequest()->isGet() && $this->_ajaxRequest) {
+            $friendService = new Service_Friend();
+            if(is_array($requests = $friendService->fetchReceivedRequests($this->_user->id))) {
+                $result['root'] = $requests;
+                $this->_response->appendBody(Zend_Json::encode($result));
+                return;
+            }
+            else {
+                $this->_response->appendBody('0');
+                return;
+            }
+        }
+        else return $this->_redirect('/messages');
+    }
+    
+    public function loadsentrequestsAction() {
+        if($this->getRequest()->isGet() && $this->_ajaxRequest) {
+            $friendService = new Service_Friend();
+            if(is_array($requests = $friendService->fetchSentRequests($this->_user->id))) {
+                $result['root'] = $requests;
+                $this->_response->appendBody(Zend_Json::encode($result));
+                return;
+            }
+            else {
+                $this->_response->appendBody('0');
+                return;
+            }
+        }
+        else return $this->_redirect('/messages');
+    }
+    
     public function countnewmessagesAction() {
         if($this->getRequest()->isGet() && $this->_ajaxRequest) {
             $messageService = new Service_Message();
+            $friendService = new Service_Friend();
             $this->_response->appendBody($messageService->messageCount($this->_user->id));
         }
     }

@@ -624,9 +624,29 @@ article.single_page_article .submit_button {
   		color: #000000;
   }
   
+  .my_messages .requests .request {
+  		margin: 0 0 10px;
+  }
+  
+  .my_messages .requests .request .img {
+  		width: 65px;
+  		height: 65px;
+  		margin: 0 10px 0 0;
+  }
+  
+  .my_messages .requests .request .info .request_response {
+  		margin: 10px 0 0;
+  }
+  
+  .my_messages .requests .request .info .request_response .submit_button {
+  		display: inline-block;
+  		margin: 0 15px 0 0;
+  }
+  
    
    /* Townhall Page */
-   #topmenutemplate #main #content.townhall #sidebar {
+   #topmenutemplate #main #content.townhall #sidebar,
+   #topmenutemplate #main #content.search #sidebar {
    		float: left;
    		width: 187px;
    		padding: 0 15px 0 0;
@@ -664,7 +684,10 @@ article.single_page_article .submit_button {
    		border-left: 1px solid #CCCCCC;
    }
    
-   #topmenutemplate #main #content.townhall.resources {
+   #topmenutemplate #main #content.townhall.resources,
+   #topmenutemplate #main #content.search #search_details,
+   #topmenutemplate #main #content.search #user_search_results,
+   #topmenutemplate #main #content.search #pagination  {
    		width: 685px;
    		padding: 0;
    }
@@ -687,6 +710,40 @@ article.single_page_article .submit_button {
    		padding-right: 10px;
    		width: 300px;
    }
+   
+   .search #search_details {
+   		border-bottom: 1px solid black;
+   		border-left: 1px solid black;
+   		padding: 0 0 0 10px;
+   		margin: 0 0 10px;
+   }
+   
+   .search #search_details p {
+   		font-size: 13px;
+   		color: 	#a31707;
+   }
+   
+   .search #pagination {
+   		font-size: 11px;
+   		color: #A31707;
+   }
+   
+   .search #pagination #previous_page:hover,
+   .search #pagination #next_page:hover {
+   		text-decoration: underline;
+   }
+   
+   .search #user_search_results .result {
+   		padding: 0 10px;
+   }
+   
+   .search #user_search_results .result img {
+   		width: 115px;
+   		height: 115px;
+   		margin: 0 10px 0 0;
+   }
+   
+ 	.search #user_search_results .result .add_friend {}
    
    .townhall_listing .townhall_item {
    		margin: 0 0 20px;
@@ -1039,14 +1096,17 @@ article.single_page_article .submit_button {
      		color: #000;
      }
      
-     #profile_content #profile_page .profile_section_content .friend .info .username {
+     #profile_content #profile_page .profile_section_content .friend .info .username,
+     .search #user_search_results .result .info .username,
+     .my_messages .requests .request .info .username {
      		font-variant: small-caps;
      		font-size: 13px;
      		margin: 0 0 3px;
      		font-weight: 500;
      }
      
-     #profile_content #profile_page .profile_section_content .friend .info .location {
+     #profile_content #profile_page .profile_section_content .friend .info .location,
+     .search #user_search_results .result .info .location {
      		font-size: 11px;
      		margin: 0 0 3px;
      }

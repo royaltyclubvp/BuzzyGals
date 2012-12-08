@@ -438,4 +438,109 @@ class ProfileController extends Base_RestrictedController {
         else return $this->_redirect('/profile');
     }
     
+    
+    public function requestfriendshipAction() {
+        if($this->getRequest()->isPost() && $this->_ajaxRequest) {
+            if($user = $this->getRequest()->getParam('user', FALSE)) {
+                $friendService = new Service_Friend();
+                if(is_array($result = $friendService->acceptRequest($this->_user->id, $user))) {
+                    $this->_response->appendBody("1");
+                    $messageService = new Message_Service();
+                    $userService = new Service_User();
+                    $userProfile = $userService->getUserProfile($this->_user->id);
+                    $subject = "New Friend Request";
+                    $content = "Hi<br/><br/>You have received a friend request from ".$user->fName." ".$user->lName.".<br/><br/>Please <a target='_blank' href='user/acceptrequest/".$result['id']."'>Accept</a> or <a target='_blank' href='user/rejectrequest/".$result['id']."'>Reject</a>";
+                    $messageService->addNew($this->_user->id, $user, 'n', NULL, $subject, $content);
+                    return;
+                }
+                else {
+                    $this->_respone->appendBody('0');
+                    return;
+                }
+            }
+            else {
+                $this->_response->appendBody('0');
+                return;
+            }
+        }
+        else {
+            return $this->_redirect('/profile');
+        }
+    }
+
+    public function acceptrequestAction() {
+        if($this->getRequest()->isGet() && !$this->_ajaxRequest) {
+            if($request = $this->getRequest()->getParam('requestid')) {
+                $friendService = new Service_Friend();
+                if(is_array($result = $friendService->acceptRequest($request, $this->_user->id))) {
+                    $userService = new Service_User();
+                    $userProfile = $userService->getUserProfile($result['friend']);
+                    $redirect = '/'.$userProfile->displayName.'/view';
+                    return $this->_redirect($redirect);
+                }
+                else {
+                    $this->view->error = "Sorry. There was a problem processing your request. Please try again later.";
+                    return $this->render('friendrequesterror');
+                }
+            }
+            else {
+                $this->view->error = "Sorry. There was a problem processing your request. Please try again later.";
+                return $this->render('friendrequesterror');
+            }
+        }
+        else if($this->_ajaxRequest) {
+            if($request = $this->getRequest()->getParam('requestid', FALSE))  {
+                $friendService = new Service_Friend();
+                if(is_array($result = $friendService->acceptRequest($request, $this->_user->id))) {
+                    $this->_response->appendBody("1");
+                    return;
+                }
+                else {
+                    $this->_response->appendBody("0");
+                    return;
+                }
+            }  
+            else {
+                $this->_response->appendBody("0");
+                return;
+            }
+        }
+    }
+
+    public function rejectrequestAction() {
+        if($this->getRequest()->isGet() && !$this->_ajaxRequest) {
+            if($request = $this->getRequest()->getParam('requestid', FALSE)) {
+                $friendService = new Service_Friend();
+                if($result = $friendService->deleteRequest($request, $this->_user->id)) {
+                    return $this->_render('requestrejectedsuccess');
+                }
+                else {
+                    $this->view->error = "Sorry. There was a problem processing your request. Please try again later.";
+                    return $this->render('friendrequesterror');
+                }
+            }
+            else {
+                $this->view->error = "Sorry. There was a problem processing your request. Please try again later.";
+                return $this->render('friendrequesterror');
+            }
+        }
+        else if($this->_ajaxRequest) {
+            if($request = $this->getRequest()->getParam('requestid', FALSE))  {
+                $friendService = new Service_Friend();
+                if($result = $friendService->deleteRequest($request, $this->_user->id)) {
+                    $this->_response->appendBody("1");
+                    return;
+                }
+                else {
+                    $this->_response->appendBody("0");
+                    return;
+                }
+            }  
+            else {
+                $this->_response->appendBody("0");
+                return;
+            }
+        }
+    }
+    
 }

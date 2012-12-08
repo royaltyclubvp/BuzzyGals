@@ -21,7 +21,7 @@ function User(data) {
 	self.requestFriendship = function() {
 		success = UserSearchVM.requestFriendship(self.id);
 		if(success) 
-			self.friend(true);
+			self.requested(true);
 	}
 }
 
@@ -42,7 +42,7 @@ UserSearchVM = new (function() {
 	self.requestFriendship = function(id) {
 		success = false;
 		$.ajax({
-			url : '/user/requestfriendship',
+			url : '/profile/requestfriendship',
 			data : {
 				user : id
 			},
@@ -58,7 +58,7 @@ UserSearchVM = new (function() {
 	
 	self.loadPreviousPage = function() {
 		$.ajax({
-			url : '/user/loadsearchresults',
+			url : '/profile/loadsearchresults',
 			data : {
 				terms : self.searchTerms(),
 				page : self.currentPage()-1,
@@ -76,4 +76,26 @@ UserSearchVM = new (function() {
 			}
 		});
 	}
+	
+	self.loadNextPage = function() {
+		$.ajax({
+			url : '/user/loadsearchresults',
+			data : {
+				terms : self.searchTerms(),
+				page : self.currentPage()+1,
+				pageAmount : self.noPerPage()
+			}
+			type : "POST",
+			dataType : "json",
+			success : function(result) {
+				if(result.length) {
+					self.currentResults(result);
+					self.currentPage(self.currentPage()+1);
+					self.currentResultsLower(((self.currentPage()-1)*self.noPerPage()) + 1);
+					self.currentResultsUpper((self.currentPage()-1)*self.noPerPage() + self.currentResults().length);
+				}
+			}
+		});
+	}
+	
 })
