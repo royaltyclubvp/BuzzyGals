@@ -1,6 +1,7 @@
 /* Author: Jarrod Placide-Raymond
 
 */
+
 //Data Structures
 function Profile(data) {
 	this.about = ko.observable(data.about);
@@ -157,6 +158,20 @@ function newProfileImage() {
 	self.height = ko.observable("");
 }
 
+function newMessageRecipient(id, displayName) {
+	this.id = id;
+	this.displayName = displayName;
+}
+
+function Message(recipientDisplayName, recipientId) {
+	this.subject = "";
+	this.content = "";
+	this.recipients = ko.observableArray([]);
+	this.recipients.push(new newMessageRecipient(recipientId, recipientDisplayName));
+	this.type = 'n';
+	this.ref = "";
+}
+
 //View Model
 ProfileVM = new (function() {
 	//Data
@@ -174,6 +189,7 @@ ProfileVM = new (function() {
 	self.resourceTypes = ko.observableArray([]);
 	self.newStory = ko.observable(new newStory());
 	self.newProfileImage = ko.observable(new newProfileImage());
+	self.newMessage = ko.observable(new Message(0,0));
 	
 	//Edit Toggles
 	self.aboutEdit = ko.observable(false);
@@ -353,6 +369,37 @@ ProfileVM = new (function() {
 	
 	self.timeAgo = function() {
 		$('time.date').timeago();
+	}
+	
+	self.sendNewMessage = function(friend) {
+		self.newMessage(new Message(friend.displayName, friend.userid));
+		$.fancybox.open(
+			{
+				href : '#send_message'
+			},
+			[{
+				width: '500px',
+				maxHeight: 600 
+			}]
+		);
+	}
+	
+	self.sendMessage = function() {
+		$.ajax({
+			url : "/messages/send",
+			data : ko.toJS(self.newMessage),
+			type : "POST",
+			dataType: "json",
+			success: function(result) {
+				if(result.length === 0) {
+					//Implement Failure Handler
+				}
+				else {
+					$.fancybox.close();
+					self.newMessage(new Message(0,0));
+				}
+			}
+		});
 	}
 	
 	//Client-Side Routes

@@ -134,6 +134,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'action' => 'bookmark'
             ))
         );
+        //Override For Search Resources
+        $router->addRoute(
+            'searchResourcs', new Zend_Controller_Router_Route_Static('resources/search', array(
+                'controller' => 'resources',
+                'action' => 'search'
+            ))
+        );
         //Townhall Articles
         $router->addRoute(
             'article', new Zend_Controller_Router_Route('featured/:uri', array(

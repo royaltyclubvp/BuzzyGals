@@ -58,6 +58,10 @@ class TestController extends Base_FoundationController {
         $this->view->profile = $this->userService->getUserProfile(6);
     }
     
+    public function searchresourceAction() {
+        $this->view->result = $this->resourceService->searchResources('test');
+        $this->render('friend');
+    }
     public function editprofileAction() {
         $profile = array(
             'fName' => 'Edited Test',
@@ -395,12 +399,12 @@ class TestController extends Base_FoundationController {
     }
         
     public function genindexAction() {
-        $this->view->result = Doctrine_Core::generateSqlFromArray(array('Model_Profile'));
+        $this->view->result = Doctrine_Core::generateSqlFromArray(array('Model_Resource'));
         $this->render('friend');
     }
     
     public function gentablesAction() {
-        Doctrine_Core::createTablesFromArray(array('Model_Location'));
+        Doctrine_Core::createTablesFromArray(array('Model_Resource'));
     }
     
     public function messagecountAction() {

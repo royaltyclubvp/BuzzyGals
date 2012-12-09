@@ -100,7 +100,7 @@ class MessagesController extends Base_RestrictedController {
             if($mid = $this->getRequest()->getParam('mid', FALSE)) {
                 $messageService = new Service_Message();
                 if(is_array($message = $messageService->fetchMessage($mid, $this->_user->id))) {
-                    $messageService->read($mid, $this->_user->id, 1);
+                    $messageService->toggleRead($mid, $this->_user->id, 1);
                     $this->_response->appendBody(Zend_Json::encode($message));
                     return;
                 }

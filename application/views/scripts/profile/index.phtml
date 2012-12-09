@@ -134,7 +134,9 @@ if ($this -> profile['Location']['country'] != '')
                         <div class="username" data-bind="text: displayName"></div>
                         <div class="location" data-bind="text: location"></div>
                         <div class="message">
-                            <img src="/assets/img/msg-icon-red.png" alt="Send Message"/>
+                            <a data-bind="click: $root.sendNewMessage">
+                                <img src="/assets/img/msg-icon-red.png" alt="Send Message"/>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -281,6 +283,21 @@ if ($this -> profile['Location']['country'] != '')
                 </section>
             </div>
         </script> 
+        
+        <!-- INLINE SEND MESSAGE MODAL -->
+        <div id="send_message" class="new-message" data-bind="with: newMessage" style="display: none">
+            <header>
+                <h2>New Message</h2>
+            </header>
+            <div class="fields">
+                <span class="fieldname">To:</span> <span data-bind="text: recipients()[0].displayName"></span><br/>
+                <span class="fieldname">Subject:</span>
+                <input type="text" placeholder="Give this message a subject" id="field_subject" data-bind="value: subject"/>
+                <span class="fieldname">Message:</span>
+                <textarea data-bind="value: content, expandingTextarea: true" placeholder="Enter your message here"></textarea>
+            </div>
+            <input type="button" id="button_send" class="submit_button"  value="Send" data-bind="click: $root.sendMessage"/>
+        </div>
       
     </div>
 </div>  

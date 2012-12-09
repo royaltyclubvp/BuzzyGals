@@ -44,10 +44,10 @@ function newMessageRecipient(data) {
 	this.displayName = data.displayName;
 }
 
-function NewMessage(subject, recipient, type, reference) {
+function NewMessage(subject, recipient, type, reference, content) {
 	this.id = "";
 	this.subject = subject;
-	this.content = "";
+	this.content = (content != "") ? content : "";
 	this.recipients = ko.observableArray([]);
 	if(recipient instanceof Array) {
 		this.recipientCount = recipient.length;
@@ -97,7 +97,7 @@ function sentFriendRequest(data) {
 	var self = this;
 	self.id = data.id;
 	self.photo = profileImagesUrl + data.Requestee.Profile.photo;
-	self.displayName = data.Requestee.Profile.photo;
+	self.displayName = data.Requestee.Profile.displayName;
 	self.responded = ko.observable(false);
 	self.cancelFriendRequest = function() {
 		success = MessagesVM.rejectFriendRequest(self.id);
@@ -116,7 +116,7 @@ MessagesVM = new (function() {
 	self.folder = ['New','Inbox','Sent', 'Requests Received', 'Requests Sent'];
 	self.currentFolder = ko.observable();
 	
-	self.newMessage = ko.observable(new NewMessage("","","n",""));
+	self.newMessage = ko.observable(new NewMessage("","","n","",""));
 	self.message = ko.observable();
 	self.inboxMessages = ko.observableArray([]);
 	self.sentMessages = ko.observableArray([]);
@@ -161,7 +161,8 @@ MessagesVM = new (function() {
 		var subject = "Fw: " + message.subject;
 		var type = 'f';
 		var ref = message.id;
-		self.newMessage(new NewMessage(subject, "", type, ref));
+		var content = message.content;
+		self.newMessage(new NewMessage(subject, "", type, ref, content));
 		self.currentFolder("New");
 		location.hash = "New";
 	}
@@ -197,7 +198,7 @@ MessagesVM = new (function() {
 					}
 					else {
 						self.goToFolder("Sent");
-						self.newMessage(new NewMessage("","","n",""));
+						self.newMessage(new NewMessage("","","n","",""));
 					}
 				}
 			});
@@ -234,6 +235,7 @@ MessagesVM = new (function() {
 				requestid : id
 			},
 			type : "GET",
+			async : false,
 			dataType : "text",
 			success : function(result) {
 				if(result = "1")
@@ -251,6 +253,7 @@ MessagesVM = new (function() {
 				requestid : id
 			},
 			type : "GET",
+			async : false,
 			dataType : "text",
 			success : function(result) {
 				if(result = "1")
@@ -300,9 +303,9 @@ MessagesVM = new (function() {
 			else if(this.params.folder == "RequestsSent") {
 				$.getJSON("/messages/loadsentrequests", function(allData) {
 					var mappedRequests = $.map(allData.root, function(request) {
-						return new receivedFriendRequest(request);
+						return new sentFriendRequest(request);
 					});
-					self.requestsReceived(mappedRequests);
+					self.requestsSent(mappedRequests);
 				});
 			}
 		});

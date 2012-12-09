@@ -2,7 +2,7 @@
 $this->menuTitle = "Message Center";
 $this->additionalBodyClasses = "my_messages";
 $this->additionalScripts = '<script src="/assets/js/messages.js"></script>';
-
+$this->profileImagesUrl = Zend_Registry::get('profileImagesUrl');
 ?>
 <div id="menu" data-bind="foreach: folder">
     <li data-bind="text: $data, css: {current: $data == $root.currentFolder() }, click: $root.goToFolder"></li>
@@ -45,7 +45,7 @@ $this->additionalScripts = '<script src="/assets/js/messages.js"></script>';
                 <input type="button" id="button_delete" class="mail_option" value="Delete" data-bind="click: $root.deleteMessage"/>
             </aside>
             <div class="fields">
-                <span class="field"><span class="name">From:</span> <span data-bind="text: sender.Profile.displayName, attr: { 'href': '/profile/'+displayName.toLowerCase() }"></span></span>
+                <span class="field"><span class="name">From:</span> <a class="displayName" data-bind="attr: { 'href': '/'+sender.Profile.displayName.toLowerCase()+'/view/' }"><span data-bind="text: sender.Profile.displayName"></span></a></span>
                 <span class="field"><span class="name">Date:</span> <span data-bind="text: date"></span></span>
                 <span class="field"><span class="name">Subject:</span> <span data-bind="text: subject"></span></span>
                 <hr/>
@@ -118,6 +118,9 @@ $this->additionalScripts = '<script src="/assets/js/messages.js"></script>';
     
     <!-- RECEIVED FRIEND REQUESTS -->
     <script type="text/html" id="friendreqreceived-template">
+        <header class="requests-header">
+            <h2>Friend Requests Received</h2>
+        </header>
         <div class="requests" data-bind="foreach: requestsReceived">
             <div class="request">
                 <img data-bind="attr: { 'src': photo, 'alt': displayName }" class="left" width="65" height="65"/>
@@ -138,6 +141,9 @@ $this->additionalScripts = '<script src="/assets/js/messages.js"></script>';
     
     <!-- SENT FRIEND REQUESTS -->
     <script type="text/html" id="friendreqsent-template">
+        <header class="requests-header">
+            <h2>Friend Requests Sent</h2>   
+        </header>
         <div class="requests" data-bind="foreach: requestsSent">
             <div class="request">
                 <img data-bind="attr: { 'src': photo, 'alt': displayName }" class="left" width="65" height="65"/>
@@ -159,5 +165,6 @@ $this->additionalScripts = '<script src="/assets/js/messages.js"></script>';
 <div class="clearfix"></div>
 <? $this->variablesJS = '<script type="text/javascript">
     var sendMsgBaseUrl="/messages#New/to/";
+    var profileImagesUrl="'.$this->profileImagesUrl.'";
  </script>';
 echo $this->variablesJS; ?>

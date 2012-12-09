@@ -1,14 +1,21 @@
 <?php
-$this->additionalBodyClasses = 'resources townhall topic';
+$this->additionalBodyClasses = 'resources townhall topic search';
 $this->additionalScripts = '<script src="/assets/js/resourcesearch.js"></script>';
-$this->menuTitle = $this->title.' Resources';
+$this->menuTitle = 'Resource Search';
 ?>
 <div id="resource_search">
-    <input type="text" name="search" placeholder="Search Resources" data-bind="value: searchValue, hasfocus: showSearchButton"/>
-    <input type="button" class="submit_button" name="search_submit" value="Search" data-bind="visible: showSearchButton()==true || searchValue().length > 0, click: $root.searchResources" />
+    <form action="/resources/search" method="get">
+        <input type="text" name="searchTerms" placeholder="Search Resources" data-bind="value: searchValue, hasfocus: showSearchButton"/>
+        <input type="submit" class="submit_button" name="search_submit" value="Search" data-bind="visible: showSearchButton()==true || searchValue().length > 0" />
+    </form>
 </div>
+<div id="search_details">
+    <p class="left"><span data-bind="text: resourceCount"></span> Matching Results Found</p>
+    <p class="right">Currently showing results <span data-bind="text: currentResultsLower"></span> to <span data-bind="text: currentResultsUpper"></span></p>
+    <div class="clearfix"></div>
+</div>  
 <div id="topic_resources" class="article_listing">
-    <div data-bind="foreach: resources">
+    <div data-bind="foreach: currentResources">
         <article class="resource">
             <div class="resource_header">
                 <div class="resource_title bold left"data-bind="text: name"></div>
@@ -23,10 +30,19 @@ $this->menuTitle = $this->title.' Resources';
         </article>
     </div>
 </div>
+<div id="pagination">
+    <span id="previous_page" class="left" data-bind="if: currentPage() > 1, click: showPreviousResultsPage">
+        << Back
+    </span>
+    <span id="next_page" class="right" data-bind="if: currentPage() < totalPages(), click: showNextResultsPage">
+        Next >>
+    </span>
+    <div class="clearfix"></div>
+</div>
 <? $this->variablesJS = '<script type="text/javascript">
     var resources='.Zend_Json::encode($this->resources).';
     var resourceCount='.$this->resultTotal.';  
-    var searchValue='.$this->searchTerms.';
+    var searchValue="'.$this->searchTerms.'";
     var noPerPage='.$this->searchNoPerPage.';
 </script>';
 echo $this->variablesJS; ?>

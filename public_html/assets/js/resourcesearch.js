@@ -36,6 +36,7 @@ ResourceVM = new (function() {
 	self.currentResources = ko.observableArray([]);
 	self.currentPage = ko.observable();
 	self.noPerPage = ko.observable();
+	self.totalPages = ko.observable();
 	self.currentResultsLower = ko.observable();
 	self.currentResultsUpper = ko.observable();
 	
@@ -86,6 +87,7 @@ ResourceVM = new (function() {
 		self.resourceCount(count);
 		self.currentPage(1);
 		self.noPerPage(noPerPage);
+		self.totalPages(Math.ceil(self.resourceCount()/self.noPerPage()));
 		self.currentResultsLower(0);
 		self.currentResultsUpper(self.currentResources().length);
 	}
@@ -100,8 +102,17 @@ ResourceVM = new (function() {
 	self.showNextResultsPage = function() {
 		self.currentPage(self.currentPage()+1);
 		self.currentResultsLower(((self.currentPage()-1)*self.noPerPage())+1);
-		self.currentResultsUpper(self.currentPage()*self.noPerPage());
+		if(self.currentPage() < self.totalPages()) {
+			self.currentResultsUpper(self.currentPage()*self.noPerPage());
+		}
+		else {
+			self.currentResultsUpper(self.resourceCount());
+		}
 		self.currentResources(self.resources().slice(self.currentResultsLower()-1, self.currentResultsUpper()));
 	}
 	
-})
+	self.loadInitialSearchResults(resources, resourceCount, noPerPage, searchValue);
+	
+});
+
+ko.applyBindings(ResourceVM, $("#content")[0]);

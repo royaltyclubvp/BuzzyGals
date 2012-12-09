@@ -180,3 +180,5 @@ FriendProfileVM = new (function() {
 		self.goToPage("About");
 	}
 });
+
+ko.applyBindings(FriendProfileVM, $("#content")[0]);

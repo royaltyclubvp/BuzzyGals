@@ -6,43 +6,67 @@ $this->additionalScripts = '
 ';
 $this->profileImagesUrl = Zend_Registry::get('profileImagesUrl');
 ?>
+<div id="user_search">
+	<form action="/user/search" method="get">
+		<input type="text" name="searchTerms" placeholder="Search Users" data-bind="value: searchValue, hasfocus: showSearchButton"/>
+		<input type="submit" class="submit_button" name="search_submit" value="Search" data-bind="visible: showSearchButton()==true || searchValue().length > 0" />
+	</form>
+</div>
 <div id="search_details">
-    <p class="left"><span data-bind="text: resultCount"></span> Matching Results Found</p>
-    <p class="right">Currently showing results <span data-bind="text: currentResultsLower"></span> to <span data-bind="text: currentResultsUpper"></span></p>
-    <div class"clearfix"></div>
+	<p class="left">
+		<span data-bind="text: resultCount"></span> Matching Results Found
+	</p>
+	<p class="right">
+		Currently showing results <span data-bind="text: currentResultsLower"></span> to <span data-bind="text: currentResultsUpper"></span>
+	</p>
+	<div class"clearfix"></div>
 </div>
 <div id="user_search_results" data-bind="foreach: currentResults">
-      <div class="result">
-          <a data-bind="attr: { 'href': url }">
-              <img data-bind="attr: { 'src': photo, 'alt': displayName }" class="left" width="115" height="115"/>
-          </a>
-          <div class="info right">
-              <div class="username" data-bind="text: displayName"></div>
-              <div class="connections" data-bind="if: connections() > 0">
-                  <span data-bind="text: connections"></span> <span data-bind="visible: connections()==1">Connection</span><span data-bind="visible: connections()!=1">Connections</span>
-              </div>
-              <div class="location" data-bind="text: locaton"></div>
-              <div class="message" data-bind="if: friend">
-                  <img src="/assets/img/msg-icon-red.png" alt="Send Message"/>
-              </div>
-              <div class="add_friend" data-bind="ifnot: friend">
-                  <input type="button" class="submit_button" value="Request As Friend" data-bind="ifnot: requested, click: requestFriendship"/>
-                  <input type="button" class="submit_button" value="Request Sent" data-bind="if: requested, disable: requested" />
-              </div>
-          </div>
-          <div class="clearfix"></div>
-      </div>
+	<div class="result">
+		<a data-bind="attr: { 'href': url }"> <img data-bind="attr: { 'src': photo, 'alt': displayName }" class="left" width="115" height="115"/> </a>
+		<div class="info right">
+			<div class="username" data-bind="text: displayName"></div>
+			<div class="connections" data-bind="if: connections() > 0">
+				<span data-bind="text: connections"></span><span data-bind="visible: connections()==1">Connection</span><span data-bind="visible: connections()!=1">Connections</span>
+			</div>
+			<div class="location" data-bind="text: locaton"></div>
+			<div class="message" data-bind="if: friend">
+				<a data-bind="click: $root.sendNewMessage"> <img src="/assets/img/msg-icon-red.png" alt="Send Message"/> </a>
+			</div>
+			<div class="add_friend" data-bind="ifnot: friend">
+				<input type="button" class="submit_button" value="Request As Friend" data-bind="ifnot: requested, click: requestFriendship"/>
+				<input type="button" class="submit_button" value="Request Sent" data-bind="if: requested, disable: requested" />
+			</div>
+		</div>
+		<div class="clearfix"></div>
+	</div>
 </div>
 <div id="pagination">
-    <span id="previous_page" class="left" data-bind="click: loadPreviousPage">
+    <span id="previous_page" class="left" data-bind="if: currentPage() > 1, click: showPreviousResultsPage">
         << Back
     </span>
-    <span id="next_page" class="right" data-bind-"click: loadNextPage">
+    <span id="next_page" class="right" data-bind="if: currentPage() < totalPages(), click: showNextResultsPage">
         Next >>
     </span>
     <div class="clearfix"></div>
 </div>
+<!-- INLINE SEND MESSAGE MODAL -->
+<div id="send_message" class="new-message" data-bind="with: newMessage" style="display: none">
+	<header>
+		<h2>New Message</h2>
+	</header>
+	<div class="fields">
+		<span class="fieldname">To:</span><span data-bind="text: recipients()[0].displayName"></span>
+		<br/>
+		<span class="fieldname">Subject:</span>
+		<input type="text" placeholder="Give this message a subject" id="field_subject" data-bind="value: subject"/>
+		<span class="fieldname">Message:</span>
+		<textarea data-bind="value: content, expandingTextarea: true" placeholder="Enter your message here"></textarea>
+	</div>
+	<input type="button" id="button_send" class="submit_button"  value="Send" data-bind="click: $root.sendMessage"/>
+</div>
 <? $this->variablesJS = '<script type="text/javascript">
-    var profileImagesUrl="'.$this->profileImagesUrl.'";
+var profileImagesUrl="'.$this->profileImagesUrl.'";
 </script>';
-echo $this->variablesJS; ?>
+    echo $this->variablesJS;
+ ?>

@@ -145,8 +145,8 @@ input :-moz-placeholder {
 	font-size: 14px;
 }
 
-#topmenutemplate .my_messages .new-message .fields input[type="text"],
-#topmenutemplate .my_messages .new-message .fields textarea,
+#topmenutemplate .new-message .fields input[type="text"],
+#topmenutemplate .new-message .fields textarea,
 #topmenutemplate #profile_content .profile_section_content textarea.profile_edit,
 #topmenutemplate #profile_content .profile_section_content textarea.story_edit {
 	border-radius: 10px;
@@ -397,7 +397,7 @@ article.single_page_article .submit_button {
   }
   
   .my_messages #menu li {
-  		height: 20px;
+  		height: auto;
   		color: #333030;
   		font-size: 14px;
   		font-weight: 100;
@@ -418,10 +418,10 @@ article.single_page_article .submit_button {
   }
   
   .my_messages #message_content header {
-  		width: 100%;
+  		width: 584px;
   		height: 27px;
   		padding: 5px 0 0 10px;
-  		background: url('/assets/img/messages-header.png') no-repeat 0 0;
+  		background: #C61804;
   }
   
   .my_messages #message_content header span {
@@ -452,8 +452,8 @@ article.single_page_article .submit_button {
   		height: 9px;
   		border-radius: 4px;
   		-moz-border-radius: 4px;
-  		background: #e6242c;
-  		border: 1px solid #c3c3c3;
+  		background: #000000;
+  		border: 1px solid #FFFFFF;
   		cursor: pointer;
   }
   
@@ -461,10 +461,11 @@ article.single_page_article .submit_button {
   .my_messages #message_content .message span:nth-child(4):hover,
   .my_messages .messages .message span:nth-child(4).read {
   		background: #FFFFFF;
+  		border: 1px solid #000000;
   }
   
    .my_messages #message_content .messages .message span.read:hover {
-   		background: #E6242C;
+   		background: #000000;
    }
   
   
@@ -499,8 +500,8 @@ article.single_page_article .submit_button {
   		width: 167px;
   }
   
-  .my_messages #message_content .new-message header {
-  		background: #c61804;
+  .new-message header,
+  header.requests-header {
   		background-image: none;
   		padding: 8px 0 0;	
   		width: 100%;
@@ -509,43 +510,51 @@ article.single_page_article .submit_button {
   		margin: 0 0 10px;
   }
   
-  .my_messages .new-message header h2 {
+  #send_message.new-message header {
+        width: 584px;
+        height: 27px;
+        padding: 5px 0 0 10px;
+        background: #C61804;
+  }
+  
+  .new-message header h2,
+  header.requests-header h2 {
   		font-size: 14px;
   		font-weight: 100;
   }
   
-  .my_messages .new-message .fields {
+  .new-message .fields {
   		margin: 0 0 30px;
   }
   
-  .my_messages .new-message .fields span.fieldname {
+  .new-message .fields span.fieldname {
   		color: #000;
   		font-size: 14px;
   		padding: 0 12px 0 0;
   		display: inline-block;
   }
   
-  .my_messages .new-message .fields input {
+  .new-message .fields input {
   		margin: 0 0 10px;
   		font-size: 12px;
   		font-style: italic;
   		display: block;
   }
   
-  .my_messages .new-message .fields textarea {
+  .new-message .fields textarea {
   		font-size: 12px;
   		display: block;
   }
   
-  .my_messages .new-message .fields input.field_recipient {
+  .new-message .fields input.field_recipient {
   		margin: 0 0 4px;
   }
   
-  .my_messages .new-message .fields .recipients {
+  .new-message .fields .recipients {
   		padding: 3px 20px 10px 0;
   }
   
-  .my_messages .new-message .fields .recipients .recipient {
+  .new-message .fields .recipients .recipient {
   		display: inline-block;
   		border-radius: 5px;
   		-moz-border-radius: 5px;
@@ -553,19 +562,19 @@ article.single_page_article .submit_button {
   		padding: 2px 3px 2px 5px;
   }
   
-  .my_messages .new-message .fields .recipients .recipient span:nth-child(1) {
+  .new-message .fields .recipients .recipient span:nth-child(1) {
   		font-size: 12px;
   		padding: 0 8px 0 0;
   }
   
-  .my_messages .new-message .fields .recipients .recipient span:nth-child(2) {
+  .new-message .fields .recipients .recipient span:nth-child(2) {
   		font-size: 11px;
   		padding: 1px;
   		text-transform: uppercase;
   		cursor: pointer;
   }
   
-  .my_messages .new_message .fields .recipients .recipient span:nth-child(2):hover {
+  .new_message .fields .recipients .recipient span:nth-child(2):hover {
   		background: #C2C2C2;
   		cursor: pointer;
   }
@@ -595,7 +604,7 @@ article.single_page_article .submit_button {
   		padding: 0 10px 0 0;
   }
   
-  .my_messages .received-message .fields .field:first-child span:nth-child(2),
+  .my_messages .received-message .fields .field:first-child a.displayName,
   .my_messages .sent-message .fields .field div.right span {
   		font-weight: bold;
   }
@@ -634,6 +643,11 @@ article.single_page_article .submit_button {
   		margin: 0 10px 0 0;
   }
   
+  .my_messages .requests .request .info {
+      text-align: left;
+      width: 480px;
+  }
+  
   .my_messages .requests .request .info .request_response {
   		margin: 10px 0 0;
   }
@@ -641,6 +655,7 @@ article.single_page_article .submit_button {
   .my_messages .requests .request .info .request_response .submit_button {
   		display: inline-block;
   		margin: 0 15px 0 0;
+  		padding: 8px 10px;
   }
   
    
@@ -685,11 +700,15 @@ article.single_page_article .submit_button {
    }
    
    #topmenutemplate #main #content.townhall.resources,
-   #topmenutemplate #main #content.search #search_details,
-   #topmenutemplate #main #content.search #user_search_results,
-   #topmenutemplate #main #content.search #pagination  {
+   #topmenutemplate #main #content.search #user_search_results  {
    		width: 685px;
    		padding: 0;
+   }
+   
+   #topmenutemplate #main #content.search #search_details,
+   #topmenutemplate #main #content.search #pagination {
+       width: 675px;
+       padding: 0;
    }
    
    #topmenutemplate #main .resources #resource_search {
@@ -699,7 +718,7 @@ article.single_page_article .submit_button {
    }
    
    
-   #resource_search input[name="search"] {
+   #resource_search input[name="searchTerms"] {
    		display: inline-block;
    		height: 30px;
    		border-radius: 5px;
@@ -712,8 +731,6 @@ article.single_page_article .submit_button {
    }
    
    .search #search_details {
-   		border-bottom: 1px solid black;
-   		border-left: 1px solid black;
    		padding: 0 0 0 10px;
    		margin: 0 0 10px;
    }
@@ -726,11 +743,13 @@ article.single_page_article .submit_button {
    .search #pagination {
    		font-size: 11px;
    		color: #A31707;
+   		padding:
    }
    
    .search #pagination #previous_page:hover,
    .search #pagination #next_page:hover {
    		text-decoration: underline;
+   		cursor: pointer;
    }
    
    .search #user_search_results .result {

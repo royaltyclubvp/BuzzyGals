@@ -132,9 +132,6 @@ abstract class Model_Base_Resource extends Doctrine_Record
         $this->hasOne('Model_Resourcetypes as Type', array(
              'local' => 'type',
              'foreign' => 'id'));
-        $this->hasOne('Model_Location as Location', array(
-             'local' => 'location',
-             'foreign' => 'id'));
         $this->hasMany('Model_Resourcetopic as Resourcetopics', array(
              'local' => 'id',
              'foreign' => 'resource'));

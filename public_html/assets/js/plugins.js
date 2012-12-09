@@ -298,6 +298,15 @@ ko.bindingHandlers.imageCrop = {
 		});
 	}
 }
+
+ko.bindingHandlers.inlineLightBox = {
+	init: function(element) {
+		$(element).fancybox({
+			width: 500,
+			maxHeight: 600
+		});
+	}
+}
 ko.bindingHandlers.uploader = {
 	completeHandler : function(event, id, filename, response) {
 		file = $(this).fineUploader('getItemByFileId', id);
