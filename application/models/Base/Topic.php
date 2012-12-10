@@ -75,5 +75,10 @@ abstract class Model_Base_Topic extends Doctrine_Record
         $this->hasMany('Model_Resourcetopic as Resourcetopic', array(
              'local' => 'id',
              'foreign' => 'topic'));
+        $this->hasMany('Model_User as Followers', array(
+            'local' => 'topic',
+            'foreign' => 'user',
+            'refClass' => 'Model_Followedtopic'
+        ));
     }
 }

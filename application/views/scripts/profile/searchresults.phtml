@@ -6,7 +6,7 @@ $this->additionalScripts = '
 ';
 $this->profileImagesUrl = Zend_Registry::get('profileImagesUrl');
 ?>
-<div id="user_search">
+<div id="user_search_container">
 	<form action="/user/search" method="get">
 		<input type="text" name="searchTerms" placeholder="Search Users" data-bind="value: searchValue, hasfocus: showSearchButton"/>
 		<input type="submit" class="submit_button" name="search_submit" value="Search" data-bind="visible: showSearchButton()==true || searchValue().length > 0" />
@@ -14,28 +14,29 @@ $this->profileImagesUrl = Zend_Registry::get('profileImagesUrl');
 </div>
 <div id="search_details">
 	<p class="left">
-		<span data-bind="text: resultCount"></span> Matching Results Found
+		<span data-bind="text: userCount"></span> Matching Results Found
 	</p>
 	<p class="right">
 		Currently showing results <span data-bind="text: currentResultsLower"></span> to <span data-bind="text: currentResultsUpper"></span>
 	</p>
-	<div class"clearfix"></div>
+	<div class="clearfix"></div>
 </div>
 <div id="user_search_results" data-bind="foreach: currentResults">
 	<div class="result">
 		<a data-bind="attr: { 'href': url }"> <img data-bind="attr: { 'src': photo, 'alt': displayName }" class="left" width="115" height="115"/> </a>
 		<div class="info right">
 			<div class="username" data-bind="text: displayName"></div>
-			<div class="connections" data-bind="if: connections() > 0">
-				<span data-bind="text: connections"></span><span data-bind="visible: connections()==1">Connection</span><span data-bind="visible: connections()!=1">Connections</span>
+			<div class="connections" data-bind="if: connections > 0">
+				<span data-bind="text: connections"></span><span data-bind="visible: connections==1"> Connection</span><span data-bind="visible: connections!=1"> Connections</span>
 			</div>
-			<div class="location" data-bind="text: locaton"></div>
+			<div class="location" data-bind="text: location"></div>
 			<div class="message" data-bind="if: friend">
 				<a data-bind="click: $root.sendNewMessage"> <img src="/assets/img/msg-icon-red.png" alt="Send Message"/> </a>
 			</div>
 			<div class="add_friend" data-bind="ifnot: friend">
-				<input type="button" class="submit_button" value="Request As Friend" data-bind="ifnot: requested, click: requestFriendship"/>
-				<input type="button" class="submit_button" value="Request Sent" data-bind="if: requested, disable: requested" />
+				<input type="button" class="submit_button" value="Send Request" data-bind="visible: !requested() && !requestreceived(), click: requestFriendship"/>
+				<input type="button" class="submit_button" value="Cancel" data-bind="visible: requested(), click: cancelRequest" />
+				<input type="button" class="submit_button" value="Accept Request" data-bind="visible: requestreceived(), click: acceptRequest"/>
 			</div>
 		</div>
 		<div class="clearfix"></div>
@@ -67,6 +68,10 @@ $this->profileImagesUrl = Zend_Registry::get('profileImagesUrl');
 </div>
 <? $this->variablesJS = '<script type="text/javascript">
 var profileImagesUrl="'.$this->profileImagesUrl.'";
+var users='.Zend_Json::encode($this->users).';
+var userCount='.$this->resultTotal.';
+var searchValue="'.$this->searchTerms.'";
+var noPerPage='.$this->searchNoPerPage.';
 </script>';
     echo $this->variablesJS;
  ?>

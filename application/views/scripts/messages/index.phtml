@@ -49,7 +49,7 @@ $this->profileImagesUrl = Zend_Registry::get('profileImagesUrl');
                 <span class="field"><span class="name">Date:</span> <span data-bind="text: date"></span></span>
                 <span class="field"><span class="name">Subject:</span> <span data-bind="text: subject"></span></span>
                 <hr/>
-                <p data-bind="text: content"></p>
+                <p data-bind="html: content"></p>
             </div>
         </div>
     </script>
@@ -87,7 +87,7 @@ $this->profileImagesUrl = Zend_Registry::get('profileImagesUrl');
                 <span class="field"><span class="name">Date:</span> <span data-bind="text: date"></span></span>
                 <span class="field"><span class="name">Subject:</span> <span data-bind="text: subject"></span></span>
                 <hr/>
-                <p data-bind="text: content"></p>
+                <p data-bind="html: content"></p>
             </div>
         </div>
     </script>

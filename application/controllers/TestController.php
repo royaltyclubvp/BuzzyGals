@@ -149,9 +149,95 @@ class TestController extends Base_FoundationController {
         $this->render('friend');
     }
     
+    public function listresourcesAction() {
+        if($topicName = $this->getRequest()->getParam('topic', FALSE)) {
+            $topicService = new Service_Topic();
+            if(is_array($topics = $topicService->fetchUrlList())) {
+                if($topic = array_search($topicName, $topics)) {
+                    //$this->_helper->layout->setLayout('topmenu');
+                    $resourceService = new Service_Resource();
+                    if(is_array($resources = $resourceService->fetchByTopic($topic))) {
+                        for($i=0; $i < $resources['total']; $i++) {
+                            $bookmarked = false;
+                            if(count($resources['resources'][$i]['Bookmarkers'])) {
+                                foreach($resources['resources'][$i]['Bookmarkers'] as $bookmarker) {
+                                    if($this->_user->id = $bookmarker['id']) {
+                                        $bookmarked = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            $resources['resources'][$i]['bookmarked'] = $bookmarked;
+                            $resources['resources'][$i]['userid'] = $this->_user->id;
+                        }
+                        //$this->view->title = ucfirst($topicName);
+                        $this->view->result = $resources['resources'];
+                       //$this->view->resourceCount = $resources['total'];
+                        return $this->render('friend');
+                    }
+                    else {
+                        return $this->_redirect("/resources/error");
+                    }
+                }
+                else 
+                    return $this->_redirect("/resources/error");
+            }
+            else 
+                return $this->_redirect("/error"); //Modify for Error Response Page
+        }
+    }
+    
     public function searchusersAction() {
-        $this->view->result = $this->friendService->searchUsers('jsimmons');
-        $this->render('friend');
+        if($this->getRequest()->isGet()) {
+            if($terms = $this->getRequest()->getParam('searchTerms', FALSE)) {
+                $userService = new Service_User();
+                if(is_array($results = $userService->searchUsers($terms))) {
+                    //$this->_helper->layout->setLayout('topmenu');
+                    for($i=0; $i < count($results); $i++) {
+                        $friended = false;
+                        if(count($results[$i]['Friends'])) {
+                            foreach($results[$i]['Friends'] as $friend) {
+                                if(12 == $friend['friend']) {
+                                    $friended = true;
+                                    break;
+                                }
+                            }
+                        }
+                        $results[$i]['friend'] = $friended;
+                        $results[$i]['connections'] = count($results[$i]['Friends']);
+                        if(!$friended) {
+                            $request = false;
+                            if(count($results[$i]['OutgoingFriendRequests'])) {
+                                foreach($results[$i]['OutgoingFriendRequests'] as $outgoing) {
+                                    if(12 == $outgoing['requestee']) {
+                                        $request = true;
+                                        $results[$i]['requestid'] = $outgoing['id'];
+                                        break;
+                                    }
+                                }
+                            }
+                            $results[$i]['incomingRequest'] = $request;
+                            if(!$request) {
+                                $requested = false;
+                                if(count($results[$i]['IncomingFriendRequests'])) {
+                                    foreach($results[$i]['IncomingFriendRequests'] as $incoming) {
+                                        if(12 == $incoming['requestor']) {
+                                            $requested = true;
+                                            $results[$i]['requestid'] = $incoming['id'];
+                                            break;
+                                        }
+                                    }
+                                }
+                                $results[$i]['outgoingRequest'] = $requested;
+                            }
+                        }
+                    }
+                    $result['root'] = $results;
+                    $this->view->result = $result;
+                    return $this->render('friend');
+                }
+            }
+        }
     }
     
     public function addstoryAction() {
@@ -405,6 +491,7 @@ class TestController extends Base_FoundationController {
     
     public function gentablesAction() {
         Doctrine_Core::createTablesFromArray(array('Model_Resource'));
+        $this->render('friend');
     }
     
     public function messagecountAction() {

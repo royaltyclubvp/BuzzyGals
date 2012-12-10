@@ -40,9 +40,9 @@
 						<span id="message_counter" data-bind="text: messageCount"></span>
 					</div>
 					<div id="user_search">
-						<form action="/users/search" method="post">
-							<input type="text" name="searchterms" placeholder="Search Users" value="" />
-							<input type="submit" value="Search" name"submit"/>
+						<form action="/user/search" method="get">
+							<input type="text" name="searchTerms" placeholder="Search Users" value="" />
+							<input type="submit" value="Search" name="submit"/>
 						</form>
 					</div>
 					<div class="clearfix"></div>

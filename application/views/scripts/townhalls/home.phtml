@@ -1,20 +1,32 @@
 <?php
 $this->additionalBodyClasses = 'resources townhall';
 $this->menuTitle = 'Townhall Center';
+$this->additionalScripts = '
+    <script src="/assets/js/townhallHome.js"></script>
+';
 ?>
-<div id="townhalls" class="townhall_listing">
-    <? foreach($this->topics as $topic): ?>
-        <article class="townhall_item">
-            <div class="townhall_icon left">
-                <a href="/townhall/<? echo strtolower(preg_replace('/\s+/', '', $topic['name'])); ?>">
-                    <img src="/assets/img/townhall-large.png" width="90" height="93"/>
-                </a>
-            </div>
-            <div class="townhall_details right">
-                <h2 class="lightred"><a href="/townhall/<? echo strtolower(preg_replace('/\s+/', '', $topic['name'])); ?>"><? echo $topic['name']; ?></a></h2>
-                <p><? echo $topic['description']; ?></p>
-            </div> 
+<div id="townhalls" class="townhall_listing" data-bind="foreach: townhalls">
+    <article class="townhall_item">
+        <div class="townhall_icon left">
+            <a data-bind="attr : { 'href': url }">
+                <img src="/assets/img/townhall-large.png" width="90" height="93"/>
+            </a>
+        </div>
+        <div class="townhall_details right">
+            <h2 class="lightred left">
+                <a data-bind="attr : { 'href': url }, text: name"></a>
+            </h2>
+            <span><span data-bind="visible: following(), click: unfollow">Unfollow Townhall</span><span data-bind="visible: !following(), click: follow">Follow Townhall</span></span>
             <div class="clearfix"></div>
-        </article>
-    <? endforeach ?>
+            <p data-bind="text: description"></p>
+        </div>
+        <div class="clearfix"></div>
+    </article>
 </div>
+<? $this->variablesJS = '<script type="text/javascript">
+    var townhalls='.Zend_Json::encode($this->townhalls).';
+</script>';
+echo $this->variablesJS;
+?>
+
+

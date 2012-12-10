@@ -204,4 +204,37 @@ class Service_User extends Service_Base_Foundation {
              return true;
          }
          
+         /**
+     * Searches For Users
+     * 
+     * @param   array       $terms          Search Terms
+     * @return  array | bool 
+     */
+    public function searchUsers($terms) {
+        $profileTable = Doctrine_Core::getTable('Model_Profile');
+        try {
+            $results = $profileTable->search($terms);    
+        }
+        catch (Doctrine_Exception $e) {
+            return $e->getMessage();
+        }
+        $ids = array();
+        foreach($results as $result) {
+            $ids[] = $result['id'];
+        }
+        $query = Doctrine_Query::create()
+                ->from('Model_Profile p')
+                ->leftJoin('p.Friends f')
+                ->leftJoin('p.Location l')
+                ->leftJoin('p.IncomingFriendRequests ifr')
+                ->leftJoin('p.OutgoingFriendRequests ofr');
+                //->whereIn('id', $ids);
+        try {
+            $results = $query->fetchArray();
+        }
+        catch (Doctrine_Exception $e) {
+            return $e->getMessage();
+        }
+        return $results;
+    }
 }

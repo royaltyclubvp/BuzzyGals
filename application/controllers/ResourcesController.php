@@ -19,7 +19,7 @@ class ResourcesController extends Base_RestrictedController {
                             $bookmarked = false;
                             if(count($resources['resources'][$i]['Bookmarkers'])) {
                                 foreach($resources['resources'][$i]['Bookmarkers'] as $bookmarker) {
-                                    if($this->_user->id = $bookmarker['id']) {
+                                    if($this->_user->id == $bookmarker['id']) {
                                         $bookmarked = true;
                                         break;
                                     }
@@ -51,7 +51,7 @@ class ResourcesController extends Base_RestrictedController {
                 $bookmarked = false;
                 if(count($newestResources[$i]['Bookmarkers'])) {
                     foreach($newestResources[$i]['Bookmarkers'] as $bookmarker) {
-                        if($this->_user->id = $bookmarker['id']) {
+                        if($this->_user->id == $bookmarker['id']) {
                             $bookmarked = true;
                             break;
                         }
@@ -65,7 +65,7 @@ class ResourcesController extends Base_RestrictedController {
                 $bookmarked = false;
                 if(count($locationResources['resources'][$i]['Bookmarkers'])) {
                     foreach($locationResources['resources'][$i]['Bookmarkers'] as $bookmarker) {
-                        if($this->_user->id = $bookmarker['id']) {
+                        if($this->_user->id == $bookmarker['id']) {
                             $bookmarked = true;
                             break;
                         }
@@ -112,7 +112,7 @@ class ResourcesController extends Base_RestrictedController {
                         $bookmarked = false;
                         if(count($results[$i]['Bookmarkers'])) {
                             foreach($results[$i]['Bookmarkers'] as $bookmarker) {
-                                if($this->_user->id = $bookmarker['id']) {
+                                if($this->_user->id == $bookmarker['id']) {
                                     $bookmarked = true;
                                     break;
                                 }

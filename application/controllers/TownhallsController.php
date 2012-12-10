@@ -59,7 +59,21 @@ class TownhallsController extends Base_RestrictedController {
     public function homeAction() {
         $this->_helper->layout->setLayout('topmenu');
         $topicService = new Service_Topic();
-        $this->view->topics = $topicService->fetchAll();
+        $results = $topicService->fetchAll();
+        for($i=0; $i < count($results); $i++) {
+            $following = false;
+            if(count($results[$i]['Followers'])) {
+                foreach($results[$i]['Followers'] as $follower) {
+                    if($this->_user->id == $follower['id']) {
+                        $following = true;
+                        break;
+                    }
+                }
+            }
+            $results[$i]['following'] = $following;
+        }
+        $result['root'] = $results;
+        $this->view->townhalls = $result;
         return $this->render();
     }
     

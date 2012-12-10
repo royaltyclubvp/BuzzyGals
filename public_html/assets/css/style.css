@@ -173,7 +173,8 @@ input :-moz-placeholder {
 	font-size: 12px;
 }
 
-.resources .submit_button {
+.resources .submit_button,
+.search #user_search_container .submit_button {
 	display: inline-block;
 	margin: 0 0 0 10px;
 }
@@ -699,8 +700,7 @@ article.single_page_article .submit_button {
    		border-left: 1px solid #CCCCCC;
    }
    
-   #topmenutemplate #main #content.townhall.resources,
-   #topmenutemplate #main #content.search #user_search_results  {
+   #topmenutemplate #main #content.townhall.resources  {
    		width: 685px;
    		padding: 0;
    }
@@ -711,14 +711,16 @@ article.single_page_article .submit_button {
        padding: 0;
    }
    
-   #topmenutemplate #main .resources #resource_search {
+   #topmenutemplate #main .resources #resource_search,
+   #topmenutemplate #main .search #user_search_container {
    		width: 500px;
    		height: auto;
    		margin: 0 0 15px;
    }
    
    
-   #resource_search input[name="searchTerms"] {
+   #resource_search input[name="searchTerms"],
+   #user_search_container input[name="searchTerms"] {
    		display: inline-block;
    		height: 30px;
    		border-radius: 5px;
@@ -743,7 +745,6 @@ article.single_page_article .submit_button {
    .search #pagination {
    		font-size: 11px;
    		color: #A31707;
-   		padding:
    }
    
    .search #pagination #previous_page:hover,
@@ -752,14 +753,36 @@ article.single_page_article .submit_button {
    		cursor: pointer;
    }
    
-   .search #user_search_results .result {
-   		padding: 0 10px;
+   .search #user_search_results {
+   		border-top: 1px solid #000000;
+   		padding: 10px 0 0;
+   		width: 675px;
    }
    
-   .search #user_search_results .result img {
+   .search #user_search_results .result {
+   		padding: 0 10px;
+   		margin: 0 0 10px;
+   }
+   
+   .search #user_search_results .result .info {
+   		width: 500px;
+   		text-align: left;
+   }
+   
+   .search #user_search_results .result .info .connections {
+   		font-size: 12px;
+   		font-style: italic;
+   		color: #999999;
+   }
+   
+   .search #user_search_results .result>img {
    		width: 115px;
    		height: 115px;
    		margin: 0 10px 0 0;
+   }
+   
+   .search #user_search_results .result .info .message {
+   		cursor: pointer;
    }
    
  	.search #user_search_results .result .add_friend {}
@@ -776,6 +799,14 @@ article.single_page_article .submit_button {
    		padding: 0 15px;
    		width: 560px;
    		text-align: left;
+   }
+   
+   .townhall_listing .townhall_item .townhall_details > span {
+   		font-size: 10px;
+   		color: #000000;
+   		margin: 0 0 0 10px;
+   		vertical-align: bottom;
+   		cursor: pointer;
    }
    
    .townhall_listing .townhall_item .townhall_details h2 {
@@ -1122,6 +1153,11 @@ article.single_page_article .submit_button {
      		font-size: 13px;
      		margin: 0 0 3px;
      		font-weight: 500;
+     }
+     
+     .search #user_search_results .result .info .username {
+     		font-weight: 600;
+     		font-size: 15px;
      }
      
      #profile_content #profile_page .profile_section_content .friend .info .location,

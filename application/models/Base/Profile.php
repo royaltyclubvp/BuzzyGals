@@ -143,6 +143,18 @@ abstract class Model_Base_Profile extends Doctrine_Record
         $this->hasOne('Model_Location as Location', array(
              'local' => 'location',
              'foreign' => 'id'));
+        $this->hasMany('Model_Friendrequest as IncomingFriendRequests', array(
+            'local' => 'user',
+            'foreign' => 'requestee'
+        ));
+        $this->hasMany('Model_Friendrequest as OutgoingFriendRequests', array(
+            'local' => 'user',
+            'foreign' => 'requestor'
+        ));
+        $this->hasMany('Model_Friendship as Friends', array(
+            'local' => 'user',
+            'foreign' => 'user'
+        ));
         $this->actAs('Searchable', array(
             'fields' => array('fName', 'lName', 'displayName')
         ));

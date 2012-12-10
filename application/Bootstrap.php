@@ -85,6 +85,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'action' => 'signup'
             ))
         );
+        //User Search Link
+        $router->addRoute(
+            'usersearch', new Zend_Controller_Router_Route_Static('user/search', array(
+                'controller' => 'profile',
+                'action' => 'search'
+            ))
+        );
         //Verification Link
         $router->addRoute(
             'verify', new Zend_Controller_Router_Route('account/verify/:verificationcode/:userid', array(
@@ -184,6 +191,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $Config = $this->getOption('email');
         Zend_Registry::set('registrationEmail', $Config['registrationEmail']);
         Zend_Registry::set('registrationSender', $Config['registrationSender']);
+    }
+    
+    protected function _initSitePaths() {
+        $Config = $this->getOption('site');
+        Zend_Registry::set('baseUrl', $Config['baseUrl']);
     }
 }
 

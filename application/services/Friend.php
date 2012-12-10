@@ -258,34 +258,6 @@ class Service_Friend extends Service_Base_Foundation {
         return $result;
     }
     
-    /**
-     * Searches For Users
-     * 
-     * @param   array       $terms          Search Terms
-     * @return  array | bool 
-     */
-    public function searchUsers($terms) {
-        $profileTable = Doctrine_Core::getTable('Model_Profile');
-        try {
-            $results = $profileTable->search($terms);    
-        }
-        catch (Doctrine_Exception $e) {
-            return $e->getMessage();
-        }
-        $ids = array();
-        foreach($results as $result) {
-            $ids[] = $result['id'];
-        }
-        $query = Doctrine_Query::create()
-                ->from('Model_Profile')
-                ->whereIn('id', $ids);
-        try {
-            $results = $query->fetchArray();
-        }
-        catch (Doctrine_Exception $e) {
-            return $e->getMessage();
-        }
-        return $results;
-    }
+    
       
 }

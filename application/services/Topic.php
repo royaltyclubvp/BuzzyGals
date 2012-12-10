@@ -116,7 +116,16 @@ class Service_Topic extends Service_Base_Foundation {
      * @return  array | bool
      */
     public function fetchAll() {
-        return Doctrine_Core::getTable('Model_Topic')->findAll(Doctrine_Core::HYDRATE_ARRAY);
+        $query = Doctrine_Query::create()
+                ->from('Model_Topic t')
+                ->leftJoin('t.Followers f');
+        try {
+            $results = $query->fetchArray();
+        }
+        catch (Doctrine_Exception $e) {
+            return $e->getMessage();
+        }
+        return $results;
     }
     
     public function fetchUrlList() {

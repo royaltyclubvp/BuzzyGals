@@ -450,6 +450,21 @@ ProfileVM = new (function() {
 				});
 			}
 		});
+		
+		this.defaultCheckFormSubmission = this._checkFormSubmission;
+		this._checkFormSubmission = function (form){
+    		var $form, path, verb;
+    		$form = $(form);
+    		path = $form.attr("action");
+    		verb = this._getFormVerb($form);
+    		if (verb === "get" && !path.startsWith("#")) {
+         		return false;
+    		}
+    		else {
+        		return this.defaultCheckFormSubmission(form);
+   			}
+		}; 
+		
 	}).run();	
 	
 	

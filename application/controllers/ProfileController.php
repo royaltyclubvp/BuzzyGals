@@ -443,18 +443,18 @@ class ProfileController extends Base_RestrictedController {
         if($this->getRequest()->isPost() && $this->_ajaxRequest) {
             if($user = $this->getRequest()->getParam('user', FALSE)) {
                 $friendService = new Service_Friend();
-                if(is_array($result = $friendService->acceptRequest($this->_user->id, $user))) {
+                if(is_array($result = $friendService->addRequest($this->_user->id, $user))) {
                     $this->_response->appendBody("1");
-                    $messageService = new Message_Service();
+                    $messageService = new Service_Message();
                     $userService = new Service_User();
                     $userProfile = $userService->getUserProfile($this->_user->id);
                     $subject = "New Friend Request";
-                    $content = "Hi<br/><br/>You have received a friend request from ".$user->fName." ".$user->lName.".<br/><br/>Please <a target='_blank' href='user/acceptrequest/".$result['id']."'>Accept</a> or <a target='_blank' href='user/rejectrequest/".$result['id']."'>Reject</a>";
+                    $content = "Hi<br/><br/>You have received a friend request from ".$userProfile->fName." ".$userProfile->lName.".<br/><br/>Please <a target='_blank' href='user/acceptrequest/".$result['id']."'>Accept</a> or <a target='_blank' href='user/rejectrequest/".$result['id']."'>Reject</a>";
                     $messageService->addNew($this->_user->id, $user, 'n', NULL, $subject, $content);
                     return;
                 }
                 else {
-                    $this->_respone->appendBody('0');
+                    $this->_response->appendBody('0');
                     return;
                 }
             }
@@ -539,6 +539,62 @@ class ProfileController extends Base_RestrictedController {
             else {
                 $this->_response->appendBody("0");
                 return;
+            }
+        }
+    }
+    
+    public function searchAction() {
+        if($this->getRequest()->isGet()) {
+            if($terms = $this->getRequest()->getParam('searchTerms', FALSE)) {
+                $userService = new Service_User();
+                if(is_array($results = $userService->searchUsers($terms))) {
+                    $this->_helper->layout->setLayout('topmenu');
+                    for($i=0; $i < count($results); $i++) {
+                        $friended = false;
+                        if(count($results[$i]['Friends'])) {
+                            foreach($results[$i]['Friends'] as $friend) {
+                                if($this->_user->id == $friend['friend']) {
+                                    $friended = true;
+                                    break;
+                                }
+                            }
+                        }
+                        $results[$i]['friend'] = $friended;
+                        $results[$i]['connections'] = count($results[$i]['Friends']);
+                        if(!$friended) {
+                            $request = false;
+                            if(count($results[$i]['OutgoingFriendRequests'])) {
+                                foreach($results[$i]['OutgoingFriendRequests'] as $outgoing) {
+                                    if($this->_user->id == $outgoing['requestee']) {
+                                        $request = true;
+                                        $results[$i]['requestid'] = $outgoing['id'];
+                                        break;
+                                    }
+                                }
+                            }
+                            $results[$i]['incomingRequest'] = $request;
+                            if(!$request) {
+                                $requested = false;
+                                if(count($results[$i]['IncomingFriendRequests'])) {
+                                    foreach($results[$i]['IncomingFriendRequests'] as $incoming) {
+                                        if($this->_user->id == $incoming['requestor']) {
+                                            $requested = true;
+                                            $results[$i]['requestid'] = $incoming['id'];
+                                            break;
+                                        }
+                                    }
+                                }
+                                $results[$i]['outgoingRequest'] = $requested;
+                            }
+                        }
+                    }
+                    $result['root'] = $results;
+                    $this->view->searchTerms = $terms;
+                    $this->view->resultTotal = count($results);
+                    $this->view->searchNoPerPage = 5;
+                    $this->view->users = $result;
+                    return $this->render('searchresults');
+                }
             }
         }
     }

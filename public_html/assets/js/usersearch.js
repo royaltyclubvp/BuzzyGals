@@ -4,41 +4,110 @@
 //Data Structures
 function User(data) {
 	var self = this;
-	self.id = data.id;
-	self.displayName = data.Profile.displayName;
+	self.user = data.user;
+	self.displayName = data.displayName;
 	self.url = '/' + self.displayName.toLowerCase() + '/view';
-	self.photo = profileImagesUrl + data.Profile.photo;
+	self.photo = profileImagesUrl + data.photo;
 	self.location = "";
-	if (data.Friend.Profile.Location.city != '')
-		this.location = this.location + data.Friend.Profile.Location.city + ", ";
-	if (data.Friend.Profile.Location.stateprov != '')
-		this.location = this.location + data.Friend.Profile.Location.stateprov + ", ";
-	if (data.Friend.Profile.Location.country != '')
-		this.location = this.location + data.Friend.Profile.Location.country;
+	if (data.Location.city != '')
+		this.location = this.location + data.Location.city + ", ";
+	if (data.Location.stateprov != '')
+		this.location = this.location + data.Location.stateprov + ", ";
+	if (data.Location.country != '')
+		this.location = this.location + data.Location.country;
 	self.connections = data.connections;
 	self.friend = ko.observable(data.friend);
-	self.requested = ko.observable((data.friend) ? "" : data.requested);
+	self.requested = ko.observable((data.friend) ? false : data.outgoingRequest);
+	self.requestreceived = ko.observable((data.requested) ? false : data.incomingRequest);
+	self.requestid = ko.observable((self.requested || self.requestreceived) ? data.requestid : 0);
 	self.requestFriendship = function() {
-		success = UserSearchVM.requestFriendship(self.id);
+		success = UserSearchVM.requestFriendship(self.user);
 		if(success) 
 			self.requested(true);
 	}
+	self.acceptRequest = function() {
+		success = UserSearchVM.acceptFriendRequest(self.requestid)
+		if(success) {
+			self.friend(true);
+		}
+	}
+	self.cancelRequest = function() {
+		success = UserSearchVM.rejectFriendRequest(self.requestid);
+		if(success) {
+			self.requested(false);
+		}
+	}
 }
+
+function newMessageRecipient(id, displayName) {
+	this.id = id;
+	this.displayName = displayName;
+}
+
+function Message(recipientDisplayName, recipientId) {
+	this.subject = "";
+	this.content = "";
+	this.recipients = ko.observableArray([]);
+	this.recipients.push(new newMessageRecipient(recipientId, recipientDisplayName));
+	this.type = 'n';
+	this.ref = "";
+}
+
 
 //View Model
 UserSearchVM = new (function() {
 	//Data
 	var self = this;
 	
+	self.searchValue = ko.observable("");
+	self.showSearchButton = ko.observable(false);
+	
+	self.users = ko.observableArray([]);
+	self.userCount = ko.observable();
 	self.currentResults = ko.observableArray([]);
-	self.noPerPage = ko.observable();
-	self.total = ko.observable();
 	self.currentPage = ko.observable();
+	self.noPerPage = ko.observable();
+	self.totalPages = ko.observable();
 	self.currentResultsLower = ko.observable();
 	self.currentResultsUpper = ko.observable();
-	self.searchTerms = ko.observable();
+	
+	self.newMessage = ko.observable(new Message(0,0));
 	
 	//Behaviours
+	self.loadInitialSearchResults = function(users, count, noPerPage, searchTerms) {
+		var mapped = $.map(users.root, function(user) {
+			return new User(user); 
+		});
+		self.users(mapped);
+		self.currentResults(self.users().slice(0, noPerPage));
+		self.searchValue(searchTerms);
+		self.userCount(count);
+		self.currentPage(1);
+		self.noPerPage(noPerPage);
+		self.totalPages(Math.ceil(self.userCount()/self.noPerPage()));
+		self.currentResultsLower(0);
+		self.currentResultsUpper(self.currentResults().length);
+	}
+	
+	self.showPreviousResultsPage = function() {
+		self.currentPage(self.currentPage()-1);
+		self.currentResultsLower(((self.currentPage()-1)*self.noPerPage())+1);
+		self.currentResultsUpper(self.currentPage()*self.noPerPage());
+		self.currentResults(self.users().slice(self.currentResultsLower()-1, self.currentResultsUpper()));
+	}
+	
+	self.showNextResultsPage = function() {
+		self.currentPage(self.currentPage()+1);
+		self.currentResultsLower(((self.currentPage()-1)*self.noPerPage())+1);
+		if(self.currentPage() < self.totalPages()) {
+			self.currentResultsUpper(self.currentPage()*self.noPerPage());
+		}
+		else {
+			self.currentResultsUpper(self.userCount());
+		}
+		self.currentResults(self.users().slice(self.currentResultsLower()-1, self.currentResultsUpper()));
+	}
+	
 	self.requestFriendship = function(id) {
 		success = false;
 		$.ajax({
@@ -47,6 +116,7 @@ UserSearchVM = new (function() {
 				user : id
 			},
 			type : "POST",
+			async : false,
 			dataType : "text",
 			success : function(result) {
 				if (result == "1") 
@@ -56,46 +126,75 @@ UserSearchVM = new (function() {
 		return success;
 	}
 	
-	self.loadPreviousPage = function() {
+	self.acceptFriendRequest = function(id) {
+		success = false;
 		$.ajax({
-			url : '/profile/loadsearchresults',
+			url : "/profile/acceptrequest",
 			data : {
-				terms : self.searchTerms(),
-				page : self.currentPage()-1,
-				pageAmount : self.noPerPage()
+				requestid : id
 			},
-			type : "POST",
-			dataType : "json",
+			type : "GET",
+			async : false,
+			dataType : "text",
 			success : function(result) {
-				if(result.length) {
-					self.currentResults(result);
-					self.currentPage(self.currentPage()-1);
-					self.currentResultsLower(((self.currentPage()-1)*self.noPerPage()) + 1);
-					self.currentResultsUpper((self.currentPage()-1)*self.noPerPage() + self.currentResults().length);
-				}
+				if(result = "1")
+					success = true;
 			}
 		});
+		return success;
 	}
 	
-	self.loadNextPage = function() {
+	self.rejectFriendRequest = function(id) {
+		success = false;
 		$.ajax({
-			url : '/user/loadsearchresults',
+			url : "/profile/rejectrequest",
 			data : {
-				terms : self.searchTerms(),
-				page : self.currentPage()+1,
-				pageAmount : self.noPerPage()
-			}
-			type : "POST",
-			dataType : "json",
+				requestid : id
+			},
+			type : "GET",
+			async : false,
+			dataType : "text",
 			success : function(result) {
-				if(result.length) {
-					self.currentResults(result);
-					self.currentPage(self.currentPage()+1);
-					self.currentResultsLower(((self.currentPage()-1)*self.noPerPage()) + 1);
-					self.currentResultsUpper((self.currentPage()-1)*self.noPerPage() + self.currentResults().length);
+				if(result = "1")
+					success = true;
+			}
+		});
+		return success;
+	}
+	
+	self.sendNewMessage = function(user) {
+		self.newMessage(new Message(user.displayName, user.user));
+		$.fancybox.open(
+			{
+				href : '#send_message'
+			},
+			[{
+				width: '500px',
+				maxHeight: 600 
+			}]
+		);
+	}
+	
+	self.sendMessage = function() {
+		$.ajax({
+			url : "/messages/send",
+			data : ko.toJS(self.newMessage),
+			type : "POST",
+			dataType: "json",
+			success: function(result) {
+				if(result.length === 0) {
+					//Implement Failure Handler
+				}
+				else {
+					$.fancybox.close();
+					self.newMessage(new Message(0,0));
 				}
 			}
 		});
 	}
 	
-})
+	self.loadInitialSearchResults(users, userCount, noPerPage, searchValue);
+	
+});
+
+ko.applyBindings(UserSearchVM, $("#content")[0]);
