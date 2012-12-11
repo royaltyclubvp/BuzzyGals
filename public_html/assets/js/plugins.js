@@ -231,7 +231,9 @@ ko.bindingHandlers.profileUploader = {
 		$('.upload_fullsize').load(function() {
 			$(this).Jcrop({
 				onSelect : ProfileVM.setCoordinates,
-				onChange : ProfileVM.setCoordinates
+				onChange : ProfileVM.setCoordinates,
+				boxWidth : 450,
+				aspectRatio : 0.8
 			});
 		}).attr('src',src);
 	},

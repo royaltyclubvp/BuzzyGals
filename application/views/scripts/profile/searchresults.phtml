@@ -5,6 +5,7 @@ $this->additionalScripts = '
     <script src="/assets/js/usersearch.js"></script>
 ';
 $this->profileImagesUrl = Zend_Registry::get('profileImagesUrl');
+$this->profileThumbsUrl = Zend_Registry::get('profileThumbsUrl');
 ?>
 <div id="user_search_container">
 	<form action="/user/search" method="get">
@@ -68,6 +69,7 @@ $this->profileImagesUrl = Zend_Registry::get('profileImagesUrl');
 </div>
 <? $this->variablesJS = '<script type="text/javascript">
 var profileImagesUrl="'.$this->profileImagesUrl.'";
+var profileThumbsUrl="'.$this->profileThumbsUrl.'";
 var users='.Zend_Json::encode($this->users).';
 var userCount='.$this->resultTotal.';
 var searchValue="'.$this->searchTerms.'";

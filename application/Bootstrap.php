@@ -174,8 +174,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Zend_Registry::set('userGalleryImagesPath', $Config['basePath'].$Config['userGalleryImagesPath']);
         Zend_Registry::set('userGalleryThumbsPath', $Config['basePath'].$Config['userGalleryThumbsPath']);
         Zend_Registry::set('profileImagesPath', Zend_Registry::get('userImagesPath').$Config['profileImagesDir']);
+        Zend_Registry::set('profileThumbsPath', Zend_Registry::get('userImagesPath').$Config['profileThumbsDir']);
         Zend_Registry::set('userImagesUrl', $Config['userImagesUrl']);
         Zend_Registry::set('profileImagesUrl', $Config['profileImagesUrl']);
+        Zend_Registry::set('profileThumbsUrl', $Config['profileThumbsUrl']);
         Zend_Registry::set('articleImagesUrl', $Config['articleImagesUrl']);
         Zend_Registry::set('userGalleryImagesUrl', $Config['userGalleryImagesUrl']);
         Zend_Registry::set('userGalleryThumbsUrl', $Config['userGalleryThumbsUrl']);

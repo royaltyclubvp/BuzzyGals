@@ -7,7 +7,7 @@ function User(data) {
 	self.user = data.user;
 	self.displayName = data.displayName;
 	self.url = '/' + self.displayName.toLowerCase() + '/view';
-	self.photo = profileImagesUrl + data.photo;
+	self.photo = profileThumbsUrl + data.photo;
 	self.location = "";
 	if (data.Location.city != '')
 		this.location = this.location + data.Location.city + ", ";

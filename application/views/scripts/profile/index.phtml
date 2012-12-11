@@ -14,6 +14,7 @@ $this -> additionalScripts = '
     <script src="/assets/js/uploader/jquery-plugin.js"></script>
     <script src="/assets/js/profile.js"></script>';
 $this->profileImagesUrl = Zend_Registry::get('profileImagesUrl');
+$this->profileThumbsUrl = Zend_Registry::get('profileThumbsUrl');
 $this->userGalleryImagesUrl = Zend_Registry::get('userGalleryImagesUrl');
 $this->userGalleryThumbsUrl = Zend_Registry::get('userGalleryThumbsUrl');
 $this -> profileLocation = '';
@@ -194,7 +195,7 @@ if ($this -> profile['Location']['country'] != '')
                                 <div class="left username" data-bind="text: displayName"></div>
                                 <time class="right date" data-bind="attr: { 'datetime': date }"></time>
                                 <div class="clearfix"></div>
-                                <img data-bind="attr: { 'src': userPhoto }" alt="User Profile Image" width="35" height="30"/>
+                                <img data-bind="attr: { 'src': userPhoto }" alt="User Profile Image" width="35" height="35"/>
                                 <div class="comment_content">
                                        <p data-bind="text: content"></p>
                                 </div>
@@ -238,7 +239,7 @@ if ($this -> profile['Location']['country'] != '')
            </div>
            <div class="profile_section_content" data-bind="with: newProfileImage">
                <div class="full_image">
-                   <img data-bind="attr: { 'src': fullSizeImage }" style="max-width: 450px;" class="upload_fullsize"/>
+                   <img data-bind="attr: { 'src': fullSizeImage }" class="upload_fullsize"/>
                </div>
                <input type="button" value="Save Image" data-bind="click: $root.submitImageCrop" class="submit_button" />
            </div>
@@ -295,6 +296,7 @@ if ($this -> profile['Location']['country'] != '')
 <div class="clearfix"></div>
 <? $this->variablesJS = '<script type="text/javascript">
     var profileImagesUrl="'.$this->profileImagesUrl.'";
+    var profileThumbsUrl="'.$this->profileThumbsUrl.'";
     var userGalleryImagesUrl="'.$this->userGalleryImagesUrl.'";
     var userGalleryThumbsUrl="'.$this->userGalleryThumbsUrl.'";
     var townhallBaseUrl="/townhall/";

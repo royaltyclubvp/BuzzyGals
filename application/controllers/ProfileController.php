@@ -308,12 +308,41 @@ class ProfileController extends Base_RestrictedController {
             $height = 250;
             $quality = 100;
             $src = Zend_Registry::get('profileImagesPath').$values['filename'];
+            list($originalWidth, $originalHeight) = getimagesize($src);
+            //Get Proportions From Interface Maxed Out at 450px
+            /*if($originalWidth > 450) {
+                $scale = 450/$originalWidth;
+                $values['width'] *= (1/$scale);
+                $values['height'] *= (1/$scale);
+            }*/
             $img_r = imagecreatefromjpeg($src);
             $dest_r = imagecreatetruecolor($width, $height);
             imagecopyresampled($dest_r, $img_r, 0, 0, $values['x1'], $values['y1'], $width, $height, $values['width'], $values['height']);
             imagejpeg($dest_r, $src, $quality);
-            $this->_response->appendBody('1');
-            return;
+            if(file_exists($src)) {
+                $thumbGenerator = new File_Adapter_Image_Filter(Zend_Registry::get('profileThumbsPath'));
+                $thumbGenerator->setConfig(200, 200, 80, 'jpeg');
+                $thumbGenerator->generateThumb(Zend_Registry::get('profileImagesPath').$values['filename']);
+                if(file_exists(Zend_Registry::get('profileThumbsPath').$values['filename'])) {
+                    $profileService = new Service_Profile();
+                    if($profileService->editProfile($this->_user->profileid, array('photo' => $values['filename']))) {
+                        $this->_response->appendBody('1');
+                        return;
+                    }
+                    else {
+                        $this->_response->appendBody('0');
+                        return;
+                    }    
+                }
+                else {
+                    $this->_response->appendBody('0');
+                    return;
+                }
+            }
+            else {
+                $this->_response->appendBody('0');
+                return;
+            }
         }
     }
     
@@ -566,6 +595,10 @@ class ProfileController extends Base_RestrictedController {
                 if(is_array($results = $userService->searchUsers($terms))) {
                     $this->_helper->layout->setLayout('topmenu');
                     for($i=0; $i < count($results); $i++) {
+                        if($this->_user->profileid == $results[$i]['id']) {
+                            unset($results[$i]);
+                            continue;
+                        }
                         $friended = false;
                         if(count($results[$i]['Friends'])) {
                             foreach($results[$i]['Friends'] as $friend) {

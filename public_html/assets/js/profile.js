@@ -26,7 +26,7 @@ function Friend(data) {
 	this.userid = data.Friend.id;
 	this.displayName = data.Friend.Profile.displayName;
 	this.url = '/' + data.Friend.Profile.displayName.toLowerCase() + '/view';
-	this.photo = profileImagesUrl + data.Friend.Profile.photo;
+	this.photo = profileThumbsUrl + data.Friend.Profile.photo;
 	this.location = "";
 	if (data.Friend.Profile.Location.city != '')
 		this.location = this.location + data.Friend.Profile.Location.city + ", ";
@@ -41,7 +41,7 @@ function Comment(data) {
 	var da = data.date.split(/[- :]/);
 	this.date = new Date(da[0], da[1]-1, da[2], da[3], da[4], da[5]);
 	this.date = ISODateString(this.date);
-	this.userPhoto = profileImagesUrl + data.User.Profile.photo;
+	this.userPhoto = profileThumbsUrl + data.User.Profile.photo;
 	this.displayName = data.User.Profile.displayName;
 	this.content = data.content;
 }
@@ -254,7 +254,10 @@ ProfileVM = new (function() {
 			},
 			type : "POST",
 			dataType : "text",
-			success : function(result) {}
+			success : function(result) {
+				if(result == "1")
+					location.reload();
+			}
 		});
 	}
 	
