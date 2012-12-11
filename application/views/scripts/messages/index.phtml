@@ -3,6 +3,7 @@ $this->menuTitle = "Message Center";
 $this->additionalBodyClasses = "my_messages";
 $this->additionalScripts = '<script src="/assets/js/messages.js"></script>';
 $this->profileImagesUrl = Zend_Registry::get('profileImagesUrl');
+$this->profileThumbsUrl = Zend_Registry::get('profileThumbsUrl');
 ?>
 <div id="menu" data-bind="foreach: folder">
     <li data-bind="text: $data, css: {current: $data == $root.currentFolder() }, click: $root.goToFolder"></li>
@@ -166,5 +167,6 @@ $this->profileImagesUrl = Zend_Registry::get('profileImagesUrl');
 <? $this->variablesJS = '<script type="text/javascript">
     var sendMsgBaseUrl="/messages#New/to/";
     var profileImagesUrl="'.$this->profileImagesUrl.'";
+    var profileThumbsUrl="'.$this->profileThumbsUrl.'";
  </script>';
 echo $this->variablesJS; ?>

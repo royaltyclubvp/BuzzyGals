@@ -74,7 +74,7 @@ function Recipient(data) {
 function receivedFriendRequest(data) {
 	var self = this;
 	self.id = data.id;
-	self.photo = profileImagesUrl + data.Requestor.Profile.photo;
+	self.photo = profileThumbsUrl + data.Requestor.Profile.photo;
 	self.displayName = data.Requestor.Profile.displayName;
 	self.responded = ko.observable(false);
 	self.accepted = ko.observable(false);
@@ -96,7 +96,7 @@ function receivedFriendRequest(data) {
 function sentFriendRequest(data) {
 	var self = this;
 	self.id = data.id;
-	self.photo = profileImagesUrl + data.Requestee.Profile.photo;
+	self.photo = profileThumbsUrl + data.Requestee.Profile.photo;
 	self.displayName = data.Requestee.Profile.displayName;
 	self.responded = ko.observable(false);
 	self.cancelFriendRequest = function() {

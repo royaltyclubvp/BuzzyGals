@@ -121,6 +121,7 @@ abstract class Model_Base_Profile extends Doctrine_Record
              'primary' => false,
              'notnull' => false,
              'autoincrement' => false,
+             'default' => 'default-profile-pic.jpg'
              ));
         $this->hasColumn('location', 'integer', 4, array(
              'type' => 'integer',
