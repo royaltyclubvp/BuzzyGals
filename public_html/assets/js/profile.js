@@ -150,10 +150,11 @@ function ResourceType(data) {
 function newProfileImage() {
 	var self = this;
 	self.fullSizeImage = ko.observable("");
-	self.xCoord = ko.observable("");
-	self.x2Coord = ko.observable("");
-	self.yCoord = ko.observable("");
-	self.y2Coord = ko.observable("");
+	self.filename = ko.observable();
+	self.x = ko.observable("");
+	self.x2 = ko.observable("");
+	self.y = ko.observable("");
+	self.y2 = ko.observable("");
 	self.width = ko.observable("");
 	self.height = ko.observable("");
 }
@@ -239,23 +240,31 @@ ProfileVM = new (function() {
 		self.profileUploadVisible(1);
 	}
 	
-	self.previewPhotoCrop = function(image, selection) {
-		var scaleX = 100 / selection.width;
-		var scaleY = 100 / selection.height;
-		
-		/*$(".thumb_image>img").css({
-			width: Math.round(scaleX * 450) + "px",
-			height: Math.round(scaleY * 167) + "px",
-			marginLeft: "-" + Math.round(scaleX * selection.x1) + "px",  
-        	marginTop: "-" + Math.round(scaleY * selection.y1) + "px" 
-		});*/
-		
-		$("#x1").val(selection.x1);  
-    	$("#y1").val(selection.y1);  
-    	$("#x2").val(selection.x2);  
-    	$("#y2").val(selection.y2);  
-    	$("#w").val(selection.width);  
-    	$("#h").val(selection.height);  
+	self.submitImageCrop = function() {
+		$.ajax({
+			url : '/profile/cropprofilepic',
+			data : {
+				filename : self.newProfileImage().filename(),
+				x1 : self.newProfileImage().x(),
+				x2 : self.newProfileImage().x2(),
+				y1 : self.newProfileImage().y(),
+				y2: self.newProfileImage().y2(),
+				width : self.newProfileImage().width(),
+				height : self.newProfileImage().height()
+			},
+			type : "POST",
+			dataType : "text",
+			success : function(result) {}
+		});
+	}
+	
+	self.setCoordinates = function(c) {
+		self.newProfileImage().x(c.x);
+		self.newProfileImage().y(c.y);
+		self.newProfileImage().x2(c.x2);
+		self.newProfileImage().y2(c.y2);
+		self.newProfileImage().width(c.w);
+		self.newProfileImage().height(c.h);
 	}
 	
 	self.removeBookmark = function(bookmark) {

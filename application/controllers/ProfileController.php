@@ -300,6 +300,22 @@ class ProfileController extends Base_RestrictedController {
         else 
             return $this->_redirect('/profile'); 
     }
+
+    public function cropprofilepicAction() {
+        if($this->getRequest()->isPost() && $this->_ajaxRequest) {
+            $values = $this->getRequest()->getPost();
+            $width = 200;
+            $height = 250;
+            $quality = 100;
+            $src = Zend_Registry::get('profileImagesPath').$values['filename'];
+            $img_r = imagecreatefromjpeg($src);
+            $dest_r = imagecreatetruecolor($width, $height);
+            imagecopyresampled($dest_r, $img_r, 0, 0, $values['x1'], $values['y1'], $width, $height, $values['width'], $values['height']);
+            imagejpeg($dest_r, $src, $quality);
+            $this->_response->appendBody('1');
+            return;
+        }
+    }
     
     public function addstoryAction() {
         if($this->getRequest()->isPost() & $this->_ajaxRequest) {

@@ -224,8 +224,16 @@ ko.bindingHandlers.galleryModal = {
 //UPLOADER Bindings
 ko.bindingHandlers.profileUploader = {
 	completeHandler : function(event, id, filename, response) {
-		ProfileVM.newProfileImage().fullSizeImage(profileImagesUrl + response.filename);
 		ProfileVM.currentPage('CropProfileImage');
+		ProfileVM.newProfileImage().fullSizeImage(profileImagesUrl + response.filename);
+		ProfileVM.newProfileImage().filename(response.filename);
+		var src = $('.upload_fullsize').attr('src');
+		$('.upload_fullsize').load(function() {
+			$(this).Jcrop({
+				onSelect : ProfileVM.setCoordinates,
+				onChange : ProfileVM.setCoordinates
+			});
+		}).attr('src',src);
 	},
 	init: function(element) {
 		$(element).fineUploader({
@@ -292,10 +300,7 @@ ko.bindingHandlers.profileUploader = {
 
 ko.bindingHandlers.imageCrop = {
 	init: function(element) {
-		$(element).imgAreaSelect({
-			aspectRatio : "1:1",
-			onSelectChange : ProfileVM.previewPhotoCrop
-		});
+		$(element).Jcrop();
 	}
 }
 
