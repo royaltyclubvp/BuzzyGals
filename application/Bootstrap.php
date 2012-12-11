@@ -185,8 +185,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 	
 	protected function _initCachepaths() {
 		$Config = $this->getOption('cache');
-		Zend_Registry::set('articlesCachePath', $Config['articlesCachePath']);
-        Zend_Registry::set('topicsCachePath', $Config['topicsCachePath']);
+        $PathConfig = $this->getOption('storage');
+        Zend_Registry::set('cacheBasePath', $PathConfig['basePath']);
+		Zend_Registry::set('articlesCachePath', Zend_Registry::get('cacheBasePath').$Config['articlesCachePath']);
+        Zend_Registry::set('topicsCachePath', Zend_Registry::get('cacheBasePath').$Config['topicsCachePath']);
 	}
     
     protected function _initEmailSettings() {

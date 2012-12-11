@@ -328,11 +328,14 @@ class TestController extends Base_FoundationController {
     
     public function addresourceAction() {
         $resource = array(
-            'name' => 'Women\'s Center for Disability',
-            'notes' => 'This center is located east of the statue',
-            'type' => 1,
-            'contact' => '<p>Home: 454-333-2323<br/>Cell: 444-874-3423',
-            'address' => '7765 8th Street, New York, 11212',
+            'name' => 'Domestic Violence and Rape Crisis Services of Saratoga County',
+            'notes' => 'DVRC help families become economically sufficient and strong enough to leave their abusive homes, other services include shelters and awarness programs.',
+            'type' => 3,
+            'state' => 1,
+            'city' => 1,
+            'country' => 1,
+            'contact' => '<p>Office: 518-583-0280<br/>Domestic Violence Hotline: 518-584-8188<br/>Rape Crisis Hotline: 518-587-2336<br/>Website: <a href="http://www.dvrcsaratoga.org/">http://www.dvrcsaratoga.org/</a>',
+            'address' => '480 Broadway Saratoga Springs, NY 12866',
             'national' => 0
         );    
         $this->view->result = $this->resourceService->addNew($resource);
