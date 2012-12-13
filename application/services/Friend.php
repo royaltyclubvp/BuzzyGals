@@ -57,9 +57,9 @@ class Service_Friend extends Service_Base_Foundation {
          if(!count($req)) return false;
          $friendid = $req[0]['requestor'];
          try {
-             $manager = $this->doctrineManager;
+             /*$manager = $this->doctrineManager;
              $connection = $manager::connection();
-             $connection->beginTransaction();
+             $connection->beginTransaction();*/
              $new = new Model_Friendship();
              $created = date('Y-m-d H:i:s');
              $new->user = $user;
@@ -75,14 +75,14 @@ class Service_Friend extends Service_Base_Foundation {
              $new2->save();
              $query = Doctrine_Query::create()->delete('Model_Friendrequest')->where('id = ?',$request);
              $delete = $query->execute();
-             $connection->commit();
+             //$connection->commit();
          }
          catch (Doctrine_Exception $e) {
-             $connection->rollback();
+             //$connection->rollback();
              return $e->getMessage();
          }
          if(!$delete) {
-             $connection->rollback();
+             //$connection->rollback();
              return false;
          }
          return $new->toArray();
@@ -171,20 +171,20 @@ class Service_Friend extends Service_Base_Foundation {
          }
          if(!count($friendship)) return false;
          try {
-             $manager = $this->doctrineManager;
+             /*$manager = $this->doctrineManager;
              $connection = $manager::connection();
-             $connection->beginTransaction();
+             $connection->beginTransaction();*/
              $query = Doctrine_Query::create()->delete('Model_Friendship')->where('user = ?',$friendship->friend)->andWhere('friend = ?',$user);
              $inverseDelete = $query->execute();
              $friendship[0]->remove();
-             $connection->commit();
+             //$connection->commit();
          }
          catch (Doctrine_Exception $e) {
-             $connection->rollback();
+             //$connection->rollback();
              return $e->getMessage();
          }
          if(!$inverseDelete) {
-             $connection->rollback();
+             //$connection->rollback();
              return false;
          }
          return true;

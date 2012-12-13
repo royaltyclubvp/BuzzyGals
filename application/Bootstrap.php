@@ -46,7 +46,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     'namespace' => 'Base_'
                 ),
 				'authadapter' => array(
-				    'path' => 'adapters/auth/',
+				    'path' => 'adapters/Auth/',
                 	'namespace' => 'Auth_Adapter_'
 				),
 				'model' => array(
