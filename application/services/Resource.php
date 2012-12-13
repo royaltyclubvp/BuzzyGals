@@ -276,10 +276,12 @@ class Service_Resource extends Service_Base_Foundation {
         foreach($results as $result) {
             $ids[] = $result['id'];
         }
+        if(!count($ids)) return array();
         $query = Doctrine_Query::create()
                 ->from('Model_Resource r')
                 ->leftJoin('r.Bookmarkers b')
-                ->orderby('r.created DESC');
+                ->orderby('r.created DESC')
+                ->whereIn('id', $ids);
         try {
             $results = $query->fetchArray();
         }

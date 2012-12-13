@@ -222,13 +222,14 @@ class Service_User extends Service_Base_Foundation {
         foreach($results as $result) {
             $ids[] = $result['id'];
         }
+        if(!count($ids)) return array();
         $query = Doctrine_Query::create()
                 ->from('Model_Profile p')
                 ->leftJoin('p.Friends f')
                 ->leftJoin('p.Location l')
                 ->leftJoin('p.IncomingFriendRequests ifr')
-                ->leftJoin('p.OutgoingFriendRequests ofr');
-                //->whereIn('id', $ids);
+                ->leftJoin('p.OutgoingFriendRequests ofr')
+                ->whereIn('id', $ids);
         try {
             $results = $query->fetchArray();
         }

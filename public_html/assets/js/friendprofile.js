@@ -13,10 +13,10 @@ function Comment(data) {
 	var da = data.date.split(/[- :]/);
 	this.date = new Date(da[0], da[1]-1, da[2], da[3], da[4], da[5]);
 	this.date = ISODateString(this.date);
-	this.userPhoto = profileImagesUrl + data.User.Profile.photo;
+	this.userPhoto = profileThumbsUrl + data.User.Profile.photo;
 	this.displayName = data.User.Profile.displayName;
 	this.content = data.content;
-	this.owned = (data.user = userId) ? true : false;
+	this.owned = (data.user == userId) ? true : false;
 }
 
 function GalleryPhoto(data) {
@@ -64,16 +64,16 @@ function Story(data) {
 		self.comments.push(new Comment(data.Comments[i]));
 	}
 	self.addComment = function() {
-		result = ProfileVM.addComment(self.id, self.newComment);
+		result = FriendProfileVM.addComment(self.id, self.newComment);
 		if(result.id) {
 			self.newComment("");
 			self.comments.push(new Comment(result));
 			self.commentCount(self.comments().length);
-			setTimeout(ProfileVM.timeAgo, 2000);
+			setTimeout(FriendProfileVM.timeAgo, 2000);
 		}
 	}
 	self.removeComment = function(comment) {
-		result = ProfileVM.removeComment(comment.id);
+		result = FriendProfileVM.removeComment(comment.id);
 		if(result) {
 			self.comments.remove(comment);
 			self.commentCount(self.comments().length);
@@ -104,7 +104,8 @@ FriendProfileVM = new (function() {
 	//Page Data
 	self.profile = ko.observable();
 	self.stories = ko.observableArray([]);
-	self.displayName = ko.observable("");
+	self.displayName = ko.observable();
+	self.userId = ko.observable();
 	
 	//Toggles
 	
@@ -114,6 +115,10 @@ FriendProfileVM = new (function() {
 		page = page.replace(/\s/g, ""); 
 		location.hash = page; 
 	};
+	
+	self.timeAgo = function() {
+		$('time.date').timeago();
+	}
 	
 	self.addComment = function(storyid, comment) {
 		success = "";
@@ -153,10 +158,17 @@ FriendProfileVM = new (function() {
 		return success;
 	}
 	
+	self.loadInitialInfo = function(displayName, id) {
+		self.displayName(displayName);
+		self.userId(id);
+	}
+	
+	self.loadInitialInfo(displayName, friendUserId);
+	
 	//Client-Side Routes
 	Sammy(function() {
 		//Page Routes
-		this.get('#page', function() {
+		this.get('#:page', function() {
 			self.currentPage(this.params.page);
 			if(this.params.page == "About") {
 				$.getJSON("/profile/loadfriendabout", {username: self.displayName()}, function(allData) {
@@ -164,7 +176,7 @@ FriendProfileVM = new (function() {
 				});
 			}
 			else if(this.params.page == "Stories") {
-				$.getJSON("/profile/loadfriendstories", {username: self.displayName()}, function(allData) {
+				$.getJSON("/profile/loadfriendstories", {userId: self.userId()}, function(allData) {
 					var mappedStories = $.map(allData.root, function(story) {
 						return new Story(story);
 					});
@@ -174,11 +186,13 @@ FriendProfileVM = new (function() {
 			}
 		});
 	}).run();
+
 	
 	if(location.hash == "") {
-		self.displayName(displayName);
 		self.goToPage("About");
 	}
+	
+	
 });
 
 ko.applyBindings(FriendProfileVM, $("#content")[0]);

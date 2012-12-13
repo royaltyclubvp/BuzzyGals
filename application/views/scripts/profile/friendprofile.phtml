@@ -1,8 +1,9 @@
 <?php
-$this->menuTitle = $this->friendDisplayName;
+$this->menuTitle = $this->profile['displayName'];
 $this->additionalBodyClasses = "my_profile friend_profile";
 $this->additionalScripts = '<script src="/assets/js/friendprofile.js"></script>';
 $this->profileImagesUrl = Zend_Registry::get('profileImagesUrl');
+$this->profileThumbsUrl = Zend_Registry::get('profileThumbsUrl');
 $this->userGalleryImagesUrl = Zend_Registry::get('userGalleryImagesUrl');
 $this->userGalleryThumbsUrl = Zend_Registry::get('userGalleryThumbsUrl');
 $this->profileLocation = '';
@@ -32,8 +33,8 @@ if ($this->profile['Location']['country'] != '')
         <div class="clearfix"></div>
     </div>
     <div id="profile_page">
-        <div data-bind="template: { name: 'about-template', if currentPage() == 'About' }"></div>
-        <div data-bind="template: { name: 'stories-template', if currentPage() == 'Stories' }"></div>
+        <div data-bind="template: { name: 'about-template', if: currentPage() == 'About' }"></div>
+        <div data-bind="template: { name: 'stories-template', if: currentPage() == 'Stories' }"></div>
         
         <!-- Templates -->
         
@@ -123,13 +124,13 @@ if ($this->profile['Location']['country'] != '')
 <div class="clearfix"></div>
 <? $this->variablesJS = '<script type="text/javascript">
     var profileImagesUrl="'.$this->profileImagesUrl.'";
+    var profileThumbsUrl="'.$this->profileThumbsUrl.'";
     var userGalleryImagesUrl="'.$this->userGalleryImagesUrl.'";
     var userGalleryThumbsUrl="'.$this->userGalleryThumbsUrl.'";
     var townhallBaseUrl="/townhall/";
-    var friendProfileBaseUrl="/profile/";
-    var articleBaseUrl="/featured/";   
-    var displayName="'.$this->displayName.'";
-    var userId="'.$this->userId.'";
+    var displayName="'.$this->profile['displayName'].'";
+    var friendUserId="'.$this->profile['user'].'";
+    var userId="'.$this->userid.'";
  </script>';
 echo $this->variablesJS; ?>
 

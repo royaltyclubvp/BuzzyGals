@@ -1,11 +1,13 @@
 <?php
 $this->additionalBodyClasses = 'resources townhall topic';
 $this->additionalScripts = '<script src="/assets/js/topicResources.js"></script>';
-$this->menuTitle = $this->title.' Resources';
+$this->menuTitle = $this->title;
 ?>
 <div id="resource_search">
-    <input type="text" name="search" placeholder="Search Resources" data-bind="value: searchValue, hasfocus: showSearchButton"/>
-    <input type="button" class="submit_button" name="search_submit" value="Search" data-bind="visible: showSearchButton()==true || searchValue().length > 0, click: $root.searchResources" />
+    <form action="/resources/search" method="get">
+        <input type="text" name="searchTerms" placeholder="Search Resources" data-bind="value: searchValue, hasfocus: showSearchButton"/>
+        <input type="submit" class="submit_button" name="search_submit" value="Search" data-bind="visible: showSearchButton()==true || searchValue().length > 0" />
+    </form>
 </div>
 <div id="topic_resources" class="article_listing">
     <div data-bind="foreach: resources">

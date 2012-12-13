@@ -47,7 +47,7 @@ class Service_Profile extends Service_Base_Foundation {
         $query = Doctrine_Query::create()
                 ->from('Model_Profile p')
                 ->innerJoin('p.Location l')
-                ->where('displayName = ?', $username)
+                ->where('p.displayName = ?', $username)
                 ->limit(1);
         try {
             $results = $query->fetchOne(array(), Doctrine::HYDRATE_ARRAY);

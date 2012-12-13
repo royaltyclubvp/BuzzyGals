@@ -15,11 +15,14 @@ class ProfileController extends Base_RestrictedController {
     public function friendprofileAction() {
         if($username = $this->getRequest()->getParam('username', FALSE)) {
             $profileService = new Service_Profile();
-            if(is_array($profile = $profileService->fetchProfileByUsername)) {
+            if(is_array($profile = $profileService->fetchProfileByUsername($username))) {
+                $this->_helper->layout->setLayout('topmenu');
                 $this->view->profile = $profile;
+                $this->view->userid = $this->_user->id;
                 return $this->render();
             }
             else {
+                $this->view->error = $profile;
                 return $this->render('friendprofilenotfound');
             }
         }
@@ -39,8 +42,31 @@ class ProfileController extends Base_RestrictedController {
                 $this->_response->appendBody('0');
                 return;
             }
+        }   
+    }
+
+    public function loadfriendaboutAction() {
+        if($this->getRequest()->isGet() && $this->_ajaxRequest) {
+            if($username = $this->getRequest()->getParam('username', FALSE)) {
+                $profileService = new Service_Profile();
+                if(is_array($profile = $profileService->fetchProfileByUsername($username))) {
+                    $this->_response->appendBody(Zend_Json::encode($profile));
+                    return;
+                }
+                else {
+                    $this->_response->appendBody('0');
+                    return;
+                }
+            }
+            else {
+                $this->_response->appendBody('0');
+                return;
+            }
         }
-        
+        else {
+            $this->_response->appendBody('0');
+            return;
+        }
     }
     
     public function changeprofileimgAction() {
@@ -236,6 +262,31 @@ class ProfileController extends Base_RestrictedController {
             }
         }
         else return $this->_redirect('/profile');
+    }
+    
+    public function loadfriendstoriesAction() {
+        if($this->getRequest()->isGet() && $this->_ajaxRequest) {
+            if($id = $this->getRequest()->getParam('userId', FALSE)) {
+                $storyService = new Service_Userstory();
+                if(is_array($stories = $storyService->fetch($id))) {
+                    $result['root'] = $stories;
+                    $this->_response->appendBody(Zend_Json::encode($result));
+                    return;
+                }
+                else {
+                    $this->_response->appendBody('0');
+                    return;
+                }
+            }
+            else {
+                $this->_response->appendBody('0');
+                return;
+            }
+        }
+        else {
+            $this->_response->appendBody('0');
+            return;
+        }
     }
     
     public function uploadstoryphotosAction() {

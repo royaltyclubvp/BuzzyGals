@@ -37,7 +37,7 @@ class TestController extends Base_FoundationController {
     }
     
     public function changepasswordAction() {
-        $this->view->user = $this->userService->changeUserPassword(4, 'js32003');
+        $this->view->user = $this->userService->changeUserPassword(12, 'js32003');
         $this->render('testuser');
     }
     public function articleuriAction() {
@@ -59,7 +59,7 @@ class TestController extends Base_FoundationController {
     }
     
     public function searchresourceAction() {
-        $this->view->result = $this->resourceService->searchResources('test');
+        $this->view->result = $this->resourceService->searchResources('domestic');
         $this->render('friend');
     }
     public function editprofileAction() {

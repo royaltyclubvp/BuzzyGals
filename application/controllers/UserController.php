@@ -119,8 +119,9 @@ class UserController extends Base_FoundationController {
                     )
                 );
                 $subject = "Welcome to BuzzyGals: Please Verify Your Account Registration";
-                $verificationLink = Zend_Registry::get('baseUrl')."account/verify/".$newAccount['verificationcode']."/".$newAccount['id'];
-                $body = '<div>'.$verificationLink.'</div>';
+                $this->view->verificationlink = Zend_Registry::get('baseUrl')."account/verify/".$newAccount['verificationcode']."/".$newAccount['id'];
+                $this->view->firstName = $newAccount['Profile']['fName'];
+                $body = $this->view->render('user/registrationemail.phtml');
                 $this->sendEmail($from, $fromName, $recipients, $subject, $body);
             }
             $response['root'] = $newAccount;

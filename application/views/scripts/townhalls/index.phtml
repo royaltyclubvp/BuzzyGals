@@ -1,6 +1,7 @@
 <?php
 $this->additionalBodyClasses = 'townhall';
 $this->additionalScripts = '<script src="/assets/js/townhalls.js"></script>';
+$this->menuTitle = $this->title;
 ?>
 
 <div id="sidebar">
@@ -10,7 +11,11 @@ $this->additionalScripts = '<script src="/assets/js/townhalls.js"></script>';
     <h1><? echo $this->title ?> Townhall</h1>
     <!-- Dynamic Article Count -->
     <p><span class="bold">Articles:</span> <span data-bind="text: articleTotal"></span></p>
-    <p><span class="bold">Resources:</span> <? echo $this->resourceCount ?></p>
+    <? if($this->resourceCount) : ?>
+        <p><span class="bold"><a href="/resources/<? echo $this->title ?>">Resources</a>:</span> <? echo $this->resourceCount ?></p>
+    <? else : ?>
+        <p><span class="bold">Resources:</span> <? echo $this->resourceCount ?></p>
+    <? endif; ?>
     <!-- Search Form -->
     <div id="townhall_search">
         <form action="/townhalls/search" method="get">
