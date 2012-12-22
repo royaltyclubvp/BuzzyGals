@@ -31,6 +31,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$view->doctype('HTML5');
 	}
     
+    protected function _initZf2() {
+        $autoloader = Zend_Loader_Autoloader::getInstance();
+        $autoloader->pushAutoloader(new Zend2_Loader_Autoloader_Zf2(), 'Zend');
+    }
+    
     protected function _initAutoload() {
         $autoloader = Zend_Loader_Autoloader::getInstance();
         $resourceLoader = new Zend_Loader_Autoloader_Resource(array(
