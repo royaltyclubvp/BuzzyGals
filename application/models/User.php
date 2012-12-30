@@ -15,8 +15,8 @@ class Model_User extends Model_Base_User
     protected $_hashing = null;
     
     public function setPassword($password) {
-        if($this->_hashing == NULL) $this->_hashing = new Cryptography_HashingService();
-        return $this->_set('password', $this->_hashing->Compute($password));
+        if($this->_hashing == NULL) $this->_hashing = new Cryptography_PasswordService();;
+        return $this->_set('password', $this->_hashing->create($password));
     }
     
     public function setUp() {

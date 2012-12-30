@@ -61,8 +61,8 @@
         if($user->enabled) {
             
             //Check Credentials
-            $hashing = new Cryptography_HashingService();
-            if ($hashing->Verify($this->_credentials, $user->password)) {
+            $hashing = new Cryptography_PasswordService();
+            if ($hashing->verify($this->_credentials, $user->password)) {
                 $userService = new Service_User();
                 if($profile = $userService->getUserProfile($user->id)) {
                     $user->mapValue('profileid', $profile->id);

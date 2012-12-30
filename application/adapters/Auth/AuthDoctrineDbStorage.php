@@ -136,6 +136,24 @@
                 catch (Doctrine_Exception $e) {
                     throw new Zend_Auth_Storage_Exception();
                 }
+                if(!$session) {
+                    $session = new Model_Session();
+                    $session->{self::$_accessedfield} = time();
+                    $session->{self::$_useridfield} = $contents->id;
+                    $session->{self::$_hostnamefield} = $_SERVER['REMOTE_ADDR'];
+                    $session->{self::$_datafield} = serialize($contents);
+                    try {
+                        $session->save();
+                    } 
+                    catch (Doctrine_Exception $e) {
+                        throw new Zend_Auth_Storage_Exception();
+                    }
+                    $encryption = new Cryptography_EncryptionService('1111834');
+                    $hashing = new Cryptography_HashingService();
+                    $cookievalue = $session->id.'||'.$hashing->Compute($session->{self::$_hostnamefield});
+                    if(setcookie(self::$_cookieName, $encryption->encrypt($cookievalue), 0, '/')) return true;
+                    else throw new Zend_Auth_Storage_Exception();
+                }
                 $session->{self::$_accessedfield} = time();
                 $session->{self::$_datafield} = serialize($contents->toArray());
                 try {

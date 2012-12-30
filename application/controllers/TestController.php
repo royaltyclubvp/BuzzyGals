@@ -37,7 +37,7 @@ class TestController extends Base_FoundationController {
     }
     
     public function changepasswordAction() {
-        $this->view->user = $this->userService->changeUserPassword(12, 'js32003');
+        $this->view->user = $this->userService->changeUserPassword(4, 'js32003');
         $this->render('testuser');
     }
     public function articleuriAction() {
