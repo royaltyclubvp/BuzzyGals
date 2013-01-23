@@ -138,7 +138,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         );
         //Topic Resources
         $router->addRoute(
-            'resourcetopics', new Zend_Controller_Router_Route('resource/:topic', array(
+            'resourcetopics', new Zend_Controller_Router_Route(':topic/resources', array(
                 'controller' => 'resources',
                 'action' => 'index'
             ))

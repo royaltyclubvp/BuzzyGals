@@ -9,6 +9,7 @@ class ResourcesController extends Base_RestrictedController {
     public function indexAction() {
         //Load Townhall Resource Page
         if($topicName = $this->getRequest()->getParam('topic', FALSE)) {
+            $topicName = strtolower($topicName);
             $topicService = new Service_Topic();
             if(is_array($topics = $topicService->fetchUrlList())) {
                 if($topic = array_search($topicName, $topics)) {
@@ -36,8 +37,11 @@ class ResourcesController extends Base_RestrictedController {
                         return $this->_redirect("/resources/error");
                     }
                 }
-                else 
-                    return $this->_redirect("/resources/error");
+                else {
+                    $this->view->error = $topics;
+                    return $this->render();
+                    return $this->_redirect("/resources/error");   
+                }
             }
             else 
                 return $this->_redirect("/error"); //Modify for Error Response Page

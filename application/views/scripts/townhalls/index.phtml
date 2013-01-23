@@ -12,7 +12,7 @@ $this->menuTitle = $this->title;
     <!-- Dynamic Article Count -->
     <p><span class="bold">Articles:</span> <span data-bind="text: articleTotal"></span></p>
     <? if($this->resourceCount) : ?>
-        <p><span class="bold"><a href="/resource/<? echo $this->title ?>">Resources</a>:</span> <? echo $this->resourceCount ?></p>
+        <p><span class="bold"><a href="/<? echo $this->title ?>/resources">Resources</a>:</span> <? echo $this->resourceCount ?></p>
     <? else : ?>
         <p><span class="bold">Resources:</span> <? echo $this->resourceCount ?></p>
     <? endif; ?>
