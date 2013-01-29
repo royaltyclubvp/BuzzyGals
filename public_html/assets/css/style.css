@@ -212,7 +212,7 @@ article.single_page_article .submit_button {
 }
 
 #topmenutemplate #body_header #top-menu {
-    width: 770px;
+    width: 868px;
     margin: 0 auto;
     background: none;
     z-index: 100;
@@ -242,6 +242,14 @@ article.single_page_article .submit_button {
    #topmenutemplate #body_header #top-menu #notification_msgs {
        width: 45px;
        padding: 10px 16px 0 0;
+   }
+   
+   #topmenutemplate #body_header #top-menu #link_logout {
+       float: right;
+       font-size: 13px;
+       padding: 12px 0 0;
+       color: #000;
+       text-align: right;
    }
    
    #topmenutemplate #notification_msgs a.icon {

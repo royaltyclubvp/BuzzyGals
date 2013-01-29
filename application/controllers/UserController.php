@@ -168,13 +168,7 @@ class UserController extends Base_FoundationController {
         if($this->getRequest()->isPost()) {
             $values = $this->getRequest()->getPost();
             if($values['username'] != '' && $values['password'] != '') {
-                //Set Auth_Adapter Configuration
-                $adapterConfig = array(
-                    'className' => 'Model_User',
-                    'identityVar' => 'username',
-                    'credentialVar' => 'password'
-                );
-                $adapter = new Auth_Adapter_DoctrineTable($adapterConfig);
+                $adapter = new Auth_Adapter_DoctrineTable();
                 $adapter->setCredentials(trim($values['username']), trim($values['password']));
                 $storage = new Auth_Adapter_AuthDoctrineDbStorage('auth');
                 $auth = Zend_Auth::getInstance();
@@ -205,12 +199,7 @@ class UserController extends Base_FoundationController {
                 $encryption = new Cryptography_EncryptionService('12675');
                 $cookie = $encryption->decrypt($cookie);
                 $credentials = explode('||', $cookie);
-                $adapterConfig = array(
-                    'className' => 'Model_User',
-                    'identityVar' => 'username',
-                    'credentialVar' => 'password'
-                );
-                $adapter = new Auth_Adapter_DoctrineTable($adapterConfig);
+                $adapter = new Auth_Adapter_DoctrineTable();
                 $storage = new Auth_Adapter_AuthDoctrineDbStorage('auth');
                 $auth = Zend_Auth::getInstance();
                 $auth->setStorage($storage);

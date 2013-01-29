@@ -197,6 +197,8 @@ ProfileVM = new (function() {
 	self.interestsEdit = ko.observable(false);
 	self.galleryInterfaceVisible = ko.observable(0);
 	self.profileUploadVisible = ko.observable(0);
+	self.cropInstructionsVisible = ko.observable(1);
+	self.saveImageVisible = ko.observable(0);
 
 	//Behaviours
 	self.goToPage = function(page) {
@@ -268,6 +270,8 @@ ProfileVM = new (function() {
 		self.newProfileImage().y2(c.y2);
 		self.newProfileImage().width(c.w);
 		self.newProfileImage().height(c.h);
+		self.saveImageVisible(1);
+		self.cropInstructionsVisible(0);
 	}
 	
 	self.removeBookmark = function(bookmark) {

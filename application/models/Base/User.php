@@ -55,8 +55,9 @@ abstract class Model_Base_User extends Doctrine_Record
              'notnull' => true,
              'autoincrement' => false,
              ));
-        $this->hasColumn('password', 'blob', null, array(
-             'type' => 'blob',
+        $this->hasColumn('password', 'string', 60, array(
+             'type' => 'string',
+             'length' => 60,
              'fixed' => false,
              'unsigned' => false,
              'primary' => false,

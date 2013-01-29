@@ -241,7 +241,10 @@ if ($this -> profile['Location']['country'] != '')
                <div class="full_image">
                    <img data-bind="attr: { 'src': fullSizeImage }" class="upload_fullsize"/>
                </div>
-               <input type="button" value="Save Image" data-bind="click: $root.submitImageCrop" class="submit_button" />
+               <p class="instructions" data-bind="visible: $root.cropInstructionsVisible()==1">
+                   Drag the overlayed box and use the corners to select the area of the image that you wish to use for your profile picture.
+               </p>
+               <input type="button" value="Save Image" data-bind="click: $root.submitImageCrop, visible: $root.saveImageVisible()==1" class="submit_button" />
            </div>
         </script>
         
