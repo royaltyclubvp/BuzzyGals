@@ -527,4 +527,9 @@ class TestController extends Base_FoundationController {
         $this->view->result = $this->locationService->locationExists(2, 1, 1);
         $this->render('message');
     }
+    
+    public function getnotifsAction() {
+        $this->view->result = $this->storyService->fetchByUsersAndTime(1, array(7));
+        $this->render('message');
+    }
 }

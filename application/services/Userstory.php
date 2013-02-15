@@ -251,4 +251,27 @@ class Service_Userstory extends Service_Base_Foundation {
         }
         return $results;
     }
+    
+    /**
+     * Retrieve List of Stories by User List & Time Frame
+     * 
+     * @param   integer     $timecutoff      Number of Days to Cut Off
+     * @param   array       $userList        User List 
+     * @return  array
+     */
+    public function fetchByUsersAndTime($timeCutOff, $userList) {
+        $date = date('Y-m-d H:i:s', time() - 86400 * $timeCutOff);
+        $query = Doctrine_Query::create()
+                ->from('Model_Userstory')
+                ->addWhere('date > ?', $timeCutOff)
+                ->whereIn('user', $userList)
+                ->orderby('date');
+        try {
+            $results = $query->fetchArray();
+        }
+        catch (Doctrine_Exception $e) {
+            return $e->getMessage();
+        }
+        return $results;
+    }
 }

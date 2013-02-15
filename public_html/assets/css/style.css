@@ -234,6 +234,12 @@ article.single_page_article .submit_button {
        padding: 2px 0 0;
    }
    
+   #topmenutemplate #body_header #top-menu #notification_stories {
+       width: 31px;
+       height: 31px;
+       padding: 2px 0 0 15px;
+   }
+   
    #topmenutemplate #body_header #top-menu #page_title {
        padding: 10px 0 0 176px;
        width: 215px;
