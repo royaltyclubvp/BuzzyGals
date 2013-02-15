@@ -13,7 +13,7 @@ abstract class Base_FoundationController extends Zend_Controller_Action {
             $this->_ajaxRequest = 1;
         }
         else {
-            $this->_helper->layout->setLayout('layout');
+            $this->_helper->layout->setLayout('default');
         }
     }
     
