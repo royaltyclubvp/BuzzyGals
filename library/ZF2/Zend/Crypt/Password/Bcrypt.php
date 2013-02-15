@@ -112,6 +112,7 @@ class Bcrypt implements PasswordInterface
     public function verify($password, $hash)
     {
         return ($hash === crypt($password, $hash));
+        //return crypt($password, $hash);
     }
 
     /**

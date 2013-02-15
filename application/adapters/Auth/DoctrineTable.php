@@ -58,6 +58,12 @@
         
         //Compare Password
         $bcrypt = new Cryptography_PasswordService();
+        /*if($user->password =! ($test = $bcrypt->verify($this->_password, $user->password))) {
+            $this->_resultInfo['code'] = Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID;
+            $this->_resultInfo['identity'] = $this->_username;
+            $this->_resultInfo['messages'][] = $test."    ".$user->password;
+            return $this->_createAuthResult();
+        }*/
         if(!$bcrypt->verify($this->_password, $user->password)) {
             $this->_resultInfo['code'] = Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID;
             $this->_resultInfo['identity'] = $this->_username;

@@ -151,12 +151,12 @@ function newProfileImage() {
 	var self = this;
 	self.fullSizeImage = ko.observable("");
 	self.filename = ko.observable();
-	self.x = ko.observable("");
-	self.x2 = ko.observable("");
-	self.y = ko.observable("");
-	self.y2 = ko.observable("");
-	self.width = ko.observable("");
-	self.height = ko.observable("");
+	self.x = ko.observable(15);
+	self.x2 = ko.observable(45);
+	self.y = ko.observable(15);
+	self.y2 = ko.observable(52.5);
+	self.width = ko.observable(30);
+	self.height = ko.observable(37.5);
 }
 
 function newMessageRecipient(id, displayName) {
