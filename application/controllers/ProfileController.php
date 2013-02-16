@@ -8,7 +8,11 @@ class ProfileController extends Base_RestrictedController {
     
     public function indexAction() {
         $profileService = new Service_Profile();
+        $storyService = new Service_Userstory();
+        $friendService = new Service_Friend();
+        $userList = $friendService->fetchFriendIds($this->_user->id);
         $this->_helper->layout->setLayout('topmenu');
+        $this->view->notifications = $storyService->fetchByUsersAndTime($this->_user->storyNotificationPeriod, $userList, TRUE);
         $this->view->profile = $profileService->fetchProfile($this->_user->id);
     }
     

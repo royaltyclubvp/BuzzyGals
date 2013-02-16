@@ -63,7 +63,10 @@ abstract class Model_Base_Userstory extends Doctrine_Record
         $this->hasOne('Model_User as User', array(
              'local' => 'user',
              'foreign' => 'id'));
-
+        $this->hasOne('Model_Profile as Profile', array(
+            'local' => 'user',
+            'foreign' => 'user'
+        ));
         $this->hasMany('Model_Userstorycomment as Comments', array(
              'local' => 'id',
              'foreign' => 'story'));

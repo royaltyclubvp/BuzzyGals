@@ -231,17 +231,17 @@ article.single_page_article .submit_button {
    
    #topmenutemplate #body_header #top-menu #link_townhall {
        width: 30px;
-       padding: 2px 0 0;
+       padding: 4px 0 0;
    }
    
    #topmenutemplate #body_header #top-menu #notification_stories {
        width: 31px;
        height: 31px;
-       padding: 2px 0 0 15px;
+       padding: 5px 0 0 35px;
    }
    
    #topmenutemplate #body_header #top-menu #page_title {
-       padding: 10px 0 0 176px;
+       padding: 10px 0 0 141px;
        width: 215px;
    }
    
@@ -426,7 +426,8 @@ article.single_page_article .submit_button {
   		background: #c6c6c6;
   }
   
-  .my_messages #message_content {
+  .my_messages #message_content,
+  .notification_center, #section_content {
   		width: 593px;
   		margin: 0 0 0 20px;
   		float: left;
@@ -516,7 +517,8 @@ article.single_page_article .submit_button {
   }
   
   .new-message header,
-  header.requests-header {
+  header.requests-header,
+  .my_messages.notification_center #section_content header {
   		background-image: none;
   		padding: 8px 0 0;	
   		width: 100%;
@@ -525,7 +527,8 @@ article.single_page_article .submit_button {
   		margin: 0 0 10px;
   }
   
-  #send_message.new-message header {
+  #send_message.new-message header,
+  .my_messages.notification_center #section_content header {
         width: 584px;
         height: 27px;
         padding: 5px 0 0 10px;
@@ -533,7 +536,8 @@ article.single_page_article .submit_button {
   }
   
   .new-message header h2,
-  header.requests-header h2 {
+  header.requests-header h2,
+  .my_messages.notification_center, #section_content header > h2 {
   		font-size: 14px;
   		font-weight: 100;
   }
@@ -671,6 +675,33 @@ article.single_page_article .submit_button {
   		display: inline-block;
   		margin: 0 15px 0 0;
   		padding: 8px 10px;
+  }
+  
+  /* Notifications Page */
+  .notification_center .stories .story {
+      margin: 0 0 10px;
+  }
+  
+  .notification_center .stories .story img {
+      width: 65px;
+      height: 65px;
+      margin: 0 0 5px;
+  }
+  
+  .notification_center .stories .story a {
+      display: inline-block;
+      text-align: left;
+      width: 513px;
+      font-size: 13px;
+      color: #000000;
+  }
+  
+  .notification_center .stories .story .description {
+      line-height: 1.7;
+  }
+  
+  .notification_center .stories .story .description span.red {
+      font-style: italic;
   }
   
    

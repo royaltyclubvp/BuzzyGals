@@ -80,6 +80,7 @@
         $userService = new Service_User();
         if($profile = $userService->getUserProfile($user->id)) {
             $user->mapValue('profileid', $profile->id);
+            $user->mapValue('storyNotificationPeriod', $profile->story_notification_period);
             $user->mapValue('locationid', $profile->location);
             $user->mapValue('cityid', $profile->Location->cityid);
             $user->mapValue('stateprovid', $profile->Location->stateprovid);

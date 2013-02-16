@@ -17,7 +17,7 @@
  * @property integer $user
  * @property Model_User $User
  * 
- * @package    ElleFab
+ * @package    BuzzyGals
  * @subpackage Data Access Layer
  * @author     Royalty Club - Jarrod Placide-Raymond <royaltyclubvp@royalty-club.com>
  * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
@@ -124,6 +124,16 @@ abstract class Model_Base_Profile extends Doctrine_Record
              'default' => 'default-profile-pic.jpg'
              ));
         $this->hasColumn('location', 'integer', 4, array(
+             'type' => 'integer',
+             'length' => 4,
+             'fixed' => false,
+             'unsigned' => true,
+             'default' => 1,
+             'primary' => false,
+             'notnull' => false,
+             'autoincrement' => false,
+             ));
+        $this->hasColumn('story_notification_period', 'integer', 4, array(
              'type' => 'integer',
              'length' => 4,
              'fixed' => false,

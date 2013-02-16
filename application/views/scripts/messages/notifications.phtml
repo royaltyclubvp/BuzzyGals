@@ -1,0 +1,42 @@
+<?php
+$this->menuTitle = "Notifications";
+$this->additionalBodyClasses = "my_messages notification_center";
+$this->additionalScripts = '<script src="/assets/js/notifications.js"></script>';
+$this->profileThumbsUrl = Zend_Registry::get('profileThumbsUrl');
+?>
+<div id="menu" data-bind="foreach: section">
+    <li data-bind="text: $data, css: {current: $data == $root.currentSection() }, click: $root.goToSection"></li>
+</div>
+<div id="section_content">
+    <div data-bind="template: { name: 'stories-template', if: currentSection() == 'NewStories' }"></div>
+    <div data-bind="template: { name: 'articles-template', if: currentSection() == 'NewArticles' }"></div>
+    
+    <!-- Templates -->
+    
+    <!-- STORIES -->
+    <script type="text/html" id="stories-template">
+        <header>
+            <h2>New Stories</h2>
+        </header>
+        <div class="stories" data-bind="foreach: stories">
+            <div class="story">
+                <img data-bind="attr: { 'src': photo, 'alt': displayName }" class="left" width="65" height="65" />
+                <a data-bind="attr: { 'href': url }" class="right">
+                    <span class="description">
+                        <span data-bind="text: date"></span> - <span class="red" data-bind="text: displayName"></span> added a story<br/>
+                        <span data-bind="text: contentPreview"></span>... 
+                    </span>
+                </a>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </script>
+    
+    
+</div>
+<div class="clearfix"></div>
+<? $this->variablesJS = '<script type="text/javascript">
+    var profileThumbsUrl="'.$this->profileThumbsUrl.'";
+    var storyLinkPrefix="";
+</script>';
+echo $this->variablesJS; ?>

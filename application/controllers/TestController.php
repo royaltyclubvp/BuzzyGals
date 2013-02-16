@@ -529,7 +529,12 @@ class TestController extends Base_FoundationController {
     }
     
     public function getnotifsAction() {
-        $this->view->result = $this->storyService->fetchByUsersAndTime(1, array(7));
+        $this->view->result = $this->storyService->fetchByUsersAndTime(1, array(4));
+        $this->render('message');
+    }
+    
+    public function getfriendlistAction() {
+        $this->view->result = $this->friendService->fetchFriendIds(4);
         $this->render('message');
     }
 }

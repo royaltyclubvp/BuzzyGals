@@ -214,6 +214,25 @@ class Service_Friend extends Service_Base_Foundation {
         return $friends;
     }
     
+    public function fetchFriendIds($user) {
+        $query = Doctrine_Query::create()
+                ->from('Model_Friendship fs')
+                ->select('fs.friend')
+                ->where('fs.user = ?', $user)
+                ->andWhere('fs.status = ?', 'a');
+        try {
+            $results = $query->fetchArray();
+        }
+        catch (Doctrine_Exception $e) {
+            return $e->getMessage();
+        }
+        $resultArray = array();
+        foreach($results as $result) {
+            $resultArray[] = $result['friend'];
+        }
+        return $resultArray;
+    }
+    
     /**
      * Changes User Friendship Status to Blocked
      * 

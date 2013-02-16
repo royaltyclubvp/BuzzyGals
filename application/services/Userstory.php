@@ -257,17 +257,21 @@ class Service_Userstory extends Service_Base_Foundation {
      * 
      * @param   integer     $timecutoff      Number of Days to Cut Off
      * @param   array       $userList        User List 
-     * @return  array
+     * @param   bool        $total           Return Total?
+     * @return  array | bool
      */
-    public function fetchByUsersAndTime($timeCutOff, $userList) {
+    public function fetchByUsersAndTime($timeCutOff, $userList, $total = FALSE) {
         $date = date('Y-m-d H:i:s', time() - 86400 * $timeCutOff);
         $query = Doctrine_Query::create()
-                ->from('Model_Userstory')
+                ->select('s.id, s.date, s.content, p.displayName, p.photo')
+                ->from('Model_Userstory s')
+                ->innerJoin('s.Profile p')
                 ->addWhere('date > ?', $timeCutOff)
                 ->whereIn('user', $userList)
-                ->orderby('date');
+                ->orderby('date DESC');
         try {
-            $results = $query->fetchArray();
+            if($total) $results = $query->count();
+            else $results = $query->fetchArray();
         }
         catch (Doctrine_Exception $e) {
             return $e->getMessage();

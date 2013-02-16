@@ -11,6 +11,16 @@ class MessagesController extends Base_RestrictedController {
         return $this->render();
     }
     
+    public function notificationsAction() {
+        $this->_helper->layout->setLayout('topmenu');
+        $profileService = new Service_Profile();
+        $storyService = new Service_Userstory();
+        $friendService = new Service_Friend();
+        $userList = $friendService->fetchFriendIds($this->_user->id);
+        $this->view->notifications = $storyService->fetchByUsersAndTime($this->_user->storyNotificationPeriod, $userList, TRUE);
+        return $this->render('notifications');
+    }
+    
     public function inboxAction() {
         $messageService = new Service_Message();
         if(is_array($messages = $messageService->fetchReceived($this->_user->id))) {
@@ -85,6 +95,24 @@ class MessagesController extends Base_RestrictedController {
             }
         }
         else return $this->_redirect('/messages');
+    }
+    
+    public function loadnewstoriesAction() {
+        if($this->getRequest()->isGet() && $this->_ajaxRequest) {
+            $friendService = new Service_Friend();
+            $storyService = new Service_Userstory();
+            $friendList = $friendService->fetchFriendIds($this->_user->id);
+            if(is_array($stories = $storyService->fetchByUsersAndTime($this->_user->storyNotificationPeriod, $friendList))) {
+                $results['root'] = $stories;
+                $this->_response->appendBody(Zend_Json::encode($results));
+                return;
+            }
+            else {
+                $this->_response->appendBody('0');
+                return;
+            }
+        }
+        else return $this->_redirect('/notifications');
     }
     
     public function countnewmessagesAction() {

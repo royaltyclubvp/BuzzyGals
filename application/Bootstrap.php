@@ -152,7 +152,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         );
         //Override For Search Resources
         $router->addRoute(
-            'searchResourcs', new Zend_Controller_Router_Route_Static('resources/search', array(
+            'searchResources', new Zend_Controller_Router_Route_Static('resources/search', array(
                 'controller' => 'resources',
                 'action' => 'search'
             ))
@@ -164,7 +164,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'action' => 'article'
             ))
         );
-        
+        //Notification Center
+        $router->addRoute(
+            'notifications', new Zend_Controller_Router_Route('notifications', array(
+                'controller' => 'messages',
+                'action' => 'notifications'
+            ))
+        );
     }
 
 	protected function _initSession() {
