@@ -80,6 +80,29 @@ class Service_Article extends Service_Base_Foundation {
     }
     
     /**
+     * Check for Existing Author Entry
+     * 
+     * @param   string      $name       Author Name
+     * @return  integer | bool
+     */
+    public function checkAuthor($name) {
+        $query = Doctrine_Query::create()
+                ->from('Model_FeaturedAuthor fa')
+                ->where('fa.name = ?', $name);
+        try {
+            $results = $query->fetchArray();
+        }
+        catch(Doctrine_Exception $e) {
+            return $e->getMessage();
+        }
+        if(count($results)) {
+            return $results[0]['id'];
+        }
+        else {
+            return false;
+        }
+    }
+    /**
      * Delete Author Record
      * 
      * @param   integer     $author     Author ID

@@ -1,0 +1,24 @@
+<?php
+
+?>
+
+<div id="account_settings">
+    <div id="profile_settings" data-bind="with: profile">
+        <div class="field">
+            Display Name: <span data-bind="text: displayName"></span>
+        </div>
+        <div class="field">
+            Name: <span data-bind="text: firstName"></span> <span data-bind="text: lastName"></span>
+        </div>
+        <div class="field">
+            Gender: <span data-bind="text: gender"></span>
+            <select data-bind="options: genders, optionsCaption: 'Gender', optionsText: 'displaytext', value: gender"></select>
+        </div>
+        <h2>Notification Settings</h2>
+        <div class="field">
+            Story Notification Period: <span data-bind="text: storyNotificationPeriod"></span> Days
+            
+        </div>
+    </div>
+    
+</div>

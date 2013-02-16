@@ -1,0 +1,45 @@
+<?php
+$this->additionalBodyClasses = 'townhall add_article';
+$this -> additionalScripts = '
+    <script src="/assets/js/jquery.Jcrop.js"></script>
+    <script src="/assets/js/uploader/header.js"></script>
+    <script src="/assets/js/uploader/util.js"></script>
+    <script src="/assets/js/uploader/button.js"></script>
+    <script src="/assets/js/uploader/handler.base.js"></script>
+    <script src="/assets/js/uploader/handler.form.js"></script>
+    <script src="/assets/js/uploader/handler.xhr.js"></script>
+    <script src="/assets/js/uploader/uploader.basic.js"></script>
+    <script src="/assets/js/uploader/uploader.js"></script>
+    <script src="/assets/js/uploader/jquery-plugin.js"></script>
+    <script src="/assets/js/profile.js"></script>';
+?>
+
+<div id="sidebar">
+    <div id="icon">
+        <img src="/assets/img/townhall-large.png" alt="<? echo $this->menuTitle ?> Townhall"/>
+    </div>
+    <div id="townhall_search">
+        <form action="/townhalls/search" method="get">
+            <input type="text" name="search" placeholder="Search Articles / Resources"/>
+        </form>
+    </div>
+</div>
+<div id="new_article" data-bind="with: newArticle">
+    <div class="fields">
+        <span class="fieldname">Townhall:</span>
+        <select data-bind="options: townhalls, optionsCaption: 'Choose a townhall...', optionsText: 'name', value: chosenTownhall"></select>
+        <span class="fieldname">Title:</span>
+        <input type="text" placeholder="What's the title of your article?" id="field_title" data-bind="value: title"/>
+        <span class="fieldname">Description:</span>
+        <textarea data-bind="value: description" placeholder="Give the article a short description" class="expanding"></textarea>
+        <span class="fieldname">Article:</span>
+        <textarea data-bind="value: content" placeholder="Enter the main body of the article here" class="expanding"></textarea>
+        <span class="fieldname">Title Image: </span>
+        <div class="profile_upload_container unstyled" data-bind=""></div>
+        <span class="fieldname">Thumbnail Image: </span>
+        <div class="profile_upload_container unstyled" data-bind=""></div>
+        <span class="fieldname">Article URL</span>
+        <input type="text" placeholder="" id="field_url" data-bind="value: url"/>
+    </div>
+    <input type="button" id="button_send" class="submit_button" value="Add Article" data-bind="click: $root.addArticle" />
+</div>

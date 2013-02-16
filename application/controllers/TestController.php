@@ -537,4 +537,9 @@ class TestController extends Base_FoundationController {
         $this->view->result = $this->friendService->fetchFriendIds(4);
         $this->render('message');
     }
+    
+    public function checkauthorAction() {
+        $this->view->result = $this->articleService->checkAuthor('Dr. Seuss');
+        $this->render('message');
+    }
 }
