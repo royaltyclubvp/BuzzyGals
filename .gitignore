@@ -6,6 +6,7 @@ extras/documentation
 docs/
 tests/
 scripts/
+*.settings/
 *.class
 *.pyc
 *.pyo
