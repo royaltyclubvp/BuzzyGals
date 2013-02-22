@@ -5,7 +5,7 @@ demos/
 extras/documentation
 docs/
 tests/
-/cache/
+scripts/
 *.class
 *.pyc
 *.pyo
