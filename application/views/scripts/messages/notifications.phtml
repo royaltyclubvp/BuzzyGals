@@ -5,11 +5,12 @@ $this->additionalScripts = '<script src="/assets/js/notifications.js"></script>'
 $this->profileThumbsUrl = Zend_Registry::get('profileThumbsUrl');
 ?>
 <div id="menu" data-bind="foreach: section">
-    <li data-bind="text: $data, css: {current: $data == $root.currentSection() }, click: $root.goToSection"></li>
+    <li data-bind="text: $data, css: {current: $data.replace(/\s/g, '') == $root.currentSection() }, click: $root.goToSection"></li>
 </div>
-<div id="section_content">
+<div id="section_content" data-bind="loadingWhen: isLoading"> 
     <div data-bind="template: { name: 'stories-template', if: currentSection() == 'NewStories' }"></div>
     <div data-bind="template: { name: 'articles-template', if: currentSection() == 'NewArticles' }"></div>
+    <div data-bind="template: { name: 'requests-template', if: currentSection() == 'FriendRequests' }"></div>
     
     <!-- Templates -->
     
@@ -27,6 +28,29 @@ $this->profileThumbsUrl = Zend_Registry::get('profileThumbsUrl');
                         <span data-bind="text: contentPreview"></span>... 
                     </span>
                 </a>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </script>
+    
+    <!-- FRIEND REQUESTS -->
+    <script type="text/html" id="requests-template">
+        <header class="requests-header">
+            <h2>Friend Requests</h2>
+        </header>
+        <div class="requests" data-bind="foreach: friendRequests">
+            <div class="request">
+                <img data-bind="attr: { 'src': photo, 'alt': displayName }" class="left" width="65" height="65"/>
+                <div class="info right">
+                    <div class="username" data-bind="text: displayName"></div>
+                    <div class="request_response" data-bind="loadingWhen: isLoading, ifnot: responded">                      
+                        <input type="button" class="submit_button" value="Accept Request" data-bind="click: acceptFriendRequest"/>
+                        <input type="button" class="submit_button" value="Reject Request" data-bind="click: rejectFriendRequest"/>
+                    </div>
+                    <div class="responded" data-bind="if: responded">
+                        <span data-bind="if: accepted">Accepted!</span><span data-bind="ifnot: accepted">Rejected!</span>
+                    </div>
+                </div>
                 <div class="clearfix"></div>
             </div>
         </div>

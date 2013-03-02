@@ -17,7 +17,6 @@ class MessagesController extends Base_RestrictedController {
         $storyService = new Service_Userstory();
         $friendService = new Service_Friend();
         $userList = $friendService->fetchFriendIds($this->_user->id);
-        $this->view->notifications = $storyService->fetchByUsersAndTime($this->_user->storyNotificationPeriod, $userList, TRUE);
         return $this->render('notifications');
     }
     

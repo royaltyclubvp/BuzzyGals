@@ -71,28 +71,6 @@ function Recipient(data) {
 }
 
 
-function receivedFriendRequest(data) {
-	var self = this;
-	self.id = data.id;
-	self.photo = profileThumbsUrl + data.Requestor.Profile.photo;
-	self.displayName = data.Requestor.Profile.displayName;
-	self.responded = ko.observable(false);
-	self.accepted = ko.observable(false);
-	self.acceptFriendRequest = function() {
-		success = MessagesVM.acceptFriendRequest(self.id);
-		if(success) {
-			self.responded(true);
-			self.accepted(true);
-		}
-	}
-	self.rejectFriendRequest = function() {
-		success = MessagesVM.rejectFriendRequest(self.id);
-		if(success) {
-			self.responded(true);
-		}
-	}
-}
-
 function sentFriendRequest(data) {
 	var self = this;
 	self.id = data.id;
@@ -113,14 +91,13 @@ MessagesVM = new (function() {
 	//Data
 	var self = this;
 	
-	self.folder = ['New','Inbox','Sent', 'Requests Received', 'Requests Sent'];
+	self.folder = ['New','Inbox','Sent', 'Requests Sent'];
 	self.currentFolder = ko.observable();
 	
 	self.newMessage = ko.observable(new NewMessage("","","n","",""));
 	self.message = ko.observable();
 	self.inboxMessages = ko.observableArray([]);
 	self.sentMessages = ko.observableArray([]);
-	self.requestsReceived = ko.observableArray([]);
 	self.requestsSent = ko.observableArray([]);
 	self.recipientList = ko.observableArray([]);
 	
@@ -227,42 +204,6 @@ MessagesVM = new (function() {
 		});
 	}
 	
-	self.acceptFriendRequest = function(id) {
-		success = false;
-		$.ajax({
-			url : "/profile/acceptrequest",
-			data : {
-				requestid : id
-			},
-			type : "GET",
-			async : false,
-			dataType : "text",
-			success : function(result) {
-				if(result = "1")
-					success = true;
-			}
-		});
-		return success;
-	}
-	
-	self.rejectFriendRequest = function(id) {
-		success = false;
-		$.ajax({
-			url : "/profile/rejectrequest",
-			data : {
-				requestid : id
-			},
-			type : "GET",
-			async : false,
-			dataType : "text",
-			success : function(result) {
-				if(result = "1")
-					success = true;
-			}
-		});
-		return success;
-	}
-	
 	//Client-Side Routes
 	Sammy(function() {
 		this.get('#:folder', function() {
@@ -291,14 +232,6 @@ MessagesVM = new (function() {
 					self.recipientList(mappedRecipients);
 				});
 				$('.new-message .fields .expanding').expandingTextarea();
-			}
-			else if(this.params.folder == "RequestsReceived") {
-				$.getJSON("/messages/loadreceivedrequests", function(allData) {
-					var mappedRequests = $.map(allData.root, function(request) {
-						return new receivedFriendRequest(request);
-					});
-					self.requestsReceived(mappedRequests);
-				});
 			}
 			else if(this.params.folder == "RequestsSent") {
 				$.getJSON("/messages/loadsentrequests", function(allData) {

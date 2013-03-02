@@ -14,19 +14,88 @@ function Story(data) {
 	this.contentPreview = data.content.substr(0, 50);
 };
 
+function FriendRequest(data) {
+	var self = this;
+	self.isLoading = ko.observable(false);
+	self.id = data.id;
+	self.photo = profileThumbsUrl + data.Requestor.Profile.photo;
+	self.displayName = data.Requestor.Profile.displayName;
+	self.responded = ko.observable(false);
+	self.accepted = ko.observable(false);
+	self.acceptFriendRequest = function() {
+		self.isLoading(true);
+		success = NotificationsVM.acceptFriendRequest(self.id);
+		self.isLoading(false);
+		if(success) {
+			self.responded(true);
+			self.accepted(true);
+		}
+	}
+	self.rejectFriendRequest = function() {
+		self.isLoading(true);
+		success = NotificationsVM.rejectFriendRequest(self.id);
+		self.isLoading(false);
+		if(success) {
+			self.responded(true);
+		}
+	}
+}
+
+
 //View Model
 NotificationsVM = new (function() {
 	var self = this;
+	
+	self.isLoading = ko.observable(false);
+	
 	//Data
-	self.section = ['New Stories', 'New Articles'];
+	self.section = ['New Stories', 'New Articles', 'Friend Requests'];
 	self.currentSection = ko.observable();
 	
 	self.stories = ko.observableArray([]);
+	self.friendRequests = ko.observableArray([]);
 	
 	//Behaviours
 	self.goToSection = function(section) {
+		self.isLoading(true);
 		section = section.replace(/\s/g, "");
 		location.hash = section;
+	}
+	
+	self.acceptFriendRequest = function(id) {
+		success = false;
+		$.ajax({
+			url : "/profile/acceptrequest",
+			data : {
+				requestid : id
+			},
+			type : "GET",
+			async : false,
+			dataType : "text",
+			success : function(result) {
+				if(result = "1")
+					success = true;
+			}
+		});
+		return success;
+	}
+	
+	self.rejectFriendRequest = function(id) {
+		success = false;
+		$.ajax({
+			url : "/profile/rejectrequest",
+			data : {
+				requestid : id
+			},
+			type : "GET",
+			async : false,
+			dataType : "text",
+			success : function(result) {
+				if(result = "1")
+					success = true;
+			}
+		});
+		return success;
 	}
 	
 	//Client-Side Routes
@@ -41,6 +110,15 @@ NotificationsVM = new (function() {
 					self.stories(mappedStories);
 				});
 			}
+			else if(this.params.section == "FriendRequests") {
+				$.getJSON("/messages/loadreceivedrequests", function(allData) {
+					var mappedRequests = $.map(allData.root, function(request) {
+						return new FriendRequest(request);
+					});
+					self.friendRequests(mappedRequests);
+				});
+			}
+			self.isLoading(false);
 		});
 	}).run();
 	

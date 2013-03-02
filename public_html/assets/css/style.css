@@ -120,6 +120,13 @@ input :-moz-placeholder {
 .button {
 	cursor: pointer;
 }
+
+.loader {
+	width: 	128px;
+	height: 15px;
+	background: transparent url('/assets/img/ajax-loader.gif') no-repeat 0 0;
+}
+
 #single form input[type="text"], #single form input[type="password"], #single form select {
 	border-radius: 10px;
 	-moz-border-radius: 10px;
