@@ -181,6 +181,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $settings = $this->getOption('security');
         Zend_Registry::set('maxAccessAttempts', $settings['maxAccessAttempts']);   
     }
+    
+    
 
     protected function _initUserpaths() {
         $Config = $this->getOption('storage');
@@ -210,6 +212,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $Config = $this->getOption('email');
         Zend_Registry::set('registrationEmail', $Config['registrationEmail']);
         Zend_Registry::set('registrationSender', $Config['registrationSender']);
+    }
+    
+    protected function _initArticleSettigns() {
+        $Config = $this->getOption('article');
+        Zend_Registry::set('articleFlagLimit', $Config['articleFlagLimit']);
     }
     
     protected function _initSitePaths() {

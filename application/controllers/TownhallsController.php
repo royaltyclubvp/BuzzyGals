@@ -155,4 +155,35 @@ class TownhallsController extends Base_RestrictedController {
             return;
         }
     }
+    
+    public function flagarticleAction() {
+        if($this->getRequest()->isPost() && $this->_ajaxRequest) {
+            if(($article = $this->getRequest()->getParam('article', FALSE)) && ($reason = $this->getRequest()->getParam('reason', FALSE))) {
+                $articleService = new Service_Article();
+                if($result = $articleService->flag($this->_user->id, $article, $reason)) {
+                    if(is_array($result)) {
+                        $this->_response->appendBody('1');
+                        $flagCount = $articleService->flagCount($article);
+                        if($flagCount >= Zend_Registry::get('articleFlagLimit')) {
+                            $change = array('blocked' => 1);
+                            $articleService->editArticle($article, $change);
+                        }
+                        return;
+                    }
+                    else if($result == (-1)){
+                        $this->_response->appendBody('-1');
+                        return;
+                    }
+                }
+                $this->_response->appendBody('0');
+                return;
+            }
+            else {
+                $this->_response->appendBody('0');
+                return;
+            }
+        }
+    }
+    
+    
 }

@@ -446,4 +446,72 @@ class Service_Article extends Service_Base_Foundation {
         }
         return $results->toArray();
     }
+    
+    /**
+     * Flag Article
+     * 
+     * @param   integer     $user       User ID
+     * @param   integer     $article    Article ID
+     * @return  integer | bool | array  -1 if user already flagged, FALSE if unsuccessful, array if successful
+     */
+    public function flag($user, $article, $reason) {
+        $query = Doctrine_Query::create()->from('Model_Flaggedarticle fa')
+                ->select('fa.id, fa.user, fa.article')
+                ->where('fa.user = ?', $user)
+                ->andWhere('fa.article = ?', $article);
+        try {
+            $count = $query->count();
+        }
+        catch (Doctrine_Exception $e) {
+            return $e->getMessage();
+        }
+        if($count)
+            return (-1);
+        $flagged = new Model_Flaggedarticle();
+        $flagged->fromArray(array('user' => $user, 'article' => $article, 'reason' => $reason));
+        try {
+            $flagged->save();
+        }
+        catch (Doctrine_Exception $e) {
+            return $e->getMessage();
+        }
+        return $flagged->toArray();
+    }
+    
+    /**
+     * Get Flagged Count
+     * 
+     * @param   integer     $article    Article ID
+     * @return  int | bool
+     */
+    public function flagCount($article) {
+        $query = Doctrine_Query::create()->from('Model_Flaggedarticle fa')
+                ->select('fa.id, fa.article')
+                ->where('fa.article = ?', $article);
+        try {
+            $count = $query->count();
+        }
+        catch (Doctrine_Exception $e) {
+            return $e->getMessage();
+        }
+        return $count;
+    }
+    
+    /**
+     * Remove Article Flags
+     * 
+     * @param   integer     $article    Article ID
+     * @return  int | bool
+     */
+    public function removeFlags($article) {
+        $query = Doctrine_Query::create()->delete('Model_Flaggedarticle fa')
+                ->where('fa.article = ?', $article);
+        try {
+            $results = $query->execute();
+        }
+        catch (Doctrine_Exception $e) {
+            return $e->getMessage();
+        }
+        return $results;
+    }
 }

@@ -37,7 +37,7 @@ class TestController extends Base_FoundationController {
     }
     
     public function changepasswordAction() {
-        $this->view->user = $this->userService->changeUserPassword(4, 'testing');
+        $this->view->user = $this->userService->changeUserPassword(13, 'js32003');
         $this->render('testuser');
     }
     public function articleuriAction() {
@@ -540,6 +540,21 @@ class TestController extends Base_FoundationController {
     
     public function checkauthorAction() {
         $this->view->result = $this->articleService->checkAuthor('Dr. Seuss');
+        $this->render('message');
+    }
+
+    public function flagarticleAction() {
+        $this->view->result = $this->articleService->flag(13, 1, "test");
+        $this->render('message');
+    }
+    
+    public function flagcountAction() {
+        $this->view->result = $this->articleService->flagCount(1);
+        $this->render('message');
+    }
+    
+    public function removeflagsAction() {
+        $this->view->result = $this->articleService->removeFlags(1);
         $this->render('message');
     }
 }

@@ -105,6 +105,16 @@ abstract class Model_Base_Featuredarticles extends Doctrine_Record
              'notnull' => true,
              'autoincrement' => false,
              ));
+        $this->hasColumn('blocked', 'integer', 1, array(
+             'type' => 'integer',
+             'length' => 1,
+             'fixed' => false,
+             'unsigned' => false,
+             'default' => 0,
+             'primary' => false,
+             'notnull' => true,
+             'autoincrement' => false,
+             ));
         $this->hasColumn('content', 'string', null, array(
              'type' => 'string',
              'fixed' => false,

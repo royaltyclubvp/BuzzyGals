@@ -1078,6 +1078,46 @@ article.single_page_article .submit_button {
    		display: inline-block;
    }
    
+   /** Report Article **/
+  	.townhall #articles #report {
+  		margin: 	50px 0 0;
+  		border-top: 1px solid #000000;
+  	}
+  	
+  	.townhall #articles #report h2.option {
+  		color: 		red;
+  		font-size: 	12px;
+  		cursor: 	pointer;
+  		margin: 	5px 0 0;
+  	}
+  	
+  	.townhall #articles #report #reasons {
+  		margin: 	5px 0 0;
+  		color: 		#000000;
+  		font-size: 	12px;
+  	}
+  	
+  	.townhall #articles #report #reasons > select {
+  		margin: 	5px 0;
+  		padding: 	3px;
+  	}
+  	
+  	.townhall #articles #report #reasons > select > option {
+  		margin: 	2px 0;
+  	}
+  	
+  	.townhall #articles #report p.message {
+  		font-style: italic;
+  		color: 		#000000;
+  		font-size: 	11px;
+  		margin: 	3px 0;
+  	}
+  	
+  	#flag_response {
+  		color: 		#000000;
+  		font-size: 	12px;
+  	}
+   
    /* Profile */
    
    #topmenutemplate #main #content #photo {

@@ -49,6 +49,33 @@ $this->additionalScripts = '<script src="/assets/js/articles.js"></script>';
         <textarea class="add_comment expanding" data-bind="expandingTextarea: true, hasfocus: showAddCommentButton, value: newComment"></textarea>
         <input name="addcomment" type="button" class="submit_button"  value="Post" data-bind="visible: showAddCommentButton()==true || newComment().length > 0, click: addComment"/>
     </article>
+    
+    <!-- REPORT ARTICLE DIALOGUE BOX -->
+    <div id="report">
+        <h2 class="option"><span data-bind="visible: $root.reported">Already Reported</span><span data-bind="visible: $root.reported() == 0, click: $root.showReasons">Report Article</span></h2>
+        <div id="reasons" data-bind="visible: $root.reasons">
+            What is the reason you have chosen to report this article?
+            <select data-bind="options: $root.reportReasons, optionsCaption: 'Choose Reason...', optionsText: 'title', value: $root.chosenReason"></select>
+        </div>
+        <p class="message">Flagged articles will be reviewed by Buzzygals within 48 hours to determine whether they violate guidelines.</p>
+        <button class="submit_button" data-bind="visible: $root.chosenReason, click: flag">Submit</button>
+    </div>
+    
+    <!-- INLINE FLAG ARTICLE RESPONSE MODAL -->
+    <div id="flag_response" class="flag-message" data-bind="with: $root.flagResponseMessage" style="display: none">
+        <div data-bind="if: success">
+            The article has been successfully flagged as:<br/>
+            <span data-bind="text:reason"></span>
+        </div>
+        <div data-bind="ifnot: success">
+            The action could not be completed. Please try again later.
+        </div>
+        <div data-bind="if: success()==(-1)">
+            You have already flagged this article. Your report is under consideration.
+        </div>
+        <input name="closeModal" type="button" class="submit_button" value="Close" data-bind="click: $root.closeModal" />
+    </div>
+    
 </div>
 <? $this->variablesJS = '<script type="text/javascript">
     var articleImagesUrl="'.Zend_Registry::get("articleImagesUrl").'";

@@ -74,6 +74,24 @@ function Article(data, bookmarked)	{
 	self.showComments = function() {
 		self.commentsVisible(1);
 	}
+	self.flag = function() {
+		result = ArticleVM.flag(self.id, ArticleVM.chosenReason().reason);
+		if(result=="-1") {
+			
+		}
+		else if(result=="1") {
+			ArticleVM.showFlagResponse(true, ArticleVM.chosenReason().reason);
+			ArticleVM.reasons(false);
+			ArticleVM.reported(true);
+			ArticleVM.chosenReason(false);
+		}
+	}
+}
+
+function flagResponse(reason, success) {
+	var self = this;
+	self.success = ko.observable(success);
+	self.reason = ko.observable(reason);
 }
 
 //View model
@@ -82,11 +100,28 @@ ArticleVM = new (function() {
 	var self = this;
 	
 	self.article = ko.observable();
+	self.reportReasons = [
+		{ title: "Sexual content", reason: "Includes graphic sexual activity, nudity, and other sexual content" },
+		{ title: "Violent or repulsive content", reason: "Violent or graphic content" },
+		{ title: "Hateful or abusive content", reason: "Content that promotes hatred against protected groups" },
+		{ title: "Harmful dangerous acts", reason: "Content that includes acts that may result in physical harm" },
+		{ title: "Child abuse", reason: "Content that includes sexual, predatory or abusive communications towards minors" },
+		{ title: "Spam or misleading", reason: "Content that is massively posted or otherwise misleading in nature" },
+		{ title: "Infringes my rights", reason: "Privacy, copyright and other legal complaints" },
+	];
+	self.chosenReason = ko.observable(false);
+	self.reported = ko.observable(false);
+	self.reasons = ko.observable(false);
+	self.flagResponseMessage = ko.observable(new flagResponse("", false));
 	
 	//Behaviours
 	
 	self.timeAgo = function() {
 		$('time.date').timeago();
+	}
+	
+	self.showReasons = function() {
+		self.reasons(true);
 	}
 	
 	self.addComment = function(articleid, comment) {
@@ -162,6 +197,41 @@ ArticleVM = new (function() {
 			}
 		});
 		return success;	
+	}
+	
+	self.flag = function(id, reason) {
+		success = false;
+		$.ajax({
+			url : "/townhalls/flagarticle",
+			data : {
+				article : id,
+				reason: reason
+			},
+			type : "POST",
+			async : false,
+			dataType : "text",
+			success : function(result) {
+				success = result;
+			}
+		});
+		return success;
+	}
+	
+	self.showFlagResponse = function(response, reason) {
+		self.flagResponseMessage(new flagResponse(reason, response));
+		$.fancybox.open(
+			{
+				href : '#flag_response'
+			},
+			[{
+				width : '500px',
+				maxHeight : 300
+			}]
+		);
+	}
+	
+	self.closeModal = function() {
+		$.fancybox.close();
 	}
 	
 	self.loadArticle = function(article, bookmarked) {
