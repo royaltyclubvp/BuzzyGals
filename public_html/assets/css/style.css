@@ -1117,6 +1117,10 @@ article.single_page_article .submit_button {
   		color: 		#000000;
   		font-size: 	12px;
   	}
+  	
+  	#flag_response .submit_button {
+  		margin: 	10px 0 0 0;
+  	}
    
    /* Profile */
    

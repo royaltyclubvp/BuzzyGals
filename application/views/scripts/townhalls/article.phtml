@@ -63,7 +63,7 @@ $this->additionalScripts = '<script src="/assets/js/articles.js"></script>';
     
     <!-- INLINE FLAG ARTICLE RESPONSE MODAL -->
     <div id="flag_response" class="flag-message" data-bind="with: $root.flagResponseMessage" style="display: none">
-        <div data-bind="if: success">
+        <div data-bind="if: success==true">
             The article has been successfully flagged as:<br/>
             <span data-bind="text:reason"></span>
         </div>

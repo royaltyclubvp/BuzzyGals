@@ -77,13 +77,16 @@ function Article(data, bookmarked)	{
 	self.flag = function() {
 		result = ArticleVM.flag(self.id, ArticleVM.chosenReason().reason);
 		if(result=="-1") {
-			
+			ArticleVM.showFlagResponse(-1, ArticleVM.chosenReason().reason);
+			ArticleVM.reasons(false);
+			ArticleVM.reported(true);
+			ArticleVM.chosenReason(null);
 		}
 		else if(result=="1") {
 			ArticleVM.showFlagResponse(true, ArticleVM.chosenReason().reason);
 			ArticleVM.reasons(false);
 			ArticleVM.reported(true);
-			ArticleVM.chosenReason(false);
+			ArticleVM.chosenReason(null);
 		}
 	}
 }

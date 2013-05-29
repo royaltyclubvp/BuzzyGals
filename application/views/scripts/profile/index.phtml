@@ -27,7 +27,7 @@ if ($this -> profile['Location']['country'] != '')
 ?>
 <div id="photo">
     <div id="profile_photo">
-        <img src="<? echo $this->profileImagesUrl.$this->profile['photo'] ?>" alt="Profile Image - <? echo $this->profile['displayName'] ?> height="250" width="200" />
+        <img src="<? echo $this->profileImagesUrl.$this->profile['photo'] ?>" alt="Profile Image - <? echo $this->profile['displayName'] ?>" height="250" width="200" />
         <input type="button" class="submit_button change_photo" value="Change Photo" data-bind="click: $root.showProfileUpload, visible: $root.profileUploadVisible()==0"/>
     </div>
     <div class="change_profile_photo" data-bind="visible: $root.profileUploadVisible()==1">
