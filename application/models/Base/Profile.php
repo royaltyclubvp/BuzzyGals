@@ -62,13 +62,22 @@ abstract class Model_Base_Profile extends Doctrine_Record
              'notnull' => true,
              'autoincrement' => false,
              ));
+        $this->hasColumn('url', 'string', 100, array(
+             'type' => 'string',
+             'length' => 100,
+             'fixed' => false,
+             'unsigned' => false,
+             'primary' => false,
+             'notnull' => true,
+             'autoincrement' => false,
+             ));
         $this->hasColumn('gender', 'string', 20, array(
              'type' => 'string',
              'length' => 20,
              'fixed' => false,
              'unsigned' => false,
              'primary' => false,
-             'notnull' => true,
+             'notnull' => false,
              'autoincrement' => false,
              ));
         $this->hasColumn('interests', 'string', null, array(
@@ -84,7 +93,7 @@ abstract class Model_Base_Profile extends Doctrine_Record
              'fixed' => false,
              'unsigned' => false,
              'primary' => false,
-             'notnull' => true,
+             'notnull' => false,
              'autoincrement' => false,
              ));
         $this->hasColumn('email', 'string', null, array(

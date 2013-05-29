@@ -702,4 +702,19 @@ class ProfileController extends Base_RestrictedController {
         }
     }
     
+     public function getsettingsAction() {
+        if($this->getRequest()->isGet() && $this->_ajaxRequest) {
+            $profileService = new Service_Profile();
+            if(is_array($profile = $profileService->fetchProfile($this->_user->id))) {
+                $result['root'] = $profile;
+                $this->_response->appendBody(Zend_Json::encode($result));
+                return;
+            }
+            else {
+                $this->_response->appendBody('0');
+                return;
+            }
+        }
+        else return $this->_redirect('/profile');
+    }
 }

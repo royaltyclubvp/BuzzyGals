@@ -29,43 +29,33 @@ function country(data) {
 	}
 }
 
-function registration() {
-	var self = this;
-	self.username = ko.observable("");
-	self.password = ko.observable("");
-	self.passwordConfirm = ko.observable("");
-	self.fName = ko.observable("");
-	self.lName = ko.observable("");
-	self.displayName = ko.observable("");
-	self.gender = ko.observable("");
-	self.dob_month = ko.observable("");
-	self.dob_day = ko.observable("");
-	self.dob_year = ko.observable("");
-	self.countryid = ko.observable("");
-	self.stateprovid = ko.observable("");
-	self.cityid = ko.observable("");
-	self.country = ko.observable("");
-	self.stateprov = ko.observable("");
-	self.city = ko.observable("");
-	self.url = ko.observable("");
-	self.usergroup = ko.observable("");
+function settings(data) {
+	self.displayName = ko.observable(data.displayName);
+	self.fName = ko.observable(data.fName);
+	self.lName = ko.observable(data.lName);
+	if(data.usergroup == 1) {
+		self.gender = ko.observable(data.gender);
+		self.storyNotificationPeriod = ko.observable(data.storyNotificationPeriod);
+	}
+	self.countryid = ko.observable(data.countryid);
+	self.stateprovid = ko.observable(data.stateprovid);
+	self.cityid = ko.observable(data.cityid);
+	self.country = ko.observable(data.country);
+	self.stateprov = ko.observable(data.stateprov);
+	self.city = ko.observable(data.city);
 }
 
-RegistrationVM = new (function() {
+SettingsVM = new (function() {
 	//Data
 	var self = this;
 	
-	self.isLoading = ko.observable(false);
+	self.isLoading = ko.observable(true);
 	
 	self.countryList = ko.observableArray([]);
 	self.stateList = ko.observableArray([]);
 	self.cityList = ko.observableArray([]);
 	
-	self.processState = ko.observable("New");
-	
-	self.registration = ko.observable(new registration());
-	
-	self.usernameError = ko.observable("");
+	self.settings = ko.observable("");
 	
 	//Subscriptions
 	self.registration().countryid.subscribe(function(newValue) {
@@ -108,36 +98,24 @@ RegistrationVM = new (function() {
 		});
 	}
 	
-	self.submitRegistration = function(registration) {
-		self.processState(null);
-		self.isLoading(true);
+	self.loadSettings = function() {
 		$.ajax({
-			url : "/user/register",
-			data : ko.toJS(registration),
-			type : "POST",
+			url : "/profile/getsettings",
+			type: "GET",
 			dataType : "json",
-			success : function(result) {
-				if(result.root.id) {
-					self.processState("Success");
-				}
-				else {
-					self.processErrors(result.root);
-					self.processState("New");
+			success: function(result) {
+				if(result.length) {
+					self.settings(new settings(result.root));
+					self.isLoading(false);
 				}
 			}
 		});
-		self.isLoading(false);
-	}
-	
-	self.processErrors = function(errors) {
-		for(var i=0; i < errors.length; i++) {
-			
-		}
 	}
 	
 	//Load Locations By Default
 	self.loadLocations();
 	
+	
+	//Load Settings
+	self.loadSettings();
 });
-
-ko.applyBindings(RegistrationVM, $("#right-column")[0]);

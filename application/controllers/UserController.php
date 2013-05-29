@@ -41,6 +41,11 @@ class UserController extends Base_FoundationController {
         return $this->render();
     }
     
+    public function orgsignupAction() {
+        $this->_helper->layout->setLayout('single');
+        return $this->render();
+    }
+    
     /**
      * Process User Registration Attempt
      */
@@ -72,17 +77,19 @@ class UserController extends Base_FoundationController {
                 $errors['root'][$i]['name'] = 'displayName';
                 $errors['root'][$i++]['text'] = 'Should be Alpanumeric. 5-30 characters';
             }
-            if(!checkdate($values['dob_month'], $values['dob_day'], $values['dob_year'])) {
-                $errors['root'][$i]['name'] = 'dob';
-                $errors['root'][$i++]['text'] = 'DOB is invalid';
-            }
+            if($values['usergroup'] == 1)
+                if(!checkdate($values['dob_month'], $values['dob_day'], $values['dob_year'])) {
+                    $errors['root'][$i]['name'] = 'dob';
+                    $errors['root'][$i++]['text'] = 'DOB is invalid';
+                }
             
             if($i) {
                 $this->_response->appendBody(Zend_Json::encode($errors));
                 return;
             }
+            if($values['usergroup'] == 1)
+                $values['dob'] = $values['dob_year'].'-'.$values['dob_month'].'-'.$values['dob_day'];
             
-            $values['dob'] = $values['dob_year'].'-'.$values['dob_month'].'-'.$values['dob_day'];
             //Assign Username to Email Field
             $values['email'] = $values['username'];
             //Create Verification String
@@ -107,8 +114,6 @@ class UserController extends Base_FoundationController {
                     $values['location'] = 1;
                 }
             }
-            //Set UserGroup
-            $values['usergroup'] = 1;
             if(is_array($newAccount = $this->service->addNew($values))) {
                 $from = Zend_Registry::get('registrationEmail');
                 $fromName = Zend_Registry::get('registrationSender');

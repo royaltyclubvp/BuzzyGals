@@ -18,28 +18,21 @@ $this->additionalScripts = '<script src="/assets/js/register.js"></script>' ?>
             <div id="signup">
                 <form id="signup_form" data-bind="with: registration">
                     <h2 class="lightred">Account Credentials</h2>
-                    <input type="text" data-bind="value: username" id="field_username" placeholder="E-Mail Address"/>
+                    <input type="text" data-bind="value: username" id="field_username" placeholder="Organization E-Mail Address"/>
                     <p class="lightred" data-bind="visible: $root.usernameError().length > 0, text: $root.usernameError"></p>
                     <input type="password" data-bind="value: password" id="field_password" placeholder="Enter Password. Minimum 7 characters"/>
                     <input type="password" data-bind="value: passwordConfirm" id="field_password_confirm" placeholder="Confirm Password"/>
                     <h2 class="lightred">Profile</h2>
-                    <input type="text" data-bind="value: fName" id="field_fName" placeholder="First Name" />
-                    <input type="text" data-bind="value: lName" id="field_lName" placeholder="Last Name" />
-                    <input type="text" data-bind="value: displayName" id="field_displayName" placeholder="Display Name"/>
-                    <input type="text" data-bind="value: url" id="field_url" placeholder="Profile URL (buzzygals.com/[yoururl])"/>
-                    <input type="radio" name="gender" value="male" data-bind="checked: gender"/><label>Male</label>
-                    <input type="radio" name="gender" value="female" data-bind="checked: gender"/><label>Female</label>
-                    <br/><br/>
-                    <label>Date of Birth</label>
-                    <input type="text" data-bind="value: dob_month" placeholder="MM" id="field_dob_month" class="square"/>
-                    <input type="text" data-bind="value: dob_day" placeholder="DD" id="field_dob_day" class="square"/>
-                    <input type="text" data-bind="value: dob_year" placeholder="YYYY" id="field_dob_year" class="square"/>
-                    <br/>
+                    <input type="text" data-bind="value: fName" id="field_fName" placeholder="Administrator First Name" />
+                    <input type="text" data-bind="value: lName" id="field_lName" placeholder="Administrator Last Name" />
+                    <input type="text" data-bind="value: displayName" id="field_displayName" placeholder="Organization Name (Shown On Profile)"/>
+                    <input type="text" data-bind="value: url" id="field_url" placeholder="Profile URL (buzzygals.com/[yoururl]). No Spaces"/>
+                    <h2 class="lightred">Main Location</h2>
                     <label>Country</label><input type="text" class="square" id="field_country" data-bind="autoComplete: $root.countryList, value: countryid, optionsText: 'name', optionsValue: 'id', autoCompleteOptions: {autoFocus: false}, attr : { 'placeholder': 'Country' }"/>
                     <label>State/Province</label><input type="text" class="square" id="field_stateprov"  data-bind="autoComplete: $root.stateList, value: stateprovid, optionsText: 'name', optionsValue: 'id', autoCompleteOptions: {autoFocus: false}"/>
                     <label>City</label><input type="text" class="square" id="field_city"  placeholder="City" data-bind="autoComplete: $root.cityList, value: cityid, optionsText: 'name', optionsValue: 'id', autoCompleteOptions: {autoFocus: false}"/>
                     
-                    <input type="hidden" data-bind="initializeValue: usergroup, value: usergroup" id="field_usergroup" value="1"/>
+                    <input type="hidden" data-bind="initializeValue: usergroup, value: usergroup" id="field_usergroup" value="2"/>
                     <input type="button" class="submit_button" value="Complete Registration" data-bind="click: $root.submitRegistration"/>
                 </form>
             </div>
