@@ -717,4 +717,9 @@ class ProfileController extends Base_RestrictedController {
         }
         else return $this->_redirect('/profile');
     }
+     
+    public function accountsettingsAction() {
+        $this->_helper->layout->setLayout('single');
+        $this->view->usergroup = $this->_user->usergroup;
+    }
 }

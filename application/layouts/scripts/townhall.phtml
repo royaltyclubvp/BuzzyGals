@@ -1,0 +1,101 @@
+<? echo $this->doctype() ?> <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+    <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+        <title>BuzzyGals - <? echo $this->pageTitle ?></title>
+        <meta name="description" content="">
+
+        <meta name="viewport" content="width=device-width">
+
+        <? echo $this->headLink()->prependStylesheet('/assets/css/style.css') ?>
+        
+        <link type="text/css" rel="stylesheet" media="screen" href="/assets/css/jquery/jquery-ui.css">
+        <link type="text/css" rel="stylesheet" media="screen" href="/assets/css/fancybox/jquery.fancybox.css">
+        <link type="text/css" rel="stylesheet" media="screen" href="/assets/css/uploader/fineuploader.css">
+        <link type="text/css" rel="stylesheet" media="screen" href="/assets/css/jquery/jquery.Jcrop.css">
+        <? echo $this->headScript()->prependFile('/assets/js/libs/modernizr-2.5.3.min.js') ?>
+    </head>
+    <body id="topmenutemplate">
+        <header id="body_header">
+            <div id="top-menu">
+                <div class="container">
+                    <div id="link_home">
+                        <a href="/">Home</a>
+                    </div>
+                    <div id="link_townhall">
+                        <a href="/townhalls"> <img src="/assets/img/townhall-small.png" alt="Townhall"/> </a>
+                    </div>
+                    <div id="notification_stories">
+                        <a href="/notifications" class="notification">
+                            <img src="/assets/img/notification.png" alt="Notification Icon" width="31" height="31"/>
+                        </a>
+                    </div>
+                    <div id="page_title">
+                        <h1><? echo $this->menuTitle ?></h1>
+                    </div>
+                    <div id="notification_msgs">
+                        <a href="/messages" class="icon">
+                            <img src="/assets/img/mail-icon.png" alt="Messages" />
+                        </a>
+                        <span id="message_counter" data-bind="text: messageCount"></span>
+                    </div>
+                    <div id="user_search">
+                        <form action="/user/search" method="get">
+                            <input type="text" name="searchTerms" placeholder="Search Users" value="" />
+                            <input type="submit" value="Search" name="submit"/>
+                        </form>
+                    </div>
+                    <div id="link_logout">
+                        <a href="/logout" title="Logout">Logout</a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </header>
+        <div class="logo">
+            <img src="/assets/img/logo.png" alt="ElleFab Logo" width="218" height="142"/>
+        </div>
+        <div class="tagline">
+            <img src="/assets/img/express-yourself.png" alt="Express Yourself" width="182" height="21"/>
+        </div>
+        <div id="main" role="main">
+            <div id="content" class="<?echo $this->additionalBodyClasses ?>">
+                <!-- Content -->
+                <? echo $this->layout()->content ?>        
+            </div>
+            <div id="side_advertising">
+                <div class="ad">
+                    <a href="#">
+                        <img src="/assets/img/ad-placeholder.jpg" alt="Ad Title" />
+                    </a>
+                </div>
+                <div class="ad">
+                    <a href="#">
+                        <img src="/assets/img/ad-placeholder.jpg" alt="Ad Title" />
+                    </a>
+                </div>
+            </div>  
+            <div class="clearfix"></div>
+        </div>  
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="/assets/js/libs/jquery-1.7.2.min.js"><\/script>')</script>
+        <script src="/assets/js/libs/jqueryui/jquery-ui.js"></script>
+        <script src="/assets/js/libs/knockout-2.2.0.js"></script>
+        <script src="/assets/js/libs/sammy.min.js"></script>
+        <script src="/assets/js/jquery.timeago.js"></script>
+        <script src="/assets/js/expanding.js"></script>
+        <script src="/assets/js/jquery.mousewheel-3.0.6.pack.js"></script>
+        <script src="/assets/js/jquery.fancybox.pack.js"></script>
+        <script src="/assets/js/plugins.js"></script>
+        <script src="/assets/js/topmenu.js"></script>
+        <? echo $this->additionalScripts ?>       
+        <script src="/assets/js/script.js"></script>
+        
+    </body>
+</html>

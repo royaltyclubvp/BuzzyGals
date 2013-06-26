@@ -57,29 +57,6 @@ SettingsVM = new (function() {
 	
 	self.settings = ko.observable("");
 	
-	//Subscriptions
-	self.registration().countryid.subscribe(function(newValue) {
-		var selected = ko.utils.arrayFirst(self.countryList(), function(country) {
-			if(country.id==newValue) return true;
-		});
-		self.registration().country(selected.name);
-		self.stateList(selected.states());
-	});
-	
-	self.registration().stateprovid.subscribe(function(newValue) {
-		var selected = ko.utils.arrayFirst(self.stateList(), function(state) {
-			if(state.id==newValue) return true;
-		});
-		self.registration().stateprov(selected.name);
-		self.cityList(selected.cities());
-	});
-	
-	self.registration().cityid.subscribe(function(newValue) {
-		var selected = ko.utils.arrayFirst(self.cityList(), function(city) {
-			if(city.id==newValue) return true;
-		});
-		self.registration().city(selected.name);
-	});
 	
 	//Behaviours
 	self.loadLocations = function() {
@@ -103,8 +80,12 @@ SettingsVM = new (function() {
 			url : "/profile/getsettings",
 			type: "GET",
 			dataType : "json",
-			success: function(result) {
-				if(result.length) {
+			success : function(result) {
+				if(result.root.length != 0) {
+					self.settings(new settings(result.root));
+					self.isLoading(false);
+				}
+				if(result != "") {
 					self.settings(new settings(result.root));
 					self.isLoading(false);
 				}
@@ -115,7 +96,32 @@ SettingsVM = new (function() {
 	//Load Locations By Default
 	self.loadLocations();
 	
-	
 	//Load Settings
 	self.loadSettings();
+	
+	//Subscriptions
+	self.settings().countryid.subscribe(function(newValue) {
+		var selected = ko.utils.arrayFirst(self.countryList(), function(country) {
+			if(country.id==newValue) return true;
+		});
+		self.settings().country(selected.name);
+		self.stateList(selected.states());
+	});
+	
+	self.settings().stateprovid.subscribe(function(newValue) {
+		var selected = ko.utils.arrayFirst(self.stateList(), function(state) {
+			if(state.id==newValue) return true;
+		});
+		self.settings().stateprov(selected.name);
+		self.cityList(selected.cities());
+	});
+	
+	self.settings().cityid.subscribe(function(newValue) {
+		var selected = ko.utils.arrayFirst(self.cityList(), function(city) {
+			if(city.id==newValue) return true;
+		});
+		self.settings().city(selected.name);
+	});
 });
+
+ko.applyBindings(SettingsVM, $("#right-column")[0]);

@@ -1,0 +1,53 @@
+<?php
+$this->pageTitle = "Account Settings";
+$this->additionalScripts = '<script src="/assets/js/accountsettings.js"></script>'
+?>
+<div id="content">
+    <div id="left-column" class="left">
+        <div id="logo">
+            <img src="/assets/img/logo-home.png" alt="BuzzyGals Logo" />
+        </div>
+    </div>
+    <div id="right-column" class="right" data-bind="with: settings, loadingWhen: isLoading">
+        <div class="field">
+            <label>Display Name:</label>
+            <input type="text" data-bind="value: displayName" id="field_displayName" />
+        </div>
+        <div class="field">
+            <?php if($this->usergroup == 1 ): ?>
+                <label>Name</label>
+            <? endif; ?>
+            <?php if($this->usergroup == 2 ): ?>
+                <label>Administrator Name</label>
+            <? endif; ?>
+            <input type="text" data-bind="value: fName" id="field_fName" /><input type="text" data-bind="value: lName" id="field_lName"/>
+        </div>
+        <?php if($this->usergroup == 1): ?>
+        <div class="field">
+            <label>Gender:</label>
+            <select data-bind="options: genders, optionsCaption: 'Gender', optionsText: 'displaytext', value: gender"></select>
+        </div>
+        <h2>Notification Settings</h2>
+        <div class="field">
+            <label>Story Notification Period:</label> 
+            <input type="text" data-bind="value: storyNotificationPeriod" id="field_storyNotificationPeriod"/>        
+        </div>
+        <?php endif; ?>
+        <div class="field">
+        <?php if($this->usergroup == 2): ?>
+            <label>Main Location</label>
+        <?php endif; ?>
+        <?php if($this->usergroup == 1 ): ?>
+            <label>Location</label>
+        <?php endif; ?>
+            <label>Country</label><input type="text" class="square" id="field_country" data-bind="autoComplete: $root.countryList, value: countryid, optionsText: 'name', optionsValue: 'id', autoCompleteOptions: {autoFocus: false}, attr : { 'placeholder': 'Country' }"/>
+            <label>State/Province</label><input type="text" class="square" id="field_stateprov"  data-bind="autoComplete: $root.stateList, value: stateprovid, optionsText: 'name', optionsValue: 'id', autoCompleteOptions: {autoFocus: false}"/>
+            <label>City</label><input type="text" class="square" id="field_city"  placeholder="City" data-bind="autoComplete: $root.cityList, value: cityid, optionsText: 'name', optionsValue: 'id', autoCompleteOptions: {autoFocus: false}"/>
+        </div>
+        <input type="hidden" class="submit_button" value="Save" data-bind="visible: changed, click: $root.saveChanges" />
+        <a href="/" title="Back to Profile">
+            <input type="submit" value="Back to Profile" name="submit"/>
+        </a>
+    </div>
+    <div class="clearfix"></div>
+</div>
