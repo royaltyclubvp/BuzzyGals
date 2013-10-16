@@ -209,6 +209,16 @@ article.single_page_article .submit_button {
 
 
 /* --- Structure --- */
+#topmenutemplate #feedback {
+	position: absolute;
+	top: 50px;
+	background: white;
+}
+
+#topmenutemplate #feedback #feedback_form {
+	display: none;
+}
+
 #topmenutemplate #body_header {
     height: 42px;
     background: red url('/assets/img/menu-gradient.jpg') repeat-x;

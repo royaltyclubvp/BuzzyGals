@@ -80,6 +80,18 @@
             </div>  
             <div class="clearfix"></div>
         </div>	
+        
+        <div id="feedback">
+            <h2>Feedback</h2>
+            <form id="feedback_form">
+                <label for="feedback_type">What would you like to report?</label>
+                <input type="radio" name="feedback_type" value="general"/>General Feedback<br/>
+                <input type="radio" name="feedback_type" value="problem"/>A Problem<br/>
+                <input type="radio" name="feedback_type" value="suggestion"/>A Suggestion<br/>
+                <label for="comment">Comment</label>
+                <textarea name="comment"></textarea>
+            </form>
+        </div>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="/assets/js/libs/jquery-1.7.2.min.js"><\/script>')</script>
         <script src="/assets/js/libs/jqueryui/jquery-ui.js"></script>
